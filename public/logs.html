@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Logs do Sistema</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpeg">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .brand h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #9333ea;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        nav .nav-btn {
+            background: #f3e8ff !important;
+            color: #6b21a8 !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            padding: 8px 20px !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        nav .nav-btn:hover:not(.active) {
+            background-color: #e9d5ff !important;
+            color: #581c87 !important;
+        }
+
+        nav .nav-btn.active {
+            background: #6b21a8 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.3) !important;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #themeToggleBtn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0 !important;
+            background: #ffffff !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .btn-logout-door {
+            background-color: #78350f !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 8px 14px !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- FILTRO E PESQUISA --- */
+        .filter-box {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        input[type="text"] {
+            border: 2px solid #cbd5e1 !important;
+            background: #ffffff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+            color: #1f2937;
+            font-size: 0.9rem;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #9333ea !important;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15);
+        }
+
+        .table-container {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            padding: 20px;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .logs-table th, .logs-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .logs-table th {
+            background-color: #f8fafc;
+            color: #6b21a8;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .badge-acao {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        /* --- TEMA ESCURO --- */
+        body.dark-theme {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme header {
+            background-color: #1e1e1e !important;
+            border-bottom: 1px solid #334155 !important;
+        }
+
+        body.dark-theme nav .nav-btn {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme nav .nav-btn.active {
+            background: #7e22ce !important;
+        }
+
+        body.dark-theme input[type="text"] {
+            background-color: #2a2a2a !important;
+            color: #ffffff !important;
+            border-color: #334155 !important;
+        }
+
+        body.dark-theme .table-container {
+            background-color: #1e1e1e !important;
+            border-color: #334155 !important;
+        }
+
+        body.dark-theme .logs-table th {
+            background-color: #2a2a2a !important;
+            color: #c084fc !important;
+        }
+
+        body.dark-theme .logs-table td {
+            border-bottom-color: #334155 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <img src="logo.jpeg" alt="Logo">
+            <h1>Sorveteria Sensação</h1>
+        </div>
+        <nav>
+            <a href="atendimento.html" class="nav-btn">📝 Atendimento</a>
+            <a href="cozinha.html" class="nav-btn">🍧 Cozinha</a>
+            <a href="historico.html" class="nav-btn">📊 Histórico</a>
+            <a href="logs.html" class="nav-btn active">📋 Logs</a>
+            <a href="admin.html" class="nav-btn">⚙️ Administração</a>
+        </nav>
+        <div class="user-info">
+            <button onclick="toggleTheme()" id="themeToggleBtn" title="Alternar Tema">🌙</button>
+            <span class="user-title" id="userNameDisplay">Admin</span>
+            <button onclick="logout()" class="btn-logout-door" title="Sair">🚪</button>
+        </div>
+    </header>
+
+    <div class="container" style="max-width: 1100px; margin: 30px auto; padding: 0 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h2 style="font-size: 1.6rem; font-weight: 800; margin: 0;">Registro de Logs do Sistema</h2>
+                <p style="color: #64748b; margin: 5px 0 0 0;">Acompanhe todas as ações e eventos executados no site.</p>
+            </div>
+            <button onclick="carregarLogs()" class="nav-btn active" style="cursor: pointer;">🔄 Atualizar</button>
+        </div>
+
+        <div class="filter-box">
+            <input type="text" id="inputBuscaLog" placeholder="🔍 Buscar por usuário, ação ou detalhe..." oninput="filtrarLogs()">
+        </div>
+
+        <div class="table-container">
+            <table class="logs-table">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Data / Hora</th>
+                        <th>Usuário</th>
+                        <th>Ação</th>
+                        <th>Detalhes</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaLogsContent">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #64748b; padding: 20px;">Carregando registros de auditoria...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let todosLogs = [];
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('sensacao_dark_theme', isDark);
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) btn.innerText = isDark ? '☀️' : '🌙';
+        }
+
+        function initTheme() {
+            const isDark = localStorage.getItem('sensacao_dark_theme') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark-theme');
+                const btn = document.getElementById('themeToggleBtn');
+                if (btn) btn.innerText = '☀️';
+            }
+        }
+
+        function escapeHtml(texto) {
+            if (!texto) return '';
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function obterCorBadge(acao) {
+            if (acao.includes('NOVO_PEDIDO') || acao.includes('PEDIDO_CONCLUIDO')) return 'background: #d1fae5; color: #065f46;';
+            if (acao.includes('EXCLUIR') || acao.includes('FALHA') || acao.includes('RESET') || acao.includes('LIMPAR')) return 'background: #fee2e2; color: #991b1b;';
+            if (acao.includes('LOGIN') || acao.includes('LOGOUT')) return 'background: #e0e7ff; color: #3730a3;';
+            if (acao.includes('FECHAR_CAIXA')) return 'background: #fef3c7; color: #92400e;';
+            return 'background: #f3e8ff; color: #6b21a8;';
+        }
+
+        async function checarSessao() {
+            try {
+                const res = await fetch('/api/session');
+                const data = await res.json();
+                if (!data.loggedIn || data.user.role !== 'admin') {
+                    alert('Acesso negado.');
+                    window.location.href = 'atendimento.html';
+                    return;
+                }
+                document.getElementById('userNameDisplay').innerText = data.user.login;
+            } catch (err) {
+                console.error('Erro de sessão:', err);
+            }
+        }
+
+        async function carregarLogs() {
+            try {
+                const res = await fetch('/api/admin/logs');
+                todosLogs = await res.json();
+                renderizarTabela(todosLogs);
+            } catch (err) {
+                console.error('Erro ao carregar logs:', err);
+            }
+        }
+
+        function renderizarTabela(logs) {
+            const tbody = document.getElementById('tabelaLogsContent');
+
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 20px;">Nenhuma atividade registrada até o momento.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = logs.map(l => {
+                const dataFmt = l.data_hora ? new Date(l.data_hora.replace(' ', 'T')).toLocaleString('pt-BR') : '-';
+                const estiloBadge = obterCorBadge(l.acao);
+                return `
+                    <tr>
+                        <td><b>#${l.id}</b></td>
+                        <td><small>${dataFmt}</small></td>
+                        <td><b>${escapeHtml(l.usuario)}</b></td>
+                        <td><span class="badge-acao" style="${estiloBadge}">${escapeHtml(l.acao)}</span></td>
+                        <td><small style="color: #64748b;">${escapeHtml(l.detalhes || '-')}</small></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filtrarLogs() {
+            const termo = document.getElementById('inputBuscaLog').value.toLowerCase();
+            const filtrados = todosLogs.filter(l => 
+                (l.usuario && l.usuario.toLowerCase().includes(termo)) ||
+                (l.acao && l.acao.toLowerCase().includes(termo)) ||
+                (l.detalhes && l.detalhes.toLowerCase().includes(termo))
+            );
+            renderizarTabela(filtrados);
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        async function init() {
+            initTheme();
+            await checarSessao();
+            carregarLogs();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>

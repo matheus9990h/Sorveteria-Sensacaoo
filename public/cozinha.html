@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Cozinha</title>
+    
+    <link rel="icon" type="image/jpeg" href="logo.jpeg">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* --- ESTILOS DO CABEÇALHO --- */
+        header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .brand h1 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #9333ea;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Botões de navegação formato Pílula */
+        nav .nav-btn {
+            background: #f3e8ff !important;
+            color: #6b21a8 !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            padding: 8px 20px !important;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: none !important;
+        }
+
+        nav .nav-btn:hover:not(.active) {
+            background-color: #e9d5ff !important;
+            color: #581c87 !important;
+        }
+
+        /* Botão Ativo (Cozinha) */
+        nav .nav-btn.active {
+            background: #6b21a8 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.3) !important;
+        }
+
+        /* Área do Usuário */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #themeToggleBtn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0 !important;
+            background: #ffffff !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 !important;
+            transition: all 0.2s ease;
+        }
+
+        #themeToggleBtn:hover {
+            background: #f8fafc !important;
+        }
+
+        .user-title {
+            font-weight: 800;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        /* --- BOTÃO DE SAÍDA COM TOM DE PORTA --- */
+        .btn-logout-door {
+            background-color: #78350f !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 8px 14px !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-logout-door:hover {
+            background-color: #582f0e !important;
+        }
+
+        /* --- VARIÁVEIS GLOBAIS DO TEMA CLARO --- */
+        :root {
+            --bg-main: #f3f0f8; 
+            --card-bg: #ffffff;
+            --card-body-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --text-color: #000000;
+            --text-muted: #334155;
+            --shadow-color: rgba(107, 33, 168, 0.06);
+            --primary-color: #6b21a8;
+        }
+
+        /* --- TEMA ESCURO PADRONIZADO --- */
+        body.dark-theme,
+        body.dark-mode {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+
+            --bg-main: #121212;
+            --card-bg: #1e1e1e;
+            --card-body-bg: #1e1e1e;
+            --border-color: #334155;
+            --text-color: #ffffff;
+            --text-muted: #a1a1aa;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-color: #c084fc;
+        }
+
+        body.dark-theme header,
+        body.dark-mode header {
+            background-color: #1e1e1e !important;
+            border-bottom: 1px solid #334155 !important;
+        }
+
+        body.dark-theme nav .nav-btn,
+        body.dark-mode nav .nav-btn {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme nav .nav-btn.active,
+        body.dark-mode nav .nav-btn.active {
+            background: #7e22ce !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .user-title,
+        body.dark-mode .user-title {
+            color: #ffffff !important;
+        }
+
+        body.dark-theme #themeToggleBtn,
+        body.dark-mode #themeToggleBtn {
+            background: #2a2a2a !important;
+            border-color: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        body {
+            background-color: var(--bg-main) !important;
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding: 0;
+            font-weight: 600;
+        }
+
+        .container {
+            padding: 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Banner Superior Modernizado */
+        .cozinha-top-banner {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .cozinha-top-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .cozinha-icon-box {
+            background: #f3e8ff;
+            border: 2px solid #e9d5ff;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        body.dark-theme .cozinha-icon-box,
+        body.dark-mode .cozinha-icon-box {
+            background: #2a2a2a !important;
+            border-color: #7e22ce !important;
+        }
+
+        .cozinha-top-title-wrapper h2 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #581c87;
+            margin: 0 0 2px 0;
+            letter-spacing: -0.5px;
+        }
+
+        body.dark-theme .cozinha-top-title-wrapper h2,
+        body.dark-mode .cozinha-top-title-wrapper h2 {
+            color: #c084fc !important;
+        }
+
+        .cozinha-top-title-wrapper p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .banner-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Botões de Alternar Visão */
+        .view-toggle-box {
+            display: flex;
+            gap: 4px;
+            background: #ffffff;
+            padding: 5px;
+            border-radius: 9999px;
+            border: 1px solid var(--border-color);
+        }
+
+        body.dark-theme .view-toggle-box,
+        body.dark-mode .view-toggle-box {
+            background: #1e1e1e !important;
+        }
+
+        .btn-view-opt {
+            border: none;
+            background: transparent;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .btn-view-opt.active {
+            background: #6b21a8;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.3);
+        }
+
+        body.dark-theme .btn-view-opt.active,
+        body.dark-mode .btn-view-opt.active {
+            background: #7e22ce !important;
+        }
+
+        .ativos-counter-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 8px 20px;
+            text-align: center;
+            min-width: 65px;
+        }
+
+        body.dark-theme .ativos-counter-box,
+        body.dark-mode .ativos-counter-box {
+            background: #2a2a2a !important;
+            border-color: #334155 !important;
+        }
+
+        .ativos-number {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #6b21a8;
+            line-height: 1;
+        }
+
+        body.dark-theme .ativos-number,
+        body.dark-mode .ativos-number {
+            color: #c084fc !important;
+        }
+
+        .ativos-label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+
+        /* --- GRID DE COMANDAS DA COZINHA --- */
+        .cozinha-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        .pedido-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            border: 2px solid var(--border-color);
+            border-top: 6px solid #6b21a8;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        body.dark-theme .pedido-card,
+        body.dark-mode .pedido-card {
+            border-top-color: #c084fc !important;
+        }
+
+        .pedido-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(107, 33, 168, 0.15);
+        }
+
+        .pedido-header {
+            padding: 18px 20px 14px 20px;
+            background: var(--card-bg);
+            border-bottom: 2px dashed var(--border-color);
+        }
+
+        .pedido-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .badge-local {
+            background: #f3e8ff;
+            color: #581c87;
+            border: 1px solid #c084fc;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        body.dark-theme .badge-local,
+        body.dark-mode .badge-local {
+            background: #2a2a2a !important;
+            color: #c084fc !important;
+            border-color: #7e22ce !important;
+        }
+
+        .badge-mesa {
+            background: #fef9c3;
+            color: #713f12;
+            border-color: #eab308;
+        }
+
+        body.dark-theme .badge-mesa,
+        body.dark-mode .badge-mesa {
+            background: #422006 !important;
+            color: #fef08a !important;
+            border-color: #ca8a04 !important;
+        }
+
+        .badge-delivery {
+            background: #ffedd5;
+            color: #9a3412;
+            border-color: #f97316;
+        }
+
+        body.dark-theme .badge-delivery,
+        body.dark-mode .badge-delivery {
+            background: #431407 !important;
+            color: #ffedd5 !important;
+            border-color: #ea580c !important;
+        }
+
+        .badge-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
+        }
+
+        .status-preparo {
+            background: #d97706;
+            color: #ffffff;
+        }
+
+        .pedido-id-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .pedido-id {
+            font-size: 1rem;
+            color: #581c87;
+            font-weight: 900;
+        }
+
+        body.dark-theme .pedido-id,
+        body.dark-mode .pedido-id {
+            color: #c084fc !important;
+        }
+
+        .pedido-cliente {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: var(--text-color);
+            margin: 2px 0 6px 0;
+            line-height: 1.2;
+        }
+
+        /* Badges de Cronômetro por tempo */
+        .cronometro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-top: 4px;
+        }
+
+        .tempo-ok {
+            background: #a7f3d0;
+            color: #064e3b;
+        }
+
+        body.dark-theme .tempo-ok,
+        body.dark-mode .tempo-ok {
+            background: #064e3b !important;
+            color: #a7f3d0 !important;
+        }
+
+        .tempo-atencao {
+            background: #fde68a;
+            color: #78350f;
+        }
+
+        body.dark-theme .tempo-atencao,
+        body.dark-mode .tempo-atencao {
+            background: #78350f !important;
+            color: #fde68a !important;
+        }
+
+        .tempo-urgente {
+            background: #fecaca;
+            color: #7f1d1d;
+            animation: pulse-urgente 1.5s infinite;
+        }
+
+        body.dark-theme .tempo-urgente,
+        body.dark-mode .tempo-urgente {
+            background: #7f1d1d !important;
+            color: #fecaca !important;
+        }
+
+        @keyframes pulse-urgente {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .pedido-body {
+            padding: 16px 20px;
+            flex: 1;
+            background: var(--card-body-bg);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .pedido-secao-titulo {
+            font-size: 0.78rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+
+        .pedido-tamanho {
+            background: #f3e8ff;
+            color: #4c1d95;
+            border: 2px solid #a855f7;
+            padding: 8px 16px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 900;
+            display: inline-block;
+        }
+
+        body.dark-theme .pedido-tamanho,
+        body.dark-mode .pedido-tamanho {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+            border-color: #c084fc !important;
+        }
+
+        .badge-acomp {
+            background: #e2e8f0;
+            color: #0f172a;
+            border: 1px solid #94a3b8;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 6px;
+        }
+
+        body.dark-theme .badge-acomp,
+        body.dark-mode .badge-acomp {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+            border-color: #475569 !important;
+        }
+
+        .badge-adic {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border: 1px solid #fca5a5;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 6px;
+        }
+
+        body.dark-theme .badge-adic,
+        body.dark-mode .badge-adic {
+            background: #450a0a !important;
+            color: #fca5a5 !important;
+            border-color: #991b1b !important;
+        }
+
+        .pedido-obs {
+            background: #fef3c7;
+            border: 2px dashed #d97706;
+            color: #78350f;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+
+        body.dark-theme .pedido-obs,
+        body.dark-mode .pedido-obs {
+            background: #451a03 !important;
+            border-color: #b45309 !important;
+            color: #fef08a !important;
+        }
+
+        .pedido-footer {
+            padding: 16px 20px 20px 20px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-concluir {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-concluir:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45);
+        }
+
+        .btn-imprimir {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #ffffff;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+        }
+
+        .btn-imprimir:hover {
+            background: #e2e8f0;
+        }
+
+        body.dark-theme .btn-imprimir,
+        body.dark-mode .btn-imprimir {
+            background: #1e1e1e !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .btn-imprimir:hover,
+        body.dark-mode .btn-imprimir:hover {
+            background: #2a2a2a !important;
+        }
+
+        /* --- ESTILOS DO KANBAN --- */
+        .kanban-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 22px;
+            align-items: start;
+        }
+
+        .kanban-column {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 480px;
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+        }
+
+        .kanban-column-title {
+            font-size: 1rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .kanban-column-count {
+            background: #e2e8f0;
+            color: #581c87;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 900;
+        }
+
+        body.dark-theme .kanban-column-count,
+        body.dark-mode .kanban-column-count {
+            background: #2a2a2a;
+            color: #c084fc;
+        }
+
+        /* --- ESTILOS DE IMPRESSÃO DA COMANDA TÉRMICA (TUDO EM NEGRITO) --- */
+        #areaComanda {
+            display: none;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden !important;
+            }
+
+            #areaComanda, #areaComanda * {
+                visibility: visible !important;
+                color: #000000 !important;
+                background: transparent !important;
+                font-family: 'Courier New', Courier, monospace !important;
+                font-weight: 900 !important;
+                -webkit-font-smoothing: none !important;
+                opacity: 1 !important;
+            }
+
+            #areaComanda {
+                display: block !important;
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 72mm !important;
+                font-size: 13px !important;
+                line-height: 1.3 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            #areaComanda h2, 
+            #areaComanda p, 
+            #areaComanda span, 
+            #areaComanda div, 
+            #areaComanda li, 
+            #areaComanda strong, 
+            #areaComanda b {
+                color: #000000 !important;
+                font-family: 'Courier New', Courier, monospace !important;
+                font-weight: 900 !important;
+                opacity: 1 !important;
+            }
+
+            .print-header {
+                text-align: center;
+                margin-bottom: 6px;
+            }
+
+            .print-header h2 {
+                margin: 0;
+                font-size: 16px !important;
+                text-transform: uppercase;
+                font-weight: 900 !important;
+            }
+
+            .print-divider {
+                border-top: 2px dashed #000000 !important;
+                margin: 6px 0 !important;
+            }
+
+            .print-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 3px;
+                font-weight: 900 !important;
+            }
+
+            .print-section-title {
+                margin-top: 6px;
+                margin-bottom: 2px;
+                text-transform: uppercase;
+                font-size: 13px !important;
+                font-weight: 900 !important;
+            }
+
+            .print-list {
+                padding-left: 14px;
+                margin: 0;
+            }
+
+            .print-list li {
+                margin-bottom: 2px;
+                font-size: 12px !important;
+                font-weight: 900 !important;
+            }
+
+            .print-total {
+                font-size: 15px !important;
+                text-align: right;
+                margin-top: 6px;
+                margin-right: 20px !important; /* Puxa o total mais para a esquerda */
+                font-weight: 900 !important;
+            }
+        }
+</style>
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <img src="logo.jpeg" alt="Logo">
+            <h1>Sorveteria Sensação</h1>
+        </div>
+        <nav>
+            <a href="atendimento.html" class="nav-btn">📝 Atendimento</a>
+            <a href="cozinha.html" class="nav-btn active">🍧 Cozinha</a>
+            <a href="historico.html" class="nav-btn">📊 Histórico</a>
+            <a href="logs.html" class="nav-btn" id="navLogs" style="display: none;">📋 Logs</a>
+            <a href="admin.html" class="nav-btn" id="navAdmin" style="display: none;">⚙️ Administração</a>
+        </nav>
+        <div class="user-info">
+            <button id="themeToggleBtn" onclick="toggleTheme()" title="Alternar Tema">🌙</button>
+            <span class="user-title" id="userNameDisplay">Usuário</span>
+            <button onclick="logout()" class="btn-logout-door" title="Sair">🚪</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Aviso de Loja Fechada -->
+        <div id="avisoLojaFechada"
+            style="display: none; background: #fee2e2; border: 2px solid #f87171; color: #991b1b; padding: 12px 20px; border-radius: 14px; margin-bottom: 20px; font-weight: 700; text-align: center;">
+            ⚠️ A loja encontra-se FECHADA no momento pela administração.
+        </div>
+
+        <!-- Banner Superior -->
+        <div class="cozinha-top-banner">
+            <div class="cozinha-top-title-wrapper">
+                <div class="cozinha-icon-box">👨‍🍳</div>
+                <div>
+                    <h2>Painel de Produção</h2>
+                    <p>Gerencie e prepare os pedidos da cozinha em tempo real.</p>
+                </div>
+            </div>
+
+            <div class="banner-right-actions">
+                <!-- Botões para Alternar Modo de Exibição -->
+                <div class="view-toggle-box">
+                    <button class="btn-view-opt active" id="btnViewGrid" onclick="alternarVisao('grid')">📋 Lista</button>
+                    <button class="btn-view-opt" id="btnViewKanban" onclick="alternarVisao('kanban')">🎴 Kanban</button>
+                </div>
+
+                <div class="ativos-counter-box">
+                    <span class="ativos-number" id="ativosCount">0</span>
+                    <span class="ativos-label">Ativos</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visão 1: Grid Normal -->
+        <div id="cozinhaGridContainer" class="cozinha-grid">
+            <p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px;">Carregando pedidos...</p>
+        </div>
+
+        <!-- Visão 2: Kanban (Cards por Colunas) -->
+        <div id="cozinhaKanbanContainer" class="kanban-container" style="display: none;">
+            <!-- Coluna 1: Na Fila -->
+            <div class="kanban-column">
+                <div class="kanban-column-title">
+                    <span>📥 Na Fila</span>
+                    <span class="kanban-column-count" id="countFila">0</span>
+                </div>
+                <div id="kanbanFilaList"></div>
+            </div>
+
+            <!-- Coluna 2: Em Preparo -->
+            <div class="kanban-column">
+                <div class="kanban-column-title">
+                    <span>👨‍🍳 Em Preparo</span>
+                    <span class="kanban-column-count" id="countPreparo">0</span>
+                </div>
+                <div id="kanbanPreparoList"></div>
+            </div>
+
+            <!-- Coluna 3: Pronto -->
+            <div class="kanban-column">
+                <div class="kanban-column-title">
+                    <span>✅ Pronto</span>
+                    <span class="kanban-column-count" id="countPronto">0</span>
+                </div>
+                <div id="kanbanProntoList"></div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+        window.pedidosCache = [];
+        let ultimoCountPedidos = null;
+        let modoVisaoAtual = localStorage.getItem('sensacao_cozinha_view') || 'grid';
+
+        function alternarVisao(modo) {
+            modoVisaoAtual = modo;
+            localStorage.setItem('sensacao_cozinha_view', modo);
+
+            const gridContainer = document.getElementById('cozinhaGridContainer');
+            const kanbanContainer = document.getElementById('cozinhaKanbanContainer');
+            const btnGrid = document.getElementById('btnViewGrid');
+            const btnKanban = document.getElementById('btnViewKanban');
+
+            if (modo === 'kanban') {
+                gridContainer.style.display = 'none';
+                kanbanContainer.style.display = 'grid';
+                btnGrid.classList.remove('active');
+                btnKanban.classList.add('active');
+            } else {
+                gridContainer.style.display = 'grid';
+                kanbanContainer.style.display = 'none';
+                btnKanban.classList.remove('active');
+                btnGrid.classList.add('active');
+            }
+
+            renderizarPedidos(window.pedidosCache);
+        }
+
+        function tocarSinalNovoPedido() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log('Sinal sonoro não emitido:', e);
+            }
+        }
+
+        function carregarTemaSalvo() {
+            const isDark = localStorage.getItem('sensacao_dark_theme') === 'true' || localStorage.getItem('sensacao_theme') === 'dark';
+            const btn = document.getElementById('themeToggleBtn');
+            if (isDark) {
+                document.body.classList.add('dark-theme', 'dark-mode');
+                if (btn) btn.innerText = '☀️';
+            } else {
+                document.body.classList.remove('dark-theme', 'dark-mode');
+                if (btn) btn.innerText = '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-theme');
+            
+            localStorage.setItem('sensacao_dark_theme', isDark);
+            localStorage.setItem('sensacao_theme', isDark ? 'dark' : 'light');
+            
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) btn.innerText = isDark ? '☀️' : '🌙';
+        }
+
+        function verificarStatusLoja() {
+            const lojaFechada = localStorage.getItem('sensacao_loja_fechada') === 'true';
+            const aviso = document.getElementById('avisoLojaFechada');
+            if (aviso) {
+                aviso.style.display = lojaFechada ? 'block' : 'none';
+            }
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'sensacao_loja_fechada') verificarStatusLoja();
+            if (e.key === 'sensacao_theme' || e.key === 'sensacao_dark_theme') carregarTemaSalvo();
+        });
+
+        function escapeHtml(texto) {
+            if (!texto) return '';
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function gerarCardHTML(p) {
+            const agora = new Date().getTime();
+            let dataPedido = agora;
+
+            if (p.data_hora) {
+                let dataStr = String(p.data_hora);
+                
+                if (!dataStr.includes('T')) {
+                    dataStr = dataStr.replace(' ', 'T');
+                }
+
+                const parsedTime = new Date(dataStr).getTime();
+                if (!isNaN(parsedTime)) {
+                    dataPedido = parsedTime;
+                }
+            }
+
+            let diffMs = agora - dataPedido;
+            if (diffMs < 0) diffMs = 0;
+            const minutosAtras = Math.floor(diffMs / 60000);
+
+            // Alerta de tempo formatado
+            let tempoBadgeClass = 'tempo-ok';
+            if (minutosAtras >= 15) {
+                tempoBadgeClass = 'tempo-urgente';
+            } else if (minutosAtras >= 8) {
+                tempoBadgeClass = 'tempo-atencao';
+            }
+
+            let badgeTipoHtml = `<span class="badge-local">🛍️ PARA VIAGEM</span>`;
+            if (p.tipo === 'delivery') {
+                badgeTipoHtml = `<span class="badge-local badge-delivery">🛵 DELIVERY</span>`;
+            } else if (p.tipo && p.tipo.toLowerCase().includes('mesa')) {
+                badgeTipoHtml = `<span class="badge-local badge-mesa">🪑 ${escapeHtml(p.tipo).toUpperCase()}</span>`;
+            } else if (p.tipo === 'viagem' || p.tipo === 'para viagem') {
+                badgeTipoHtml = `<span class="badge-local">🛍️ PARA VIAGEM</span>`;
+            } else if (p.tipo) {
+                badgeTipoHtml = `<span class="badge-local badge-mesa">🪑 ${escapeHtml(p.tipo).toUpperCase()}</span>`;
+            }
+
+            let acompItems = [];
+            if (p.acompanhamentos) {
+                if (typeof p.acompanhamentos === 'string') {
+                    acompItems = p.acompanhamentos.split(',').map(a => a.trim()).filter(Boolean);
+                } else if (Array.isArray(p.acompanhamentos)) {
+                    acompItems = p.acompanhamentos;
+                }
+            }
+
+            let adicItems = [];
+            if (p.adicionais) {
+                if (typeof p.adicionais === 'string') {
+                    adicItems = p.adicionais.split(',').map(a => a.trim()).filter(Boolean);
+                } else if (Array.isArray(p.adicionais)) {
+                    adicItems = p.adicionais;
+                }
+            }
+
+            return `
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div class="pedido-header-top">
+                            ${badgeTipoHtml}
+                            <span class="badge-status status-preparo">Em Preparo</span>
+                        </div>
+                        <div class="pedido-id-row">
+                            <span class="pedido-id">PEDIDO #${p.id}</span>
+                        </div>
+                        <div class="pedido-cliente">${escapeHtml(p.cliente)}</div>
+                        <div>
+                            <span class="cronometro-badge ${tempoBadgeClass}">⏱️ há ${minutosAtras} min</span>
+                        </div>
+                    </div>
+
+                    <div class="pedido-body">
+                        <div>
+                            <div class="pedido-secao-titulo">Copo / Produto</div>
+                            <span class="pedido-tamanho">🍧 ${escapeHtml(p.tamanho)}</span>
+                        </div>
+
+                        ${acompItems.length > 0 ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Acompanhamentos</div>
+                                <div>${acompItems.map(i => `<span class="badge-acomp">${escapeHtml(i)}</span>`).join('')}</div>
+                            </div>
+                        ` : ''}
+
+                        ${adicItems.length > 0 ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Adicionais Pagos</div>
+                                <div>${adicItems.map(i => `<span class="badge-adic">${escapeHtml(i)}</span>`).join('')}</div>
+                            </div>
+                        ` : ''}
+
+                        ${p.observacoes ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Observações</div>
+                                <div class="pedido-obs">⚠️ ${escapeHtml(p.observacoes)}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="pedido-footer">
+                        <button class="btn-concluir" onclick="concluirPedido(${p.id})">
+                            ✓ Marcar como Pronto
+                        </button>
+                        <button class="btn-imprimir" onclick="imprimirComanda(${p.id})">
+                            🖨️ Imprimir Comanda
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderizarPedidos(pedidos) {
+            const grid = document.getElementById('cozinhaGridContainer');
+            const counter = document.getElementById('ativosCount');
+            if (counter) counter.innerText = pedidos.length;
+
+            if (pedidos.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 1.1rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border-color);">🎉 Nenhum pedido pendente na cozinha no momento!</div>`;
+                document.getElementById('kanbanFilaList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('kanbanPreparoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('kanbanProntoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('countFila').innerText = '0';
+                document.getElementById('countPreparo').innerText = '0';
+                document.getElementById('countPronto').innerText = '0';
+                return;
+            }
+
+            grid.innerHTML = pedidos.map(p => gerarCardHTML(p)).join('');
+
+            const fila = pedidos.filter(p => !p.status || p.status === 'pendente' || p.status === 'fila');
+            const preparo = pedidos.filter(p => p.status === 'preparo' || p.status === 'em_preparo');
+            const pronto = pedidos.filter(p => p.status === 'pronto');
+
+            const emPreparoList = preparo.length === 0 && fila.length === 0 ? pedidos : preparo;
+
+            document.getElementById('kanbanFilaList').innerHTML = fila.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+            document.getElementById('kanbanPreparoList').innerHTML = emPreparoList.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+            document.getElementById('kanbanProntoList').innerHTML = pronto.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+
+            document.getElementById('countFila').innerText = fila.length;
+            document.getElementById('countPreparo').innerText = emPreparoList.length;
+            document.getElementById('countPronto').innerText = pronto.length;
+        }
+
+        async function carregarPedidos() {
+            try {
+                const response = await fetch('/api/pedidos/ativos');
+                if (!response.ok) throw new Error('Erro ao buscar pedidos ativos.');
+
+                const pedidos = await response.json();
+
+                if (ultimoCountPedidos !== null && pedidos.length > ultimoCountPedidos) {
+                    tocarSinalNovoPedido();
+                }
+                ultimoCountPedidos = pedidos.length;
+
+                window.pedidosCache = pedidos;
+                renderizarPedidos(pedidos);
+            } catch (error) {
+                console.error('Erro ao carregar cozinha:', error);
+            }
+        }
+
+        function imprimirComanda(id) {
+            const pedido = (window.pedidosCache || []).find(p => p.id === id);
+            if (!pedido) {
+                alert('Pedido não encontrado.');
+                return;
+            }
+
+            const dataObj = pedido.data_hora ? new Date(pedido.data_hora.replace(' ', 'T')) : new Date();
+            const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+            const horaFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            let acompHtml = '';
+            if (pedido.acompanhamentos && String(pedido.acompanhamentos).trim() !== '') {
+                const acomps = String(pedido.acompanhamentos).split(',').map(a => a.trim()).filter(Boolean);
+                acompHtml = acomps.map(a => `<li style="font-weight: 900;">${escapeHtml(a)} (grátis)</li>`).join('');
+            } else {
+                acompHtml = '<li style="font-weight: 900;">Nenhum</li>';
+            }
+
+            let adicHtml = '';
+            if (pedido.adicionais && String(pedido.adicionais).trim() !== '') {
+                const adics = String(pedido.adicionais).split(',').map(a => a.trim()).filter(Boolean);
+                adicHtml = adics.map(a => `<li style="font-weight: 900;">${escapeHtml(a)}</li>`).join('');
+            } else {
+                adicHtml = '<li style="font-weight: 900;">Nenhum</li>';
+            }
+
+            const valorTotal = parseFloat(pedido.total);
+            const totalFormatado = !isNaN(valorTotal) ? valorTotal.toFixed(2).replace('.', ',') : '0,00';
+
+            const conteudoImpressao = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Comanda #${pedido.id}</title>
+                    <style>
+                        @page { size: 80mm auto; margin: 0; }
+                        * { font-weight: 900 !important; color: #000 !important; }
+                        body {
+                            font-family: 'Courier New', Courier, monospace;
+                            width: 70mm;
+                            margin: 5mm auto;
+                            font-size: 13px;
+                            line-height: 1.4;
+                            color: #000;
+                            background: #fff;
+                            font-weight: 900 !important;
+                        }
+                        .text-center { text-align: center; }
+                        .bold { font-weight: 900 !important; }
+                        .header-title { font-size: 15px; font-weight: 900 !important; letter-spacing: 1px; margin-bottom: 12px; }
+                        .double-line { border-bottom: 2px dashed #000; margin: 8px 0; }
+                        .flex-row { display: flex; justify-content: space-between; align-items: center; font-weight: 900 !important; }
+                        .pedido-info { font-size: 14px; font-weight: 900 !important; }
+                        .cliente-info { margin: 10px 0; font-size: 14px; font-weight: 900 !important; }
+                        .section-title { margin-top: 10px; font-weight: 900 !important; }
+                        ul { list-style-type: disc; margin: 4px 0 10px 20px; padding: 0; font-weight: 900 !important; }
+                        li { margin-bottom: 2px; font-weight: 900 !important; }
+                        .total-row { font-size: 15px; font-weight: 900 !important; margin: 6px 0; }
+                        .total-valor { margin-right: 20px !important; font-weight: 900 !important; } /* Afasta da borda direita */
+                        .footer { margin-top: 15px; font-size: 12px; font-weight: 900 !important; }
+                    </style>
+                </head>
+                <body>
+                    <div class="text-center header-title">SORVETERIA SENSAÇÃO</div>
+                    <div class="double-line"></div>
+                    <div class="pedido-info">PEDIDO #${pedido.id}</div>
+                    <div>${dataFormatada}, ${horaFormatada}</div>
+                    <div class="double-line"></div>
+                    <div class="cliente-info">Cliente: <b>${escapeHtml(pedido.cliente)}</b></div>
+                    <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
+                    <div class="flex-row bold" style="margin-bottom: 8px;">
+                        <span>${escapeHtml(pedido.tamanho)}</span>
+                    </div>
+                    <div class="section-title">Acompanhamentos:</div>
+                    <ul>${acompHtml}</ul>
+                    ${pedido.adicionais && String(pedido.adicionais).trim() !== '' ? `
+                        <div class="section-title">Adicionais:</div>
+                        <ul>${adicHtml}</ul>
+                    ` : ''}
+                    ${pedido.observacoes ? `
+                        <div class="section-title">Observações:</div>
+                        <div style="margin-left: 10px; font-weight: 900;">${escapeHtml(pedido.observacoes)}</div>
+                    ` : ''}
+                    <div class="double-line"></div>
+                    <div class="flex-row total-row">
+                        <span>TOTAL</span>
+                        <span class="total-valor">R$ ${totalFormatado}</span>
+                    </div>
+                    <div class="double-line"></div>
+                    <div class="text-center footer">
+                        Obrigado pela preferência!<br>Volte sempre! 🍧
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const janImpressao = window.open('', '_blank', 'width=400,height=600');
+            janImpressao.document.write(conteudoImpressao);
+            janImpressao.document.close();
+            janImpressao.focus();
+
+            setTimeout(() => {
+                janImpressao.print();
+                janImpressao.close();
+            }, 250);
+        }
+
+        async function concluirPedido(id) {
+            try {
+                const response = await fetch(`/api/pedidos/${id}/concluir`, { method: 'PUT' });
+                if (response.ok) carregarPedidos();
+                else alert('Erro ao concluir pedido.');
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function init() {
+            try {
+                carregarTemaSalvo();
+                verificarStatusLoja();
+
+                const sessRes = await fetch('/api/session');
+                const sess = await sessRes.json();
+
+                if (!sess.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                document.getElementById('userNameDisplay').innerText = escapeHtml(sess.user.login);
+
+                const navAdmin = document.getElementById('navAdmin');
+                const navLogs = document.getElementById('navLogs');
+
+                if (sess.user) {
+                    const role = sess.user.role || sess.user.cargo || '';
+                    if (role.toLowerCase() === 'admin') {
+                        if (navAdmin) navAdmin.style.display = 'inline-flex';
+                        if (navLogs) navLogs.style.display = 'inline-flex';
+                    } else {
+                        if (navAdmin) navAdmin.style.display = 'none';
+                        if (navLogs) navLogs.style.display = 'none';
+                    }
+                }
+
+                alternarVisao(modoVisaoAtual);
+                carregarPedidos();
+                setInterval(carregarPedidos, 3000);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

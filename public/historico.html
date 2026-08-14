@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Histórico de Pedidos</title>
+    
+    <link rel="icon" type="image/jpeg" href="logo.jpeg">
+    <link rel="stylesheet" href="style.css">
+ <style>
+        /* --- ESTILOS DO CABEÇALHO --- */
+        header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .brand h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #9333ea;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Botões de navegação formato Pílula */
+        nav .nav-btn {
+            background: #f3e8ff !important;
+            color: #6b21a8 !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            padding: 8px 20px !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: none !important;
+        }
+
+        nav .nav-btn:hover:not(.active) {
+            background-color: #e9d5ff !important;
+            color: #581c87 !important;
+        }
+
+        /* Botão Ativo (Histórico) */
+        nav .nav-btn.active {
+            background: #6b21a8 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.3) !important;
+        }
+
+        /* Área do Usuário */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #themeToggleBtn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0 !important;
+            background: #ffffff !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 !important;
+            transition: all 0.2s ease;
+        }
+
+        #themeToggleBtn:hover {
+            background: #f8fafc !important;
+        }
+
+        .user-title {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        /* --- BOTÃO DE SAÍDA COM FUNDO MARROM --- */
+        .btn-logout-door {
+            background-color: #78350f !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 9999px !important;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 8px 14px !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-logout-door:hover {
+            background-color: #582f0e !important;
+        }
+
+        /* --- VARIÁVEIS GLOBAIS DO TEMA CLARO (FUNDO LILÁS IGUAL ATENDIMENTO) --- */
+        :root {
+            --bg-main: #f3f0f8; /* Tom lilás suave idêntico à página de Atendimento */
+            --card-bg: #ffffff;
+            --border-color: #cbd5e1;
+            --text-color: #1f2937;
+            --text-muted: #64748b;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --primary-color: #6b21a8;
+        }
+
+        /* Titularidade e Textos Principais */
+        .page-title, h2, h3 {
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .page-subtitle, p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        /* --- TEMA ESCURO PADRONIZADO --- */
+        body.dark-theme,
+        body.dark-mode {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+
+            --bg-main: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #334155;
+            --text-color: #ffffff;
+            --text-muted: #cbd5e1;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --primary-color: #c084fc;
+        }
+
+        body.dark-theme h1, body.dark-theme h2, body.dark-theme h3, body.dark-theme .page-title,
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode .page-title {
+            color: #ffffff !important;
+        }
+
+        body.dark-theme p, body.dark-theme .page-subtitle, body.dark-theme span,
+        body.dark-mode p, body.dark-mode .page-subtitle, body.dark-mode span {
+            color: #cbd5e1 !important;
+        }
+
+        body.dark-theme header,
+        body.dark-mode header {
+            background-color: #1e1e1e !important;
+            border-bottom: 1px solid #334155 !important;
+        }
+
+        body.dark-theme nav .nav-btn,
+        body.dark-mode nav .nav-btn {
+            background: #2a2a2a !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme nav .nav-btn.active,
+        body.dark-mode nav .nav-btn.active {
+            background: #7e22ce !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .user-title,
+        body.dark-mode .user-title {
+            color: #ffffff !important;
+        }
+
+        body.dark-theme #themeToggleBtn,
+        body.dark-mode #themeToggleBtn {
+            background: #2a2a2a !important;
+            border-color: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        body {
+            background-color: var(--bg-main) !important;
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Filtros e Pesquisa */
+        .filter-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        input[type="text"] {
+            border: 2px solid var(--border-color) !important;
+            background: var(--card-bg);
+            padding: 10px 14px;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        input[type="text"]:focus {
+            border-color: #9333ea !important;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15);
+        }
+
+        body.dark-theme input[type="text"],
+        body.dark-mode input[type="text"] {
+            background-color: #2a2a2a !important;
+            color: #ffffff !important;
+            border-color: #334155 !important;
+        }
+
+        /* Tabela do Histórico */
+        .table-container {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color) !important;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-theme .table-container,
+        body.dark-mode .table-container {
+            background-color: #1e1e1e !important;
+            border-color: #334155 !important;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 700;
+            color: #334155;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        body.dark-theme th,
+        body.dark-mode th {
+            background-color: #252525 !important;
+            border-bottom: 2px solid #334155 !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme td,
+        body.dark-mode td {
+            border-bottom: 1px solid #2a2a2a !important;
+            color: #cbd5e1 !important;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Badges de Status do Histórico */
+        .badge-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .badge-pendente { 
+            background: #fef3c7; 
+            color: #d97706; 
+        }
+
+        .badge-pronto { 
+            background: #d1fae5; 
+            color: #059669; 
+        }
+
+        body.dark-theme .badge-pendente,
+        body.dark-mode .badge-pendente {
+            background: #78350f !important;
+            color: #fde047 !important;
+        }
+
+        body.dark-theme .badge-pronto,
+        body.dark-mode .badge-pronto {
+            background: #064e3b !important;
+            color: #6ee7b7 !important;
+        }
+
+        /* Botões de Ação na Tabela */
+        .btn-acao {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            color: #475569;
+            padding: 8px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-acao:hover {
+            background: #7e22ce;
+            color: #ffffff;
+            border-color: #7e22ce;
+            box-shadow: 0 2px 8px rgba(126, 34, 206, 0.25);
+        }
+
+        body.dark-theme .btn-acao,
+        body.dark-mode .btn-acao {
+            background: #2a2a2a !important;
+            border-color: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-theme .btn-acao:hover,
+        body.dark-mode .btn-acao:hover {
+            background: #7e22ce !important;
+            border-color: #7e22ce !important;
+            color: #ffffff !important;
+        }
+</style>
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <img src="logo.jpeg" alt="Sorveteria Sensação Logo">
+            <h1>Sorveteria Sensação</h1>
+        </div>
+        <nav>
+            <a href="/atendimento.html" class="nav-btn">📝 Atendimento</a>
+            <a href="/cozinha.html" class="nav-btn">🍧 Cozinha</a>
+            <a href="/historico.html" class="nav-btn active">📊 Histórico</a>
+            <a href="/logs.html" class="nav-btn" id="navLogs" style="display: none;">📋 Logs</a>
+            <a href="/admin.html" class="nav-btn" id="navAdmin" style="display: none;">⚙️ Administração</a>
+        </nav>
+        <div class="user-info">
+            <button onclick="toggleTheme()" title="Alternar Tema" id="themeToggleBtn">🌙</button>
+            <span class="user-title" id="userNameDisplay">Usuário</span>
+            <button onclick="logout()" class="btn-logout-door" title="Sair">🚪</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 style="color: #000000; margin-bottom: 5px;">Histórico de Pedidos do Dia</h2>
+        <p style="color: #64748b; margin-bottom: 20px;">Consulte pedidos já realizados para conferência de caixa ou reimpressão.</p>
+
+        <div class="filter-box">
+            <input type="text" id="filtroCliente" placeholder="🔍 Buscar por nome do cliente ou mesa..." oninput="filtrarPedidos()" style="max-width: 350px;">
+            <button id="btnLimparHistorico" onclick="limparHistorico()" class="btn-acao" style="background: #fee2e2; color: #dc2626; border-color: #fca5a5; display: none;">🗑️ Limpar Histórico</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Horário</th>
+                        <th>Cliente / Local</th>
+                        <th>Itens / Descrição</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaHistorico">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #64748b;">Carregando pedidos...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let todosPedidos = [];
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('sensacao_dark_theme', isDark);
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) btn.innerText = isDark ? '☀️' : '🌙';
+        }
+
+        function initTheme() {
+            const isDark = localStorage.getItem('sensacao_dark_theme') === 'true';
+            const btn = document.getElementById('themeToggleBtn');
+            if (isDark) {
+                document.body.classList.add('dark-theme');
+                if (btn) btn.innerText = '☀️';
+            }
+        }
+
+        async function checarSessao() {
+            try {
+                const res = await fetch('/api/session');
+                const data = await res.json();
+                if (!data.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                document.getElementById('userNameDisplay').innerText = data.user.login;
+                if (data.user.role === 'admin') {
+                    const navAdmin = document.getElementById('navAdmin');
+                    if (navAdmin) navAdmin.style.display = 'inline-flex';
+
+                    const navLogs = document.getElementById('navLogs');
+                    if (navLogs) navLogs.style.display = 'inline-flex';
+                    
+                    const btnLimpar = document.getElementById('btnLimparHistorico');
+                    if (btnLimpar) btnLimpar.style.display = 'inline-block';
+                }
+            } catch (err) {
+                console.error('Erro ao checar sessão:', err);
+            }
+        }
+
+        async function carregarHistorico() {
+            try {
+                const res = await fetch('/api/pedidos');
+                if (!res.ok) throw new Error('Falha na resposta do servidor');
+                todosPedidos = await res.json();
+                renderizarTabela(todosPedidos);
+            } catch (err) {
+                console.error('Erro ao carregar histórico:', err);
+                document.getElementById('tabelaHistorico').innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">Erro ao carregar dados. Verifique a conexão com o servidor.</td></tr>`;
+            }
+        }
+
+        function renderizarTabela(pedidos) {
+            const tbody = document.getElementById('tabelaHistorico');
+            if (!pedidos || pedidos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b;">Nenhum pedido encontrado.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = pedidos.map(p => {
+                const acompStr = p.acompanhamentos ? `<b>Acomp:</b> ${p.acompanhamentos}<br>` : '';
+                const adicStr = p.adicionais ? `<b>Adic:</b> ${p.adicionais}<br>` : '';
+                const obsStr = p.observacoes ? `<i>Obs: ${p.observacoes}</i>` : '';
+                
+                const statusPronto = p.status === 'PRONTO' || p.status === 'pronto';
+                const statusBadge = statusPronto 
+                    ? `<span class="badge-status badge-pronto">Pronto/Entregue</span>` 
+                    : `<span class="badge-status badge-pendente">Em Preparo</span>`;
+
+                return `
+                    <tr>
+                        <td>#${p.id || '---'}</td>
+                        <td>${p.data_hora || '---'}</td>
+                        <td><strong>${p.cliente}</strong></td>
+                        <td>
+                            ${p.tamanho}<br>
+                            ${acompStr} ${adicStr} ${obsStr}
+                        </td>
+                        <td><strong>R$ ${Number(p.total || 0).toFixed(2).replace('.', ',')}</strong></td>
+                        <td>${statusBadge}</td>
+                        <td style="text-align: center;">
+                            <button class="btn-acao" onclick='reimprimir(${JSON.stringify(p)})' title="Reimprimir Comprovante">🖨️ Reimprimir</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filtrarPedidos() {
+            const termo = document.getElementById('filtroCliente').value.toLowerCase();
+            const filtrados = todosPedidos.filter(p => 
+                p.cliente.toLowerCase().includes(termo) || (p.id && String(p.id).includes(termo))
+            );
+            renderizarTabela(filtrados);
+        }
+
+        async function limparHistorico() {
+            if (!confirm('Tem certeza que deseja apagar todo o histórico de pedidos? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/pedidos/limpar', { method: 'DELETE' });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert('Histórico limpo com sucesso!');
+                    carregarHistorico();
+                } else {
+                    alert('Erro ao limpar histórico: ' + (data.error || 'Erro desconhecido'));
+                }
+            } catch (err) {
+                console.error('Erro na requisição:', err);
+                alert('Erro de conexão ao tentar limpar o histórico.');
+            }
+        }
+
+        function reimprimir(pedido) {
+            const janela = window.open('', '', 'width=300,height=600');
+            if (!janela) {
+                alert('Permita pop-ups no navegador para realizar a reimpressão.');
+                return;
+            }
+            janela.document.write(`
+                <html>
+                <head><title>Reimpressão - Pedido #${pedido.id}</title></head>
+                <body style="font-family: monospace; font-size: 12px; padding: 10px;">
+                    <div style="text-align: center; font-weight: bold;">SORVETERIA SENSAÇÃO</div>
+                    <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 6px;">REIMPRESSÃO DE CAIXA</div>
+                    <div><strong>Pedido:</strong> #${pedido.id}</div>
+                    <div><strong>Horário:</strong> ${pedido.data_hora}</div>
+                    <div><strong>Cliente:</strong> ${pedido.cliente}</div>
+                    <div style="border-bottom: 1px dashed #000; margin: 6px 0;"></div>
+                    <div><strong>Tamanho:</strong> ${pedido.tamanho}</div>
+                    <div><strong>Acompanhamentos:</strong><br>${pedido.acompanhamentos || 'Nenhum'}</div>
+                    <div style="margin-top: 4px;"><strong>Adicionais:</strong><br>${pedido.adicionais || 'Nenhum'}</div>
+                    <div style="margin-top: 4px;"><strong>Obs:</strong> ${pedido.observacoes || 'Nenhuma'}</div>
+                    <div style="border-bottom: 1px dashed #000; margin: 6px 0;"></div>
+                    <div style="text-align: right; font-weight: bold; font-size: 13px;">TOTAL: R$ ${Number(pedido.total || 0).toFixed(2).replace('.', ',')}</div>
+                </body>
+                </html>
+            `);
+            janela.document.close();
+            janela.focus();
+            setTimeout(() => { janela.print(); janela.close(); }, 500);
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        initTheme();
+        checarSessao();
+        carregarHistorico();
+    </script>
+</body>
+</html>

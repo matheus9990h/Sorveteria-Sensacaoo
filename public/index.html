@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sorveteria Sensação</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpeg">
+    <!-- Google Fonts para tipografia mais moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .login-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- PAINEL ESQUERDO (BRANDING) --- */
+        .brand-section {
+            flex: 1;
+            background: linear-gradient(135deg, #4c1d95 0%, #6b21a8 50%, #86198f 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #ffffff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Detalhes sutis no fundo */
+        .brand-section::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            top: -50px;
+            left: -50px;
+        }
+
+        .brand-section::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(236, 72, 153, 0.1);
+            border-radius: 50%;
+            bottom: -100px;
+            right: -100px;
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+            max-width: 420px;
+        }
+
+        .logo-box {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 24px auto;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-box:hover {
+            transform: scale(1.04);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .brand-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .brand-subtitle-highlight {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #f472b6;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-description {
+            font-size: 0.95rem;
+            color: #e9d5ff;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* --- PAINEL DIREITO (FORMULÁRIO) --- */
+        .form-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background-color: #ffffff;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-header {
+            margin-bottom: 32px;
+        }
+
+        .form-header h2 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            font-size: 1.1rem;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1e293b;
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #94a3b8;
+        }
+
+        .input-wrapper input:focus {
+            background-color: #ffffff;
+            border-color: #9333ea;
+            box-shadow: 0 0 0 4px rgba(147, 51, 234, 0.1);
+        }
+
+        /* Botão Mostrar Senha */
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #94a3b8;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #6b21a8;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(107, 33, 168, 0.35);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(107, 33, 168, 0.45);
+            background: linear-gradient(135deg, #8b5cf6 0%, #7e22ce 100%);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 850px) {
+            .login-wrapper {
+                flex-direction: column;
+            }
+
+            .brand-section {
+                padding: 40px 20px 30px 20px;
+            }
+
+            .logo-box {
+                width: 100px;
+                height: 100px;
+            }
+
+            .brand-title {
+                font-size: 1.8rem;
+            }
+
+            .brand-subtitle-highlight {
+                font-size: 1.6rem;
+                margin-bottom: 8px;
+            }
+
+            .form-section {
+                padding: 30px 20px 40px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-wrapper">
+        <!-- Lado Esquerdo: Marca -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="logo-box">
+                    <img src="logo.jpeg" alt="Logo Sorveteria Sensação">
+                </div>
+                <h1 class="brand-title">Sorveteria</h1>
+                <div class="brand-subtitle-highlight">Sensação</div>
+                <p class="brand-description">O sistema de gestão mais refrescante e saboroso para o seu negócio.</p>
+            </div>
+        </div>
+
+        <!-- Lado Direito: Formulário -->
+        <div class="form-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Bem-vindo(a) ao<br>Gestor de Pedidos 👋</h2>
+                    <p>Faça login para acessar o sistema.</p>
+                </div>
+
+                <form id="loginForm" onsubmit="realizarLogin(event)">
+                    <!-- Campo Usuário -->
+                    <div class="input-group">
+                        <label for="username">Usuário</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="username" placeholder="Digite seu usuário" required autocomplete="username">
+                        </div>
+                    </div>
+
+                    <!-- Campo Senha -->
+                    <div class="input-group">
+                        <label for="password">Senha</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="password" placeholder="••••••••••••" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" title="Mostrar/Ocultar Senha">👁️</button>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Envio -->
+                    <button type="submit" class="btn-submit">
+                        Entrar 🍦
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+            } else {
+                pwdInput.type = 'password';
+            }
+        }
+
+        async function realizarLogin(e) {
+            e.preventDefault();
+            const login = document.getElementById('username').value.trim();
+            const senha = document.getElementById('password').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login, senha })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    // Redireciona para a página correspondente informada pelo servidor (admin.html ou atendimento.html)
+                    window.location.href = data.redirect || 'atendimento.html';
+                } else {
+                    alert(data.message || data.error || 'Usuário ou senha incorretos!');
+                }
+            } catch (err) {
+                console.error('Erro no login:', err);
+                alert('Erro de conexão com o servidor.');
+            }
+        }
+    </script>
+</body>
+
+</html>
