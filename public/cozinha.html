@@ -915,466 +915,432 @@
     </div>
 
    <script>
-    window.pedidosCache = [];
-    let ultimoCountPedidos = null;
-    let modoVisaoAtual = localStorage.getItem('sensacao_cozinha_view') || 'grid';
+        window.pedidosCache = [];
+        let ultimoCountPedidos = null;
+        let modoVisaoAtual = localStorage.getItem('sensacao_cozinha_view') || 'grid';
 
-    // Controle de comadas já impressas automaticamente para não repetir
-    window.pedidosImpressos = JSON.parse(localStorage.getItem('pedidos_impressos_ids') || '[]');
+        function alternarVisao(modo) {
+            modoVisaoAtual = modo;
+            localStorage.setItem('sensacao_cozinha_view', modo);
 
-    function alternarVisao(modo) {
-        modoVisaoAtual = modo;
-        localStorage.setItem('sensacao_cozinha_view', modo);
+            const gridContainer = document.getElementById('cozinhaGridContainer');
+            const kanbanContainer = document.getElementById('cozinhaKanbanContainer');
+            const btnGrid = document.getElementById('btnViewGrid');
+            const btnKanban = document.getElementById('btnViewKanban');
 
-        const gridContainer = document.getElementById('cozinhaGridContainer');
-        const kanbanContainer = document.getElementById('cozinhaKanbanContainer');
-        const btnGrid = document.getElementById('btnViewGrid');
-        const btnKanban = document.getElementById('btnViewKanban');
+            if (modo === 'kanban') {
+                gridContainer.style.display = 'none';
+                kanbanContainer.style.display = 'grid';
+                btnGrid.classList.remove('active');
+                btnKanban.classList.add('active');
+            } else {
+                gridContainer.style.display = 'grid';
+                kanbanContainer.style.display = 'none';
+                btnKanban.classList.remove('active');
+                btnGrid.classList.add('active');
+            }
 
-        if (modo === 'kanban') {
-            gridContainer.style.display = 'none';
-            kanbanContainer.style.display = 'grid';
-            btnGrid.classList.remove('active');
-            btnKanban.classList.add('active');
-        } else {
-            gridContainer.style.display = 'grid';
-            kanbanContainer.style.display = 'none';
-            btnKanban.classList.remove('active');
-            btnGrid.classList.add('active');
+            renderizarPedidos(window.pedidosCache);
         }
 
-        renderizarPedidos(window.pedidosCache);
-    }
-
-    function tocarSinalNovoPedido() {
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.5);
-        } catch (e) {
-            console.log('Sinal sonoro não emitido:', e);
+        function tocarSinalNovoPedido() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log('Sinal sonoro não emitido:', e);
+            }
         }
-    }
 
-    function carregarTemaSalvo() {
-        const isDark = localStorage.getItem('sensacao_dark_theme') === 'true' || localStorage.getItem('sensacao_theme') === 'dark';
-        const btn = document.getElementById('themeToggleBtn');
-        if (isDark) {
-            document.body.classList.add('dark-theme', 'dark-mode');
-            if (btn) btn.innerText = '☀️';
-        } else {
-            document.body.classList.remove('dark-theme', 'dark-mode');
-            if (btn) btn.innerText = '🌙';
+        function carregarTemaSalvo() {
+            const isDark = localStorage.getItem('sensacao_dark_theme') === 'true' || localStorage.getItem('sensacao_theme') === 'dark';
+            const btn = document.getElementById('themeToggleBtn');
+            if (isDark) {
+                document.body.classList.add('dark-theme', 'dark-mode');
+                if (btn) btn.innerText = '☀️';
+            } else {
+                document.body.classList.remove('dark-theme', 'dark-mode');
+                if (btn) btn.innerText = '🌙';
+            }
         }
-    }
 
-    function toggleTheme() {
-        document.body.classList.toggle('dark-theme');
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-theme');
-        
-        localStorage.setItem('sensacao_dark_theme', isDark);
-        localStorage.setItem('sensacao_theme', isDark ? 'dark' : 'light');
-        
-        const btn = document.getElementById('themeToggleBtn');
-        if (btn) btn.innerText = isDark ? '☀️' : '🌙';
-    }
-
-    function verificarStatusLoja() {
-        const lojaFechada = localStorage.getItem('sensacao_loja_fechada') === 'true';
-        const aviso = document.getElementById('avisoLojaFechada');
-        if (aviso) {
-            aviso.style.display = lojaFechada ? 'block' : 'none';
-        }
-    }
-
-    window.addEventListener('storage', (e) => {
-        if (e.key === 'sensacao_loja_fechada') verificarStatusLoja();
-        if (e.key === 'sensacao_theme' || e.key === 'sensacao_dark_theme') carregarTemaSalvo();
-    });
-
-    function escapeHtml(texto) {
-        if (!texto) return '';
-        return String(texto)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-    function gerarCardHTML(p) {
-        const agora = new Date().getTime();
-        let dataPedido = agora;
-
-        if (p.data_hora) {
-            let dataStr = String(p.data_hora);
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-theme');
             
-            if (!dataStr.includes('T')) {
-                dataStr = dataStr.replace(' ', 'T');
-            }
-
-            const parsedTime = new Date(dataStr).getTime();
-            if (!isNaN(parsedTime)) {
-                dataPedido = parsedTime;
-            }
+            localStorage.setItem('sensacao_dark_theme', isDark);
+            localStorage.setItem('sensacao_theme', isDark ? 'dark' : 'light');
+            
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) btn.innerText = isDark ? '☀️' : '🌙';
         }
 
-        let diffMs = agora - dataPedido;
-        if (diffMs < 0) diffMs = 0;
-        const minutosAtras = Math.floor(diffMs / 60000);
-
-        let tempoBadgeClass = 'tempo-ok';
-        if (minutosAtras >= 15) {
-            tempoBadgeClass = 'tempo-urgente';
-        } else if (minutosAtras >= 8) {
-            tempoBadgeClass = 'tempo-atencao';
-        }
-
-        let badgeTipoHtml = `<span class="badge-local">🛍️ PARA VIAGEM</span>`;
-        if (p.tipo === 'delivery') {
-            badgeTipoHtml = `<span class="badge-local badge-delivery">🛵 DELIVERY</span>`;
-        } else if (p.tipo && p.tipo.toLowerCase().includes('mesa')) {
-            badgeTipoHtml = `<span class="badge-local badge-mesa">🪑 ${escapeHtml(p.tipo).toUpperCase()}</span>`;
-        } else if (p.tipo === 'viagem' || p.tipo === 'para viagem') {
-            badgeTipoHtml = `<span class="badge-local">🛍️ PARA VIAGEM</span>`;
-        } else if (p.tipo) {
-            badgeTipoHtml = `<span class="badge-local badge-mesa">🪑 ${escapeHtml(p.tipo).toUpperCase()}</span>`;
-        }
-
-        let acompItems = [];
-        if (p.acompanhamentos) {
-            if (typeof p.acompanhamentos === 'string') {
-                acompItems = p.acompanhamentos.split(',').map(a => a.trim()).filter(Boolean);
-            } else if (Array.isArray(p.acompanhamentos)) {
-                acompItems = p.acompanhamentos;
+        function verificarStatusLoja() {
+            const lojaFechada = localStorage.getItem('sensacao_loja_fechada') === 'true';
+            const aviso = document.getElementById('avisoLojaFechada');
+            if (aviso) {
+                aviso.style.display = lojaFechada ? 'block' : 'none';
             }
         }
 
-        let adicItems = [];
-        if (p.adicionais) {
-            if (typeof p.adicionais === 'string') {
-                adicItems = p.adicionais.split(',').map(a => a.trim()).filter(Boolean);
-            } else if (Array.isArray(p.adicionais)) {
-                adicItems = p.adicionais;
-            }
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'sensacao_loja_fechada') verificarStatusLoja();
+            if (e.key === 'sensacao_theme' || e.key === 'sensacao_dark_theme') carregarTemaSalvo();
+        });
+
+        function escapeHtml(texto) {
+            if (!texto) return '';
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
-        return `
-            <div class="pedido-card">
-                <div class="pedido-header">
-                    <div class="pedido-header-top">
-                        ${badgeTipoHtml}
-                        <span class="badge-status status-preparo">Em Preparo</span>
-                    </div>
-                    <div class="pedido-id-row">
-                        <span class="pedido-id">PEDIDO #${p.id}</span>
-                    </div>
-                    <div class="pedido-cliente">${escapeHtml(p.cliente)}</div>
-                    <div>
-                        <span class="cronometro-badge ${tempoBadgeClass}">⏱️ há ${minutosAtras} min</span>
-                    </div>
-                </div>
+        function gerarCardHTML(p) {
+            const agora = new Date().getTime();
+            let dataPedido = agora;
 
-                <div class="pedido-body">
-                    <div>
-                        <div class="pedido-secao-titulo">Copo / Produto</div>
-                        <span class="pedido-tamanho">🍧 ${escapeHtml(p.tamanho)}</span>
-                    </div>
-
-                    ${acompItems.length > 0 ? `
-                        <div>
-                            <div class="pedido-secao-titulo">Acompanhamentos</div>
-                            <div>${acompItems.map(i => `<span class="badge-acomp">${escapeHtml(i)}</span>`).join('')}</div>
-                        </div>
-                    ` : ''}
-
-                    ${adicItems.length > 0 ? `
-                        <div>
-                            <div class="pedido-secao-titulo">Adicionais Pagos</div>
-                            <div>${adicItems.map(i => `<span class="badge-adic">${escapeHtml(i)}</span>`).join('')}</div>
-                        </div>
-                    ` : ''}
-
-                    ${p.observacoes ? `
-                        <div>
-                            <div class="pedido-secao-titulo">Observações</div>
-                            <div class="pedido-obs">⚠️ ${escapeHtml(p.observacoes)}</div>
-                        </div>
-                    ` : ''}
-                </div>
-
-                <div class="pedido-footer">
-                    <button class="btn-concluir" onclick="concluirPedido(${p.id})">
-                        ✓ Marcar como Pronto
-                    </button>
-                    <button class="btn-imprimir" onclick="imprimirComanda(${p.id})">
-                        🖨️ Imprimir Comanda
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderizarPedidos(pedidos) {
-        const grid = document.getElementById('cozinhaGridContainer');
-        const counter = document.getElementById('ativosCount');
-        if (counter) counter.innerText = pedidos.length;
-
-        if (pedidos.length === 0) {
-            grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 1.1rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border-color);">🎉 Nenhum pedido pendente na cozinha no momento!</div>`;
-            document.getElementById('kanbanFilaList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
-            document.getElementById('kanbanPreparoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
-            document.getElementById('kanbanProntoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
-            document.getElementById('countFila').innerText = '0';
-            document.getElementById('countPreparo').innerText = '0';
-            document.getElementById('countPronto').innerText = '0';
-            return;
-        }
-
-        grid.innerHTML = pedidos.map(p => gerarCardHTML(p)).join('');
-
-        const fila = pedidos.filter(p => !p.status || p.status === 'pendente' || p.status === 'fila');
-        const preparo = pedidos.filter(p => p.status === 'preparo' || p.status === 'em_preparo');
-        const pronto = pedidos.filter(p => p.status === 'pronto');
-
-        const emPreparoList = preparo.length === 0 && fila.length === 0 ? pedidos : preparo;
-
-        document.getElementById('kanbanFilaList').innerHTML = fila.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
-        document.getElementById('kanbanPreparoList').innerHTML = emPreparoList.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
-        document.getElementById('kanbanProntoList').innerHTML = pronto.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
-
-        document.getElementById('countFila').innerText = fila.length;
-        document.getElementById('countPreparo').innerText = emPreparoList.length;
-        document.getElementById('countPronto').innerText = pronto.length;
-    }
-
-    async function carregarPedidos() {
-        try {
-            const response = await fetch('/api/pedidos/ativos');
-            if (!response.ok) throw new Error('Erro ao buscar pedidos ativos.');
-
-            const pedidos = await response.json();
-
-            // Verifica se há novos pedidos que ainda NÃO foram impressos
-            pedidos.forEach(pedido => {
-                if (!window.pedidosImpressos.includes(pedido.id)) {
-                    
-                    // 1. Toca o som do pedido
-                    tocarSinalNovoPedido();
-
-                    // 2. Dispara a impressão automática silenciosa
-                    imprimirAutomáticoSilencioso(pedido);
-
-                    // 3. Marca como impresso para não rodar de novo
-                    window.pedidosImpressos.push(pedido.id);
-                    localStorage.setItem('pedidos_impressos_ids', JSON.stringify(window.pedidosImpressos));
+            if (p.data_hora) {
+                let dataStr = String(p.data_hora);
+                
+                if (!dataStr.includes('T')) {
+                    dataStr = dataStr.replace(' ', 'T');
                 }
-            });
 
-            ultimoCountPedidos = pedidos.length;
-            window.pedidosCache = pedidos;
-            renderizarPedidos(pedidos);
-        } catch (error) {
-            console.error('Erro ao carregar cozinha:', error);
-        }
-    }
+                const parsedTime = new Date(dataStr).getTime();
+                if (!isNaN(parsedTime)) {
+                    dataPedido = parsedTime;
+                }
+            }
 
-    // Envia o pedido para o servidor de impressão local (estilo iFood)
-    async function imprimirAutomáticoSilencioso(pedido) {
-        try {
-            await fetch('http://localhost:3001/imprimir-silencioso', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pedido })
-            });
-            console.log(`Comanda #${pedido.id} enviada para a impressora!`);
-        } catch (err) {
-            console.warn('Servidor local offline. Usando modo de impressão padrão via navegador...', err);
-            // Fallback caso o servidor local não esteja rodando: chama a impressão do navegador
-            imprimirComanda(pedido.id);
-        }
-    }
+            let diffMs = agora - dataPedido;
+            if (diffMs < 0) diffMs = 0;
+            const minutosAtras = Math.floor(diffMs / 60000);
 
-    /* --- FUNÇÃO DE IMPRESSÃO DA COMANDA PELO NAVEGADOR (SISTEMA PADRÃO) --- */
-    function imprimirComanda(id) {
-        const pedido = (window.pedidosCache || []).find(p => p.id === id);
-        if (!pedido) {
-            alert('Pedido não encontrado.');
-            return;
-        }
+            // Alerta de tempo formatado
+            let tempoBadgeClass = 'tempo-ok';
+            if (minutosAtras >= 15) {
+                tempoBadgeClass = 'tempo-urgente';
+            } else if (minutosAtras >= 8) {
+                tempoBadgeClass = 'tempo-atencao';
+            }
 
-        const dataObj = pedido.data_hora ? new Date(pedido.data_hora.replace(' ', 'T')) : new Date();
-        const dataFormatada = dataObj.toLocaleDateString('pt-BR');
-        const horaFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            let badgeTipoHtml = `<span class="badge-local">🛍️ PARA VIAGEM</span>`;
+            if (p.tipo === 'delivery') {
+                badgeTipoHtml = `<span class="badge-local badge-delivery">🛵 DELIVERY</span>`;
+            } else if (p.tipo && p.tipo.toLowerCase().includes('mesa')) {
+                badgeTipoHtml = `<span class="badge-local badge-mesa">🪑 ${escapeHtml(p.tipo).toUpperCase()}</span>`;
+            } else if (p.tipo === 'viagem' || p.tipo === 'para viagem') {
+                badgeTipoHtml = `<span class="badge-local">🛍️ PARA VIAGEM</span>`;
+            } else if (p.tipo) {
+                badgeTipoHtml = `<span class="badge-local badge-mesa">🪑 ${escapeHtml(p.tipo).toUpperCase()}</span>`;
+            }
 
-        let acompHtml = '';
-        if (pedido.acompanhamentos && String(pedido.acompanhamentos).trim() !== '') {
-            const acomps = String(pedido.acompanhamentos).split(',').map(a => a.trim()).filter(Boolean);
-            acompHtml = acomps.map(a => `<div style="padding-left: 10px; margin-bottom: 2px;">• <b>${escapeHtml(a)} (grátis)</b></div>`).join('');
-        } else {
-            acompHtml = '<div style="padding-left: 10px;">• <b>Nenhum</b></div>';
-        }
+            let acompItems = [];
+            if (p.acompanhamentos) {
+                if (typeof p.acompanhamentos === 'string') {
+                    acompItems = p.acompanhamentos.split(',').map(a => a.trim()).filter(Boolean);
+                } else if (Array.isArray(p.acompanhamentos)) {
+                    acompItems = p.acompanhamentos;
+                }
+            }
 
-        let adicHtml = '';
-        if (pedido.adicionais && String(pedido.adicionais).trim() !== '') {
-            const adics = String(pedido.adicionais).split(',').map(a => a.trim()).filter(Boolean);
-            adicHtml = adics.map(a => `<div style="padding-left: 10px; margin-bottom: 2px;">• <b>${escapeHtml(a)}</b></div>`).join('');
-        }
+            let adicItems = [];
+            if (p.adicionais) {
+                if (typeof p.adicionais === 'string') {
+                    adicItems = p.adicionais.split(',').map(a => a.trim()).filter(Boolean);
+                } else if (Array.isArray(p.adicionais)) {
+                    adicItems = p.adicionais;
+                }
+            }
 
-        const valorTotal = parseFloat(pedido.total);
-        const totalFormatado = !isNaN(valorTotal) ? valorTotal.toFixed(2).replace('.', ',') : '0,00';
+            return `
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div class="pedido-header-top">
+                            ${badgeTipoHtml}
+                            <span class="badge-status status-preparo">Em Preparo</span>
+                        </div>
+                        <div class="pedido-id-row">
+                            <span class="pedido-id">PEDIDO #${p.id}</span>
+                        </div>
+                        <div class="pedido-cliente">${escapeHtml(p.cliente)}</div>
+                        <div>
+                            <span class="cronometro-badge ${tempoBadgeClass}">⏱️ há ${minutosAtras} min</span>
+                        </div>
+                    </div>
 
-        const conteudoImpressao = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Comanda #${pedido.id}</title>
-                <style>
-                    @page { size: 80mm auto; margin: 0mm; }
-                    * { box-sizing: border-box; color: #000 !important; }
-                    html, body {
-                        width: 100%;
-                        max-width: 72mm;
-                        margin: 0 auto;
-                        padding: 2mm;
-                        font-family: 'Courier New', Courier, monospace;
-                        font-size: 12px;
-                        line-height: 1.25;
-                        color: #000;
-                        background: #fff;
-                    }
-                    .text-center { text-align: center; }
-                    .header-title { font-size: 13px; font-weight: 900 !important; margin-bottom: 2px; }
-                    .dash-line { border-bottom: 1px dashed #000; margin: 4px 0; }
-                    .flex-row { display: flex; justify-content: space-between; align-items: center; }
-                    .pedido-title { font-size: 13px; font-weight: 900 !important; }
-                    .cliente-row { margin: 3px 0; font-size: 12px; word-break: break-word; }
-                    .item-tamanho { font-size: 12px; font-weight: 900 !important; margin: 4px 0; }
-                    .section-title { margin-top: 6px; margin-bottom: 2px; font-size: 12px; font-weight: bold; }
-                    .total-row { font-size: 13px; font-weight: 900 !important; margin: 4px 0; }
-                    .footer { margin-top: 8px; font-size: 11px; }
-                </style>
-            </head>
-            <body>
-                <div class="text-center header-title">SORVETERIA SENSAÇÃO</div>
-                <div class="dash-line"></div>
-                
-                <div class="pedido-title">PEDIDO #${pedido.id}</div>
-                <div style="font-size: 11px;">${dataFormatada}, ${horaFormatada}</div>
-                <div class="dash-line"></div>
-                
-                <div class="cliente-row">Cliente: <b>${escapeHtml(pedido.cliente)}</b></div>
-                <div class="dash-line"></div>
-                
-                <div class="item-tamanho">${escapeHtml(pedido.tamanho)}</div>
-                
-                <div class="section-title">Acompanhamentos:</div>
-                ${acompHtml}
-                
-                ${pedido.adicionais && String(pedido.adicionais).trim() !== '' ? `
-                    <div class="section-title">Adicionais:</div>
-                    ${adicHtml}
-                ` : ''}
+                    <div class="pedido-body">
+                        <div>
+                            <div class="pedido-secao-titulo">Copo / Produto</div>
+                            <span class="pedido-tamanho">🍧 ${escapeHtml(p.tamanho)}</span>
+                        </div>
 
-                ${pedido.observacoes ? `
-                    <div class="section-title">Observações:</div>
-                    <div style="padding-left: 10px; font-size: 11px; font-weight: bold;">⚠️ ${escapeHtml(pedido.observacoes)}</div>
-                ` : ''}
+                        ${acompItems.length > 0 ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Acompanhamentos</div>
+                                <div>${acompItems.map(i => `<span class="badge-acomp">${escapeHtml(i)}</span>`).join('')}</div>
+                            </div>
+                        ` : ''}
 
-                <div class="dash-line"></div>
-                
-                <div class="flex-row total-row">
-                    <span>TOTAL</span>
-                    <span>R$ ${totalFormatado}</span>
+                        ${adicItems.length > 0 ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Adicionais Pagos</div>
+                                <div>${adicItems.map(i => `<span class="badge-adic">${escapeHtml(i)}</span>`).join('')}</div>
+                            </div>
+                        ` : ''}
+
+                        ${p.observacoes ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Observações</div>
+                                <div class="pedido-obs">⚠️ ${escapeHtml(p.observacoes)}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="pedido-footer">
+                        <button class="btn-concluir" onclick="concluirPedido(${p.id})">
+                            ✓ Marcar como Pronto
+                        </button>
+                        <button class="btn-imprimir" onclick="imprimirComanda(${p.id})">
+                            🖨️ Imprimir Comanda
+                        </button>
+                    </div>
                 </div>
-                <div class="dash-line"></div>
-                
-                <div class="text-center footer">
-                    Obrigado pela preferência!<br>Volte sempre! 🍧
-                </div>
-            </body>
-            </html>
-        `;
-
-        const janImpressao = window.open('', '_blank', 'width=400,height=600');
-        janImpressao.document.write(conteudoImpressao);
-        janImpressao.document.close();
-        janImpressao.focus();
-
-        setTimeout(() => {
-            janImpressao.print();
-            janImpressao.close();
-        }, 250);
-    }
-
-    async function concluirPedido(id) {
-        try {
-            const response = await fetch(`/api/pedidos/${id}/concluir`, { method: 'PUT' });
-            if (response.ok) carregarPedidos();
-            else alert('Erro ao concluir pedido.');
-        } catch (error) {
-            console.error(error);
+            `;
         }
-    }
 
-    async function init() {
-        try {
-            carregarTemaSalvo();
-            verificarStatusLoja();
+        function renderizarPedidos(pedidos) {
+            const grid = document.getElementById('cozinhaGridContainer');
+            const counter = document.getElementById('ativosCount');
+            if (counter) counter.innerText = pedidos.length;
 
-            const sessRes = await fetch('/api/session');
-            const sess = await sessRes.json();
-
-            if (!sess.loggedIn) {
-                window.location.href = 'index.html';
+            if (pedidos.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 1.1rem; background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border-color);">🎉 Nenhum pedido pendente na cozinha no momento!</div>`;
+                document.getElementById('kanbanFilaList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('kanbanPreparoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('kanbanProntoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('countFila').innerText = '0';
+                document.getElementById('countPreparo').innerText = '0';
+                document.getElementById('countPronto').innerText = '0';
                 return;
             }
 
-            document.getElementById('userNameDisplay').innerText = escapeHtml(sess.user.login);
+            grid.innerHTML = pedidos.map(p => gerarCardHTML(p)).join('');
 
-            const navAdmin = document.getElementById('navAdmin');
-            const navLogs = document.getElementById('navLogs');
+            const fila = pedidos.filter(p => !p.status || p.status === 'pendente' || p.status === 'fila');
+            const preparo = pedidos.filter(p => p.status === 'preparo' || p.status === 'em_preparo');
+            const pronto = pedidos.filter(p => p.status === 'pronto');
 
-            if (sess.user) {
-                const role = sess.user.role || sess.user.cargo || '';
-                if (role.toLowerCase() === 'admin') {
-                    if (navAdmin) navAdmin.style.display = 'inline-flex';
-                    if (navLogs) navLogs.style.display = 'inline-flex';
-                } else {
-                    if (navAdmin) navAdmin.style.display = 'none';
-                    if (navLogs) navLogs.style.display = 'none';
+            const emPreparoList = preparo.length === 0 && fila.length === 0 ? pedidos : preparo;
+
+            document.getElementById('kanbanFilaList').innerHTML = fila.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+            document.getElementById('kanbanPreparoList').innerHTML = emPreparoList.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+            document.getElementById('kanbanProntoList').innerHTML = pronto.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+
+            document.getElementById('countFila').innerText = fila.length;
+            document.getElementById('countPreparo').innerText = emPreparoList.length;
+            document.getElementById('countPronto').innerText = pronto.length;
+        }
+
+        async function carregarPedidos() {
+            try {
+                const response = await fetch('/api/pedidos/ativos');
+                if (!response.ok) throw new Error('Erro ao buscar pedidos ativos.');
+
+                const pedidos = await response.json();
+
+                if (ultimoCountPedidos !== null && pedidos.length > ultimoCountPedidos) {
+                    tocarSinalNovoPedido();
                 }
+                ultimoCountPedidos = pedidos.length;
+
+                window.pedidosCache = pedidos;
+                renderizarPedidos(pedidos);
+            } catch (error) {
+                console.error('Erro ao carregar cozinha:', error);
+            }
+        }
+
+        function imprimirComanda(id) {
+            const pedido = (window.pedidosCache || []).find(p => p.id === id);
+            if (!pedido) {
+                alert('Pedido não encontrado.');
+                return;
             }
 
-            alternarVisao(modoVisaoAtual);
-            carregarPedidos();
-            setInterval(carregarPedidos, 3000);
-        } catch (err) {
-            console.error(err);
-        }
-    }
+            const dataObj = pedido.data_hora ? new Date(pedido.data_hora.replace(' ', 'T')) : new Date();
+            const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+            const horaFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-    async function logout() {
-        try {
-            await fetch('/api/logout', { method: 'POST' });
-            window.location.href = 'index.html';
-        } catch (err) {
-            window.location.href = 'index.html';
-        }
-    }
+            let acompHtml = '';
+            if (pedido.acompanhamentos && String(pedido.acompanhamentos).trim() !== '') {
+                const acomps = String(pedido.acompanhamentos).split(',').map(a => a.trim()).filter(Boolean);
+                acompHtml = acomps.map(a => `<li style="font-weight: 900;">${escapeHtml(a)} (grátis)</li>`).join('');
+            } else {
+                acompHtml = '<li style="font-weight: 900;">Nenhum</li>';
+            }
 
-    window.onload = init;
-</script>
+            let adicHtml = '';
+            if (pedido.adicionais && String(pedido.adicionais).trim() !== '') {
+                const adics = String(pedido.adicionais).split(',').map(a => a.trim()).filter(Boolean);
+                adicHtml = adics.map(a => `<li style="font-weight: 900;">${escapeHtml(a)}</li>`).join('');
+            } else {
+                adicHtml = '<li style="font-weight: 900;">Nenhum</li>';
+            }
+
+            const valorTotal = parseFloat(pedido.total);
+            const totalFormatado = !isNaN(valorTotal) ? valorTotal.toFixed(2).replace('.', ',') : '0,00';
+
+            const conteudoImpressao = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Comanda #${pedido.id}</title>
+                    <style>
+                        @page { size: 80mm auto; margin: 0; }
+                        * { font-weight: 900 !important; color: #000 !important; }
+                        body {
+                            font-family: 'Courier New', Courier, monospace;
+                            width: 70mm;
+                            margin: 5mm auto;
+                            font-size: 13px;
+                            line-height: 1.4;
+                            color: #000;
+                            background: #fff;
+                            font-weight: 900 !important;
+                        }
+                        .text-center { text-align: center; }
+                        .bold { font-weight: 900 !important; }
+                        .header-title { font-size: 15px; font-weight: 900 !important; letter-spacing: 1px; margin-bottom: 12px; }
+                        .double-line { border-bottom: 2px dashed #000; margin: 8px 0; }
+                        .flex-row { display: flex; justify-content: space-between; align-items: center; font-weight: 900 !important; }
+                        .pedido-info { font-size: 14px; font-weight: 900 !important; }
+                        .cliente-info { margin: 10px 0; font-size: 14px; font-weight: 900 !important; }
+                        .section-title { margin-top: 10px; font-weight: 900 !important; }
+                        ul { list-style-type: disc; margin: 4px 0 10px 20px; padding: 0; font-weight: 900 !important; }
+                        li { margin-bottom: 2px; font-weight: 900 !important; }
+                        .total-row { font-size: 15px; font-weight: 900 !important; margin: 6px 0; }
+                        .total-valor { margin-right: 20px !important; font-weight: 900 !important; } /* Afasta da borda direita */
+                        .footer { margin-top: 15px; font-size: 12px; font-weight: 900 !important; }
+                    </style>
+                </head>
+                <body>
+                    <div class="text-center header-title">SORVETERIA SENSAÇÃO</div>
+                    <div class="double-line"></div>
+                    <div class="pedido-info">PEDIDO #${pedido.id}</div>
+                    <div>${dataFormatada}, ${horaFormatada}</div>
+                    <div class="double-line"></div>
+                    <div class="cliente-info">Cliente: <b>${escapeHtml(pedido.cliente)}</b></div>
+                    <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
+                    <div class="flex-row bold" style="margin-bottom: 8px;">
+                        <span>${escapeHtml(pedido.tamanho)}</span>
+                    </div>
+                    <div class="section-title">Acompanhamentos:</div>
+                    <ul>${acompHtml}</ul>
+                    ${pedido.adicionais && String(pedido.adicionais).trim() !== '' ? `
+                        <div class="section-title">Adicionais:</div>
+                        <ul>${adicHtml}</ul>
+                    ` : ''}
+                    ${pedido.observacoes ? `
+                        <div class="section-title">Observações:</div>
+                        <div style="margin-left: 10px; font-weight: 900;">${escapeHtml(pedido.observacoes)}</div>
+                    ` : ''}
+                    <div class="double-line"></div>
+                    <div class="flex-row total-row">
+                        <span>TOTAL</span>
+                        <span class="total-valor">R$ ${totalFormatado}</span>
+                    </div>
+                    <div class="double-line"></div>
+                    <div class="text-center footer">
+                        Obrigado pela preferência!<br>Volte sempre! 🍧
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const janImpressao = window.open('', '_blank', 'width=400,height=600');
+            janImpressao.document.write(conteudoImpressao);
+            janImpressao.document.close();
+            janImpressao.focus();
+
+            setTimeout(() => {
+                janImpressao.print();
+                janImpressao.close();
+            }, 250);
+        }
+
+        async function concluirPedido(id) {
+            try {
+                const response = await fetch(`/api/pedidos/${id}/concluir`, { method: 'PUT' });
+                if (response.ok) carregarPedidos();
+                else alert('Erro ao concluir pedido.');
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function init() {
+            try {
+                carregarTemaSalvo();
+                verificarStatusLoja();
+
+                const sessRes = await fetch('/api/session');
+                const sess = await sessRes.json();
+
+                if (!sess.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                document.getElementById('userNameDisplay').innerText = escapeHtml(sess.user.login);
+
+                const navAdmin = document.getElementById('navAdmin');
+                const navLogs = document.getElementById('navLogs');
+
+                if (sess.user) {
+                    const role = sess.user.role || sess.user.cargo || '';
+                    if (role.toLowerCase() === 'admin') {
+                        if (navAdmin) navAdmin.style.display = 'inline-flex';
+                        if (navLogs) navLogs.style.display = 'inline-flex';
+                    } else {
+                        if (navAdmin) navAdmin.style.display = 'none';
+                        if (navLogs) navLogs.style.display = 'none';
+                    }
+                }
+
+                alternarVisao(modoVisaoAtual);
+                carregarPedidos();
+                setInterval(carregarPedidos, 3000);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
