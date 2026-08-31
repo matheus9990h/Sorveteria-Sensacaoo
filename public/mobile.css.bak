@@ -1,0 +1,661 @@
+/* ==========================================================
+   RESPONSIVIDADE GLOBAL - SORVETERIA SENSAÇÃO
+   Este arquivo só altera telas menores. O desktop permanece igual.
+   ========================================================== */
+
+@media (max-width: 900px) {
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        min-height: 100dvh;
+    }
+
+    img,
+    svg,
+    video,
+    canvas {
+        max-width: 100%;
+    }
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    input,
+    select,
+    textarea {
+        max-width: 100%;
+        font-size: 16px !important; /* evita zoom automático no iPhone */
+    }
+
+    button,
+    .nav-btn,
+    .btn-acao,
+    .btn-submit,
+    .btn-concluir,
+    .btn-imprimir,
+    .btn-salvar {
+        min-height: 44px;
+    }
+
+    /* Cabeçalho usado nas telas internas */
+    body > header,
+    header {
+        width: 100%;
+        padding: 10px 12px !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+    }
+
+    header .brand {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    header .brand img {
+        width: 42px !important;
+        height: 42px !important;
+        flex: 0 0 42px;
+    }
+
+    header .brand h1 {
+        font-size: 1.05rem !important;
+        line-height: 1.15;
+        white-space: normal;
+    }
+
+    header .user-info {
+        width: auto !important;
+        flex: 0 0 auto;
+        border-top: 0 !important;
+        padding-top: 0 !important;
+        gap: 6px !important;
+    }
+
+    header nav,
+    nav {
+        order: 3;
+        width: 100% !important;
+        max-width: 100%;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        padding: 2px 0 6px !important;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    header nav .nav-btn,
+    nav .nav-btn {
+        flex: 0 0 auto !important;
+        white-space: nowrap;
+        padding: 9px 13px !important;
+        font-size: 0.82rem !important;
+        scroll-snap-align: start;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 18px auto !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .page-title {
+        font-size: 1.45rem !important;
+        line-height: 1.2;
+    }
+
+    .page-subtitle {
+        line-height: 1.5;
+    }
+
+    .card,
+    .menu-card,
+    .page-header {
+        max-width: 100%;
+    }
+
+    /* Atendimento */
+    .grid-atendimento {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 16px !important;
+    }
+
+    .summary-card {
+        position: static !important;
+        top: auto !important;
+    }
+
+    .options-grid,
+    .items-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    .option-card,
+    .item-card {
+        min-width: 0;
+        padding: 13px 10px !important;
+    }
+
+    .summary-row {
+        gap: 10px;
+        align-items: flex-start !important;
+    }
+
+    .summary-row > * {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .summary-row strong {
+        max-width: 55% !important;
+    }
+
+    /* Cozinha */
+    .cozinha-top-banner {
+        padding: 16px !important;
+        align-items: stretch !important;
+    }
+
+    .cozinha-top-title-wrapper {
+        min-width: 0;
+        flex: 1 1 100%;
+    }
+
+    .cozinha-icon-box {
+        width: 48px !important;
+        height: 48px !important;
+        flex: 0 0 48px;
+    }
+
+    .cozinha-top-title-wrapper h2 {
+        font-size: 1.25rem !important;
+    }
+
+    .banner-right-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px !important;
+        flex-wrap: wrap;
+    }
+
+    .view-toggle-box {
+        flex: 1 1 auto;
+    }
+
+    .btn-view-opt {
+        flex: 1 1 0;
+        padding: 8px 10px !important;
+    }
+
+    .cozinha-grid,
+    .kanban-container {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 14px !important;
+    }
+
+    .kanban-column,
+    .pedido-card {
+        min-width: 0 !important;
+        width: 100%;
+    }
+
+    .pedido-header,
+    .pedido-body,
+    .pedido-footer {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    .pedido-footer {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .pedido-footer button,
+    .pedido-footer .btn-concluir,
+    .pedido-footer .btn-imprimir {
+        flex: 1 1 140px;
+    }
+
+    /* Histórico e Logs */
+    .filter-box {
+        width: 100%;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    .search-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        flex: 1 1 100% !important;
+    }
+
+    .filter-box > input,
+    .filter-box > select,
+    .filter-box > button {
+        width: 100%;
+    }
+
+    .table-container,
+    .table-responsive,
+    .admin-table {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-container table,
+    .admin-table table,
+    table.tabela-custom {
+        min-width: 720px;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+
+    td .item-details,
+    td.item-details {
+        white-space: normal;
+        min-width: 220px;
+    }
+
+    /* Administração: derruba os grids inline de 2 colunas para 1 coluna */
+    .cardapio-grid,
+    .caixa-grid-layout,
+    .tab-panel [style*="grid-template-columns"],
+    .container [style*="grid-template-columns: 2fr 1fr"],
+    .container [style*="grid-template-columns: 1fr 1fr"],
+    .container [style*="grid-template-columns: repeat(2"] {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .form-inline {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .form-inline > *,
+    .form-inline input,
+    .form-inline select,
+    .form-inline button {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    .menu-card,
+    .card {
+        padding: 18px !important;
+    }
+
+    .admin-nav-bar {
+        overflow-x: auto;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-nav-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .modal-overlay {
+        padding: 12px !important;
+        align-items: center !important;
+    }
+
+    .modal-card {
+        width: 100% !important;
+        max-width: 520px !important;
+        max-height: 90dvh;
+        overflow-y: auto;
+        padding: 18px !important;
+    }
+
+    .modal-actions {
+        flex-wrap: wrap;
+    }
+
+    .modal-actions button {
+        flex: 1 1 140px;
+    }
+
+    /* Caixa */
+    .caixa-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .caixa-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .calendario-box,
+    .caixa-header {
+        max-width: 100%;
+    }
+
+    .historico-fechamentos {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .historico-fechamentos table,
+    .tabela-custom {
+        min-width: 680px;
+    }
+
+    /* Login */
+    .login-wrapper {
+        width: 100%;
+        min-height: 100dvh !important;
+        height: auto !important;
+        flex-direction: column !important;
+        overflow-x: hidden;
+    }
+
+    .brand-section {
+        width: 100% !important;
+        flex: 0 0 auto !important;
+        min-height: auto !important;
+        padding: 30px 20px 42px !important;
+    }
+
+    .brand-content {
+        width: 100%;
+        max-width: 440px;
+    }
+
+    .brand-description {
+        max-width: 340px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-section {
+        width: 100% !important;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        padding: 34px 20px 28px !important;
+        margin-top: -20px !important;
+        border-radius: 24px 24px 0 0 !important;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 440px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    header .brand h1 {
+        font-size: 0.95rem !important;
+    }
+
+    header .user-title {
+        display: none !important;
+    }
+
+    header .user-info button,
+    .theme-toggle-btn,
+    .btn-logout-door,
+    #themeToggleBtn {
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+        padding: 0 !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        margin-top: 14px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .page-title {
+        font-size: 1.28rem !important;
+    }
+
+    .card,
+    .menu-card,
+    .page-header {
+        border-radius: 14px !important;
+        padding: 14px !important;
+    }
+
+    .options-grid,
+    .items-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .option-card,
+    .item-card {
+        font-size: 0.88rem;
+        min-height: 78px;
+    }
+
+    #acompContainer.items-grid,
+    #adicContainer.items-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    #acompContainer .item-card,
+    #adicContainer .item-card {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 12px !important;
+        align-items: stretch !important;
+        padding: 14px !important;
+    }
+
+    #acompContainer .item-info,
+    #adicContainer .item-info {
+        width: 100%;
+        min-width: 0;
+    }
+
+    #acompContainer .item-info .title,
+    #adicContainer .item-info .title {
+        font-size: 0.98rem;
+        line-height: 1.25;
+    }
+
+    #adicContainer .item-info .price {
+        margin-top: 4px;
+    }
+
+    #acompContainer .counter-box,
+    #adicContainer .counter-box {
+        width: 100%;
+        max-width: 100% !important;
+        justify-content: space-between;
+        padding: 6px 10px !important;
+        border-radius: 12px !important;
+    }
+
+    #acompContainer .counter-btn,
+    #adicContainer .counter-btn {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 1rem !important;
+    }
+
+    #acompContainer .counter-value,
+    #adicContainer .counter-value {
+        min-width: 28px;
+        font-size: 1rem;
+    }
+
+    .summary-row {
+        font-size: 0.9rem;
+    }
+
+    .cozinha-top-banner {
+        border-radius: 14px !important;
+        padding: 14px !important;
+    }
+
+    .cozinha-top-title-wrapper {
+        gap: 10px !important;
+    }
+
+    .cozinha-top-title-wrapper p {
+        font-size: 0.8rem !important;
+    }
+
+    .banner-right-actions {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .view-toggle-box {
+        min-width: 0;
+    }
+
+    .ativos-counter-box {
+        min-width: 62px;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .pedido-header-top,
+    .pedido-id-row,
+    .cliente-info,
+    .total-row {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .filter-box {
+        flex-direction: column !important;
+    }
+
+    .table-container {
+        border-radius: 12px !important;
+    }
+
+    .admin-nav-bar {
+        margin-left: -10px;
+        margin-right: -10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions button {
+        width: 100%;
+    }
+
+    .logo-box {
+        width: 86px !important;
+        height: 86px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .brand-title {
+        font-size: 1.8rem !important;
+    }
+
+    .brand-subtitle-highlight {
+        font-size: 1.65rem !important;
+    }
+
+    .brand-description {
+        font-size: 0.9rem !important;
+        line-height: 1.45 !important;
+    }
+
+    .form-header h2 {
+        font-size: 1.45rem !important;
+    }
+
+    .btn-submit,
+    .btn-salvar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 390px) {
+    header .brand img {
+        width: 38px !important;
+        height: 38px !important;
+        flex-basis: 38px;
+    }
+
+    header .brand h1 {
+        font-size: 0.88rem !important;
+    }
+
+    .options-grid,
+    .items-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .banner-right-actions {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .ativos-counter-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 900px) {
+    table.admin-table {
+        display: table !important;
+        width: 100% !important;
+        min-width: 720px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .loja-status-card {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        padding: 14px !important;
+    }
+
+    .loja-status-card > div {
+        width: 100%;
+        flex-wrap: wrap;
+        row-gap: 6px !important;
+    }
+
+    .loja-status-card > button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}

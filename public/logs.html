@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#7e22ce">
+    <title>Sensação - Auditoria e Logs</title>
+    <link rel="icon" type="image/jpeg" href="Logo.jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --bg: #f6f7fb;
+            --card: #fff;
+            --border: #e6e8ef;
+            --text: #172033;
+            --muted: #6b7280;
+            --primary: #7e22ce;
+            --primary-2: #9333ea;
+            --primary-soft: #f3e8ff;
+            --success: #059669;
+            --success-soft: #ecfdf5;
+            --danger: #dc2626;
+            --danger-soft: #fef2f2;
+            --warning: #d97706;
+            --warning-soft: #fffbeb;
+            --info: #2563eb;
+            --info-soft: #eff6ff;
+            --shadow: 0 10px 30px rgba(15,23,42,.06);
+        }
+        body.dark-theme {
+            --bg: #0b1120;
+            --card: #111827;
+            --border: #253047;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --primary: #a855f7;
+            --primary-2: #c084fc;
+            --primary-soft: #3b0764;
+            --success-soft: #052e24;
+            --danger-soft: #3f1115;
+            --warning-soft: #3a2706;
+            --info-soft: #10234d;
+            --shadow: 0 14px 35px rgba(0,0,0,.18);
+        }
+        html { min-height: 100%; background: var(--bg); }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 0%, rgba(126,34,206,.08), transparent 28rem),
+                var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        button, input, select { font: inherit; }
+        button, a { -webkit-tap-highlight-color: transparent; }
+
+        /* Cabeçalho */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 11px max(20px, env(safe-area-inset-left)) 11px max(20px, env(safe-area-inset-right));
+            background: color-mix(in srgb, var(--card) 94%, transparent);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 3px 20px rgba(15,23,42,.04);
+        }
+        .brand { display:flex; align-items:center; gap:11px; flex:0 0 auto; }
+        .brand img { width:42px; height:42px; border-radius:12px; object-fit:cover; box-shadow:0 3px 10px rgba(0,0,0,.12); }
+        .brand h1 { margin:0; color:var(--primary); font-size:1.15rem; font-weight:800; letter-spacing:-.03em; white-space:nowrap; }
+        nav { display:flex; align-items:center; gap:6px; flex:1; min-width:0; overflow-x:auto; scrollbar-width:none; }
+        nav::-webkit-scrollbar { display:none; }
+        .nav-btn {
+            flex:0 0 auto;
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            padding:9px 12px;
+            border:1px solid transparent;
+            border-radius:11px;
+            color:var(--muted);
+            background:transparent;
+            text-decoration:none;
+            font-size:.82rem;
+            font-weight:700;
+            white-space:nowrap;
+        }
+        .nav-btn:hover { background:var(--primary-soft); color:var(--primary); }
+        .nav-btn.active { color:#fff; background:var(--primary); box-shadow:0 5px 15px rgba(126,34,206,.25); }
+        .user-info { display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+        .user-title { max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.82rem; font-weight:800; }
+        .icon-btn {
+            width:40px; height:40px; border-radius:11px; border:1px solid var(--border);
+            background:var(--card); color:var(--text); display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+        }
+        .logout { background:#ef4444; color:#fff; border-color:#ef4444; }
+
+        .container { width:min(1400px, calc(100% - 36px)); margin:28px auto 50px; }
+        .hero {
+            display:flex; justify-content:space-between; align-items:center; gap:18px;
+            padding:24px; margin-bottom:18px; border:1px solid var(--border); border-radius:20px;
+            background:linear-gradient(135deg, var(--card), color-mix(in srgb, var(--primary-soft) 38%, var(--card)));
+            box-shadow:var(--shadow);
+        }
+        .eyebrow { display:flex; align-items:center; gap:8px; color:var(--primary); font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; margin-bottom:7px; }
+        .page-title { margin:0; display:flex; align-items:center; gap:10px; font-size:1.75rem; letter-spacing:-.04em; }
+        .page-subtitle { margin:7px 0 0; color:var(--muted); font-size:.9rem; line-height:1.5; }
+        .hero-actions { display:flex; align-items:center; gap:9px; flex:0 0 auto; }
+        .btn {
+            min-height:42px; padding:9px 14px; border-radius:11px; border:1px solid var(--border);
+            background:var(--card); color:var(--text); font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+        }
+        .btn.primary { background:var(--primary); border-color:var(--primary); color:#fff; }
+        .btn:active { transform:scale(.98); }
+        .live-dot { width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.13); }
+
+        .stats { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+        .stat {
+            min-width:0; padding:17px; background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+        }
+        .stat-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .stat-label { color:var(--muted); font-size:.76rem; font-weight:800; }
+        .stat-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--primary-soft); color:var(--primary); }
+        .stat-value { margin-top:9px; font-size:1.45rem; font-weight:800; letter-spacing:-.04em; }
+        .stat-note { margin-top:3px; color:var(--muted); font-size:.7rem; }
+
+        .filters {
+            display:grid; grid-template-columns:minmax(240px,1.5fr) minmax(150px,.65fr) minmax(150px,.65fr) auto;
+            gap:10px; align-items:center; padding:14px; margin-bottom:14px;
+            background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+        }
+        .field { position:relative; min-width:0; }
+        .field .field-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; }
+        .control {
+            width:100%; height:43px; padding:0 12px; border:1px solid var(--border); border-radius:11px;
+            background:var(--bg); color:var(--text); outline:none;
+        }
+        .field input { padding-left:39px; }
+        .control:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(126,34,206,.11); }
+        .check { display:flex; align-items:center; justify-content:center; gap:8px; min-height:43px; padding:0 10px; border:1px solid var(--border); border-radius:11px; color:var(--muted); font-size:.76rem; font-weight:800; white-space:nowrap; }
+        .check input { accent-color:var(--primary); }
+
+        .table-shell { overflow:hidden; background:var(--card); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow); }
+        .table-scroll { overflow-x:auto; }
+        table { width:100%; min-width:930px; border-collapse:collapse; text-align:left; }
+        th { padding:13px 16px; background:var(--bg); color:var(--muted); border-bottom:1px solid var(--border); font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; }
+        td { padding:14px 16px; border-bottom:1px solid var(--border); vertical-align:middle; font-size:.82rem; }
+        tbody tr:hover { background:color-mix(in srgb, var(--primary-soft) 22%, transparent); }
+        tr:last-child td { border-bottom:0; }
+        .id { color:var(--muted); font-weight:800; }
+        .date { white-space:nowrap; }
+        .user-cell { display:flex; align-items:center; gap:9px; min-width:130px; }
+        .avatar { width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--primary-soft); color:var(--primary); font-weight:800; font-size:.78rem; flex:0 0 auto; }
+        .user-name { font-weight:800; }
+        .user-role { color:var(--muted); font-size:.66rem; margin-top:2px; }
+        .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 9px; border-radius:999px; font-size:.68rem; font-weight:800; white-space:nowrap; border:1px solid transparent; }
+        .action-login { color:#4338ca; background:#eef2ff; border-color:#c7d2fe; }
+        .action-good { color:#047857; background:#d1fae5; border-color:#a7f3d0; }
+        .action-danger { color:#b91c1c; background:#fee2e2; border-color:#fecaca; }
+        .action-warning { color:#b45309; background:#fef3c7; border-color:#fde68a; }
+        .action-neutral { color:#6b21a8; background:#f3e8ff; border-color:#e9d5ff; }
+        .details { max-width:430px; color:var(--muted); line-height:1.45; }
+        .network { display:flex; flex-direction:column; gap:3px; min-width:145px; }
+        .ip { color:var(--text); font-weight:800; font-variant-numeric:tabular-nums; }
+        .device { color:var(--muted); font-size:.68rem; display:flex; align-items:center; gap:5px; }
+        .copy-ip { border:0; background:transparent; color:var(--muted); cursor:pointer; padding:2px; }
+
+        .empty { padding:50px 20px; text-align:center; color:var(--muted); }
+        .empty-icon { width:50px; height:50px; margin:0 auto 12px; border-radius:15px; display:flex; align-items:center; justify-content:center; background:var(--primary-soft); color:var(--primary); }
+
+        .mobile-list { display:none; padding:10px; }
+        .log-card {
+            padding:14px; margin-bottom:10px; border:1px solid var(--border); border-radius:15px; background:var(--card);
+        }
+        .log-card:last-child { margin-bottom:0; }
+        .log-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+        .log-card-user { display:flex; align-items:center; gap:9px; min-width:0; }
+        .log-card-meta { min-width:0; }
+        .log-card-meta strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .log-card-time { color:var(--muted); font-size:.68rem; margin-top:3px; }
+        .log-details { margin:12px 0; padding:10px; border-radius:10px; background:var(--bg); color:var(--muted); font-size:.75rem; line-height:1.5; overflow-wrap:anywhere; }
+        .log-card-bottom { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .info-box { min-width:0; padding:9px; border-radius:10px; background:var(--bg); }
+        .info-label { color:var(--muted); font-size:.62rem; text-transform:uppercase; font-weight:800; letter-spacing:.05em; }
+        .info-value { margin-top:3px; font-size:.72rem; font-weight:800; overflow-wrap:anywhere; }
+        .copy-mobile { margin-left:3px; border:0; background:transparent; color:var(--muted); cursor:pointer; }
+
+        .footer-status { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 15px; border-top:1px solid var(--border); color:var(--muted); font-size:.7rem; }
+        .status { display:flex; align-items:center; gap:8px; }
+        .status .live-dot { width:7px; height:7px; }
+
+        @media (max-width: 1050px) {
+            .filters { grid-template-columns:1fr 1fr; }
+            .filters .search-field { grid-column:1 / -1; }
+            .check { justify-content:flex-start; }
+        }
+        @media (max-width: 800px) {
+            header { flex-wrap:wrap; padding:10px 14px; gap:8px; }
+            .brand { flex:1; min-width:0; }
+            .brand h1 { font-size:1rem; overflow:hidden; text-overflow:ellipsis; }
+            .user-title { display:none; }
+            nav { order:3; flex-basis:100%; width:100%; }
+            .container { width:min(100% - 20px, 680px); margin-top:15px; }
+            .hero { align-items:flex-start; flex-direction:column; padding:18px; border-radius:16px; }
+            .page-title { font-size:1.35rem; }
+            .hero-actions { width:100%; }
+            .hero-actions .btn { flex:1; }
+            .stats { grid-template-columns:1fr 1fr; }
+            .filters { grid-template-columns:1fr 1fr; border-radius:14px; }
+            .table-shell { border-radius:15px; }
+            .desktop-list { display:none; }
+            .mobile-list { display:block; }
+        }
+        @media (max-width: 520px) {
+            .container { width:calc(100% - 14px); margin-bottom:25px; }
+            .stats { gap:8px; }
+            .stat { padding:13px; border-radius:13px; }
+            .stat-value { font-size:1.2rem; }
+            .stat-label { font-size:.68rem; }
+            .filters { grid-template-columns:1fr; padding:10px; }
+            .filters .search-field { grid-column:auto; }
+            .hero { padding:15px; }
+            .page-subtitle { font-size:.78rem; }
+            .footer-status { align-items:flex-start; flex-direction:column; }
+            .log-card-bottom { grid-template-columns:1fr; }
+            .nav-btn { padding:9px 10px; font-size:.76rem; }
+            .brand img { width:38px; height:38px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior:auto !important; transition:none !important; animation:none !important; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="brand">
+        <img src="Logo.jpeg" alt="Logo Sorveteria Sensação">
+        <h1>Sorveteria Sensação</h1>
+    </div>
+    <nav>
+        <a href="atendimento.html" class="nav-btn"><i data-lucide="clipboard-edit" size="17"></i> Atendimento</a>
+        <a href="cozinha.html" class="nav-btn" id="navCozinha"><i data-lucide="chef-hat" size="17"></i> Cozinha</a>
+        <a href="historico.html" class="nav-btn" id="navHistorico"><i data-lucide="bar-chart-3" size="17"></i> Histórico</a>
+        <a href="logs.html" class="nav-btn active" id="navLogs" style="display:none"><i data-lucide="shield-check" size="17"></i> Logs</a>
+        <a href="admin.html" class="nav-btn" id="navAdmin" style="display:none"><i data-lucide="settings" size="17"></i> Administração</a>
+    </nav>
+    <div class="user-info">
+        <button class="icon-btn" onclick="toggleTheme()" id="themeToggleBtn" title="Alternar tema"><i data-lucide="moon" id="themeIcon" size="19"></i></button>
+        <span class="user-title" id="userNameDisplay">Usuário</span>
+        <button class="icon-btn logout" onclick="logout()" title="Sair"><i data-lucide="log-out" size="18"></i></button>
+    </div>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <div>
+            <div class="eyebrow"><span class="live-dot"></span> Auditoria de segurança</div>
+            <h2 class="page-title"><i data-lucide="scroll-text" size="27"></i> Logs do sistema</h2>
+            <p class="page-subtitle">Veja quem acessou, o que fez, quando aconteceu e de qual IP/dispositivo veio o acesso.</p>
+        </div>
+        <div class="hero-actions">
+            <button class="btn" onclick="carregarLogs()"><i data-lucide="refresh-cw" size="16"></i> Atualizar</button>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat">
+            <div class="stat-top"><span class="stat-label">Registros exibidos</span><span class="stat-icon"><i data-lucide="list" size="17"></i></span></div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-note">últimos registros disponíveis</div>
+        </div>
+        <div class="stat">
+            <div class="stat-top"><span class="stat-label">Logins hoje</span><span class="stat-icon"><i data-lucide="log-in" size="17"></i></span></div>
+            <div class="stat-value" id="statLogins">0</div>
+            <div class="stat-note">sessões iniciadas</div>
+        </div>
+        <div class="stat">
+            <div class="stat-top"><span class="stat-label">Falhas de login</span><span class="stat-icon"><i data-lucide="triangle-alert" size="17"></i></span></div>
+            <div class="stat-value" id="statFalhas">0</div>
+            <div class="stat-note">tentativas malsucedidas</div>
+        </div>
+        <div class="stat">
+            <div class="stat-top"><span class="stat-label">Dispositivos</span><span class="stat-icon"><i data-lucide="smartphone" size="17"></i></span></div>
+            <div class="stat-value" id="statDevices">0</div>
+            <div class="stat-note">tipos identificados</div>
+        </div>
+    </section>
+
+    <section class="filters">
+        <div class="field search-field">
+            <i class="field-icon" data-lucide="search" size="17"></i>
+            <input class="control" type="search" id="inputBuscaLog" placeholder="Buscar usuário, ação, IP ou detalhe..." oninput="filtrarLogs()">
+        </div>
+        <select class="control" id="filtroAcao" onchange="filtrarLogs()">
+            <option value="">Todas as ações</option>
+        </select>
+        <select class="control" id="filtroDispositivo" onchange="filtrarLogs()">
+            <option value="">Todos os dispositivos</option>
+        </select>
+        <label class="check"><input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()"> Atualizar automaticamente</label>
+    </section>
+
+    <section class="table-shell">
+        <div class="desktop-list table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data / hora</th>
+                        <th>Usuário</th>
+                        <th>Ação</th>
+                        <th>IP de origem</th>
+                        <th>Dispositivo</th>
+                        <th>Detalhes</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaLogsContent"></tbody>
+            </table>
+        </div>
+        <div class="mobile-list" id="listaLogsMobile"></div>
+        <div class="footer-status">
+            <div class="status"><span class="live-dot"></span><span id="statusText">Aguardando registros...</span></div>
+            <span>Mostrando até 300 eventos</span>
+        </div>
+    </section>
+</main>
+
+<script>
+let todosLogs = [];
+let autoTimer = null;
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('sensacao_dark_theme', isDark);
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+    lucide.createIcons();
+}
+
+function initTheme() {
+    const isDark = localStorage.getItem('sensacao_dark_theme') === 'true';
+    if (isDark) document.body.classList.add('dark-theme');
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+}
+
+function escapeHtml(texto) {
+    return String(texto ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function initials(nome) {
+    const parts = String(nome || 'Sistema').trim().split(/\s+/).filter(Boolean);
+    return (parts.slice(0, 2).map(p => p[0]).join('') || 'S').toUpperCase();
+}
+
+function formatarData(valor) {
+    if (!valor) return '-';
+    const raw = String(valor).replace(' ', 'T');
+    const date = new Date(raw);
+    return Number.isNaN(date.getTime()) ? escapeHtml(valor) : date.toLocaleString('pt-BR', {
+        day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'
+    });
+}
+
+function badgeClass(acao) {
+    const a = String(acao || '').toUpperCase();
+    if (a.includes('LOGIN')) return 'action-login';
+    if (a.includes('EXCLUIR') || a.includes('FALHA') || a.includes('RESET') || a.includes('LIMPAR')) return 'action-danger';
+    if (a.includes('FECHAR_CAIXA')) return 'action-warning';
+    if (a.includes('NOVO_PEDIDO') || a.includes('PEDIDO_CONCLUIDO') || a.includes('CRIAR')) return 'action-good';
+    return 'action-neutral';
+}
+
+function deviceIcon(dispositivo) {
+    const d = String(dispositivo || '').toLowerCase();
+    if (d.includes('celular') || d.includes('iphone')) return 'smartphone';
+    if (d.includes('tablet')) return 'tablet';
+    return 'monitor';
+}
+
+function ipValue(log) {
+    return log.ip && log.ip !== 'N/D' ? log.ip : 'Não identificado';
+}
+
+function copiarIp(ip) {
+    if (!ip || ip === 'Não identificado') return;
+    navigator.clipboard?.writeText(ip).then(() => {
+        const status = document.getElementById('statusText');
+        if (status) status.textContent = `IP ${ip} copiado para a área de transferência.`;
+        setTimeout(() => { if (status) status.textContent = `${todosLogs.length} registros carregados.`; }, 1800);
+    }).catch(() => {});
+}
+
+function popularFiltros() {
+    const acoes = [...new Set(todosLogs.map(l => l.acao).filter(Boolean))].sort();
+    const dispositivos = [...new Set(todosLogs.map(l => l.dispositivo).filter(Boolean))].sort();
+    const selectAcao = document.getElementById('filtroAcao');
+    const selectDisp = document.getElementById('filtroDispositivo');
+    const oldA = selectAcao.value, oldD = selectDisp.value;
+    selectAcao.innerHTML = '<option value="">Todas as ações</option>' + acoes.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+    selectDisp.innerHTML = '<option value="">Todos os dispositivos</option>' + dispositivos.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+    selectAcao.value = acoes.includes(oldA) ? oldA : '';
+    selectDisp.value = dispositivos.includes(oldD) ? oldD : '';
+}
+
+function atualizarStats(logs) {
+    const hoje = new Date().toLocaleDateString('pt-BR');
+    document.getElementById('statTotal').textContent = logs.length;
+    document.getElementById('statLogins').textContent = logs.filter(l => l.acao === 'LOGIN' && formatarData(l.data_hora).startsWith(hoje)).length;
+    document.getElementById('statFalhas').textContent = logs.filter(l => l.acao === 'LOGIN_FALHA' && formatarData(l.data_hora).startsWith(hoje)).length;
+    document.getElementById('statDevices').textContent = new Set(logs.map(l => l.dispositivo).filter(Boolean)).size;
+}
+
+function renderUser(log) {
+    return `<div class="user-cell">
+        <span class="avatar">${escapeHtml(initials(log.usuario))}</span>
+        <div><div class="user-name">${escapeHtml(log.usuario || 'Sistema')}</div><div class="user-role">auditoria</div></div>
+    </div>`;
+}
+
+function renderBadge(log) {
+    return `<span class="badge ${badgeClass(log.acao)}"><i data-lucide="activity" size="12"></i>${escapeHtml(log.acao || 'EVENTO')}</span>`;
+}
+
+function renderNetwork(log, mobile = false) {
+    const ip = escapeHtml(ipValue(log));
+    const raw = ipValue(log);
+    const copy = raw !== 'Não identificado'
+        ? `<button class="${mobile ? 'copy-mobile' : 'copy-ip'}" title="Copiar IP" onclick="copiarIp('${escapeHtml(raw).replace(/'/g, '&#039;')}')"><i data-lucide="copy" size="13"></i></button>`
+        : '';
+    return `<div class="network">
+        <div class="ip">${ip}${copy}</div>
+        <div class="device"><i data-lucide="${deviceIcon(log.dispositivo)}" size="12"></i>${escapeHtml(log.dispositivo || 'Dispositivo não identificado')}</div>
+    </div>`;
+}
+
+function renderizarTabela(logs) {
+    const tbody = document.getElementById('tabelaLogsContent');
+    const mobile = document.getElementById('listaLogsMobile');
+
+    if (!logs.length) {
+        const empty = `<div class="empty"><div class="empty-icon"><i data-lucide="search-x" size="23"></i></div><strong>Nenhum registro encontrado</strong><p style="margin-top:5px">Tente mudar os filtros ou a busca.</p></div>`;
+        tbody.innerHTML = `<tr><td colspan="7">${empty}</td></tr>`;
+        mobile.innerHTML = empty;
+        lucide.createIcons();
+        return;
+    }
+
+    tbody.innerHTML = logs.map(l => `
+        <tr>
+            <td class="id">#${escapeHtml(l.id)}</td>
+            <td class="date">${escapeHtml(formatarData(l.data_hora))}</td>
+            <td>${renderUser(l)}</td>
+            <td>${renderBadge(l)}</td>
+            <td>${renderNetwork(l)}</td>
+            <td><span class="device"><i data-lucide="${deviceIcon(l.dispositivo)}" size="14"></i>${escapeHtml(l.dispositivo || 'Não identificado')}</span></td>
+            <td><div class="details">${escapeHtml(l.detalhes || '-')}</div></td>
+        </tr>
+    `).join('');
+
+    mobile.innerHTML = logs.map(l => `
+        <article class="log-card">
+            <div class="log-card-top">
+                <div class="log-card-user">
+                    <span class="avatar">${escapeHtml(initials(l.usuario))}</span>
+                    <div class="log-card-meta"><strong>${escapeHtml(l.usuario || 'Sistema')}</strong><div class="log-card-time">#${escapeHtml(l.id)} • ${escapeHtml(formatarData(l.data_hora))}</div></div>
+                </div>
+                ${renderBadge(l)}
+            </div>
+            <div class="log-details">${escapeHtml(l.detalhes || 'Sem detalhes adicionais.')}</div>
+            <div class="log-card-bottom">
+                <div class="info-box"><div class="info-label">IP de origem</div><div class="info-value">${escapeHtml(ipValue(l))}${ipValue(l) !== 'Não identificado' ? ` <button class="copy-mobile" onclick="copiarIp('${escapeHtml(ipValue(l))}')"><i data-lucide="copy" size="12"></i></button>` : ''}</div></div>
+                <div class="info-box"><div class="info-label">Dispositivo</div><div class="info-value"><i data-lucide="${deviceIcon(l.dispositivo)}" size="12"></i> ${escapeHtml(l.dispositivo || 'Não identificado')}</div></div>
+            </div>
+        </article>
+    `).join('');
+
+    lucide.createIcons();
+}
+
+function filtrarLogs() {
+    const termo = document.getElementById('inputBuscaLog').value.trim().toLowerCase();
+    const acao = document.getElementById('filtroAcao').value;
+    const dispositivo = document.getElementById('filtroDispositivo').value;
+
+    const filtrados = todosLogs.filter(l => {
+        const texto = [l.usuario, l.acao, l.detalhes, l.ip, l.dispositivo].filter(Boolean).join(' ').toLowerCase();
+        return (!termo || texto.includes(termo)) &&
+               (!acao || l.acao === acao) &&
+               (!dispositivo || l.dispositivo === dispositivo);
+    });
+
+    atualizarStats(filtrados);
+    renderizarTabela(filtrados);
+    document.getElementById('statusText').textContent = `${filtrados.length} registro(s) encontrado(s).`;
+}
+
+async function carregarLogs() {
+    const status = document.getElementById('statusText');
+    status.textContent = 'Atualizando registros...';
+    try {
+        const res = await fetch('/api/admin/logs', { cache:'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        todosLogs = await res.json();
+        popularFiltros();
+        filtrarLogs();
+        status.textContent = `${todosLogs.length} registros carregados.`;
+    } catch (err) {
+        console.error('Erro ao carregar logs:', err);
+        document.getElementById('tabelaLogsContent').innerHTML = `<tr><td colspan="7"><div class="empty"><div class="empty-icon"><i data-lucide="wifi-off" size="23"></i></div><strong>Não foi possível carregar os logs.</strong><p style="margin-top:5px">Verifique sua sessão e tente novamente.</p></div></td></tr>`;
+        document.getElementById('listaLogsMobile').innerHTML = `<div class="empty"><strong>Não foi possível carregar os logs.</strong></div>`;
+        status.textContent = 'Falha ao atualizar.';
+        lucide.createIcons();
+    }
+}
+
+function toggleAutoRefresh() {
+    if (autoTimer) clearInterval(autoTimer);
+    autoTimer = null;
+    if (document.getElementById('autoRefresh').checked) autoTimer = setInterval(carregarLogs, 15000);
+}
+
+async function checarSessao() {
+    try {
+        const res = await fetch('/api/session', { cache:'no-store' });
+        const data = await res.json();
+        if (!data.loggedIn || data.user.role !== 'admin') {
+            alert('Acesso negado.');
+            window.location.href = 'atendimento.html';
+            return;
+        }
+        document.getElementById('userNameDisplay').textContent = data.user.login;
+        ['navCozinha','navHistorico','navAdmin','navLogs'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'inline-flex';
+        });
+        lucide.createIcons();
+    } catch (err) {
+        console.error('Erro de sessão:', err);
+    }
+}
+
+async function logout() {
+    try { await fetch('/api/logout', { method:'POST' }); }
+    finally { window.location.href = 'index.html'; }
+}
+
+async function init() {
+    initTheme();
+    lucide.createIcons();
+    await checarSessao();
+    await carregarLogs();
+}
+
+window.addEventListener('load', init);
+window.addEventListener('beforeunload', () => { if (autoTimer) clearInterval(autoTimer); });
+</script>
+</body>
+</html>

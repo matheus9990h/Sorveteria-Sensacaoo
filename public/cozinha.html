@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Cozinha</title>
+    
+    <link rel="icon" type="image/jpeg" href="Logo.jpeg">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- VARIÁVEIS GLOBAIS DO TEMA CLARO --- */
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #7e22ce;
+            --primary-hover: #6b21a8;
+            --primary-light: #f3e8ff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --card-body-bg: #ffffff;
+            --shadow-color: rgba(126, 34, 206, 0.06);
+        }
+
+        /* --- TEMA ESCURO PADRONIZADO --- */
+        body.dark-theme,
+        body.dark-mode {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --primary-color: #a855f7;
+            --primary-hover: #c084fc;
+            --primary-light: #3b0764;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b;
+            --card-body-bg: #1e293b;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            background-color: var(--bg-body) !important;
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 600;
+        }
+
+        /* --- ESTILOS DO CABEÇALHO (COPIADO DO ATENDIMENTO) --- */
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        nav .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        nav .nav-btn:hover:not(.active) {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        nav .nav-btn.active {
+            background: var(--primary-color);
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(126, 34, 206, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #themeToggleBtn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #themeToggleBtn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .user-title {
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .btn-logout-door {
+            background-color: #ef4444;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-logout-door:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* --- CONTAINER E CONTEÚDO DA COZINHA --- */
+        .container {
+            padding: 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .cozinha-top-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .cozinha-top-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .cozinha-icon-box {
+            background: var(--primary-light);
+            border: 2px solid var(--border-color);
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .cozinha-top-title-wrapper h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 0 0 2px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .cozinha-top-title-wrapper p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .banner-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .view-toggle-box {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-body);
+            padding: 5px;
+            border-radius: 9999px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-view-opt {
+            border: none;
+            background: transparent;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .btn-view-opt.active {
+            background: var(--primary-color);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
+        }
+
+        .ativos-counter-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 8px 20px;
+            text-align: center;
+            min-width: 65px;
+        }
+
+        .ativos-number {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .ativos-label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+
+        .cozinha-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        .pedido-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            border: 2px solid var(--border-color);
+            border-top: 6px solid var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pedido-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(126, 34, 206, 0.15);
+        }
+
+        .pedido-header {
+            padding: 18px 20px 14px 20px;
+            background: var(--card-bg);
+            border-bottom: 2px dashed var(--border-color);
+        }
+
+        .pedido-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .badge-local {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .badge-mesa {
+            background: #fef9c3;
+            color: #713f12;
+            border-color: #eab308;
+        }
+
+        body.dark-theme .badge-mesa,
+        body.dark-mode .badge-mesa {
+            background: #422006 !important;
+            color: #fef08a !important;
+            border-color: #ca8a04 !important;
+        }
+
+        .badge-delivery {
+            background: #ffedd5;
+            color: #9a3412;
+            border-color: #f97316;
+        }
+
+        body.dark-theme .badge-delivery,
+        body.dark-mode .badge-delivery {
+            background: #431407 !important;
+            color: #ffedd5 !important;
+            border-color: #ea580c !important;
+        }
+
+        .badge-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .status-preparo {
+            background: #d97706;
+            color: #ffffff;
+        }
+
+        .pedido-id-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .pedido-id {
+            font-size: 1rem;
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        .pedido-cliente {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-color);
+            margin: 2px 0 6px 0;
+            line-height: 1.2;
+        }
+
+        .cronometro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-top: 4px;
+        }
+
+        .tempo-ok {
+            background: #a7f3d0;
+            color: #064e3b;
+        }
+
+        body.dark-theme .tempo-ok,
+        body.dark-mode .tempo-ok {
+            background: #064e3b !important;
+            color: #a7f3d0 !important;
+        }
+
+        .tempo-atencao {
+            background: #fde68a;
+            color: #78350f;
+        }
+
+        body.dark-theme .tempo-atencao,
+        body.dark-mode .tempo-atencao {
+            background: #78350f !important;
+            color: #fde68a !important;
+        }
+
+        .tempo-urgente {
+            background: #fecaca;
+            color: #7f1d1d;
+            animation: pulse-urgente 1.5s infinite;
+        }
+
+        body.dark-theme .tempo-urgente,
+        body.dark-mode .tempo-urgente {
+            background: #7f1d1d !important;
+            color: #fecaca !important;
+        }
+
+        @keyframes pulse-urgente {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .pedido-body {
+            padding: 16px 20px;
+            flex: 1;
+            background: var(--card-body-bg);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .pedido-secao-titulo {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+
+        .pedido-tamanho {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .badge-acomp {
+            background: var(--bg-body);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 6px;
+        }
+
+        .badge-adic {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border: 1px solid #fca5a5;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 6px;
+        }
+
+        body.dark-theme .badge-adic,
+        body.dark-mode .badge-adic {
+            background: #450a0a !important;
+            color: #fca5a5 !important;
+            border-color: #991b1b !important;
+        }
+
+        .pedido-obs {
+            background: #fef3c7;
+            border: 2px dashed #d97706;
+            color: #78350f;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+
+        body.dark-theme .pedido-obs,
+        body.dark-mode .pedido-obs {
+            background: #451a03 !important;
+            border-color: #b45309 !important;
+            color: #fef08a !important;
+        }
+
+        .pedido-footer {
+            padding: 16px 20px 20px 20px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-concluir {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+            transition: all 0.2s ease;
+        }
+
+        .btn-concluir:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45);
+        }
+
+        .btn-imprimir {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--bg-card);
+            color: var(--text-color);
+            transition: all 0.2s ease;
+        }
+
+        .btn-imprimir:hover {
+            background: var(--bg-body);
+        }
+
+        .kanban-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 22px;
+            align-items: start;
+        }
+
+        .kanban-column {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 480px;
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+        }
+
+        .kanban-column-title {
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .kanban-column-count {
+            background: var(--bg-body);
+            color: var(--primary-color);
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="mobile.css">
+</head>
+
+<body>
+    <!-- CABEÇALHO PADRONIZADO IGUAL AO ATENDIMENTO -->
+    <header>
+        <div class="brand">
+            <img src="Logo.jpeg" alt="Logo">
+            <h1>Sorveteria Sensação</h1>
+        </div>
+        <nav>
+            <a href="atendimento.html" class="nav-btn">
+                <i data-lucide="clipboard-edit" size="18"></i> Atendimento
+            </a>
+            <a href="cozinha.html" class="nav-btn active">
+                <i data-lucide="chef-hat" size="18"></i> Cozinha
+            </a>
+            <a href="historico.html" class="nav-btn" id="navHistorico">
+                <i data-lucide="bar-chart-3" size="18"></i> Histórico
+            </a>
+            <a href="logs.html" class="nav-btn" id="navLogs" style="display: none;">
+                <i data-lucide="file-text" size="18"></i> Logs
+            </a>
+            <a href="admin.html" class="nav-btn" id="navAdmin" style="display: none;">
+                <i data-lucide="settings" size="18"></i> Administração
+            </a>
+        </nav>
+        <div class="user-info">
+            <button onclick="toggleTheme()" id="themeToggleBtn" title="Alternar Tema">
+                <i data-lucide="moon" id="themeIcon" size="20"></i>
+            </button>
+            <span class="user-title" id="userNameDisplay">Usuário</span>
+            <button onclick="logout()" class="btn-logout-door" title="Sair">
+                <i data-lucide="log-out" size="18"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Aviso de Loja Fechada -->
+        <div id="avisoLojaFechada"
+            style="display: none; background: #fee2e2; border: 2px solid #f87171; color: #991b1b; padding: 12px 20px; border-radius: 14px; margin-bottom: 20px; font-weight: 700; text-align: center;">
+            A loja encontra-se FECHADA no momento pela administração.
+        </div>
+
+        <!-- Banner Superior -->
+        <div class="cozinha-top-banner">
+            <div class="cozinha-top-title-wrapper">
+                <div class="cozinha-icon-box">
+                    <i data-lucide="chef-hat" size="28"></i>
+                </div>
+                <div>
+                    <h2>Painel de Produção</h2>
+                    <p>Gerencie e prepare os pedidos da cozinha em tempo real.</p>
+                </div>
+            </div>
+
+            <div class="banner-right-actions">
+                <!-- Botões para Alternar Modo de Exibição -->
+                <div class="view-toggle-box">
+                    <button class="btn-view-opt active" id="btnViewGrid" onclick="alternarVisao('grid')">Lista</button>
+                    <button class="btn-view-opt" id="btnViewKanban" onclick="alternarVisao('kanban')">Kanban</button>
+                </div>
+
+                <div class="ativos-counter-box">
+                    <span class="ativos-number" id="ativosCount">0</span>
+                    <span class="ativos-label">Ativos</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visão 1: Grid Normal -->
+        <div id="cozinhaGridContainer" class="cozinha-grid">
+            <p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px;">Carregando pedidos...</p>
+        </div>
+
+        <!-- Visão 2: Kanban (Cards por Colunas) -->
+        <div id="cozinhaKanbanContainer" class="kanban-container" style="display: none;">
+            <!-- Coluna 1: Na Fila -->
+            <div class="kanban-column">
+                <div class="kanban-column-title">
+                    <span>Na Fila</span>
+                    <span class="kanban-column-count" id="countFila">0</span>
+                </div>
+                <div id="kanbanFilaList"></div>
+            </div>
+
+            <!-- Coluna 2: Em Preparo -->
+            <div class="kanban-column">
+                <div class="kanban-column-title">
+                    <span>Em Preparo</span>
+                    <span class="kanban-column-count" id="countPreparo">0</span>
+                </div>
+                <div id="kanbanPreparoList"></div>
+            </div>
+
+            <!-- Coluna 3: Pronto -->
+            <div class="kanban-column">
+                <div class="kanban-column-title">
+                    <span>Pronto</span>
+                    <span class="kanban-column-count" id="countPronto">0</span>
+                </div>
+                <div id="kanbanProntoList"></div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+        window.pedidosCache = [];
+        let ultimoCountPedidos = null;
+        let modoVisaoAtual = localStorage.getItem('sensacao_cozinha_view') || 'grid';
+
+        function alternarVisao(modo) {
+            modoVisaoAtual = modo;
+            localStorage.setItem('sensacao_cozinha_view', modo);
+
+            const gridContainer = document.getElementById('cozinhaGridContainer');
+            const kanbanContainer = document.getElementById('cozinhaKanbanContainer');
+            const btnGrid = document.getElementById('btnViewGrid');
+            const btnKanban = document.getElementById('btnViewKanban');
+
+            if (modo === 'kanban') {
+                gridContainer.style.display = 'none';
+                kanbanContainer.style.display = 'grid';
+                btnGrid.classList.remove('active');
+                btnKanban.classList.add('active');
+            } else {
+                gridContainer.style.display = 'grid';
+                kanbanContainer.style.display = 'none';
+                btnKanban.classList.remove('active');
+                btnGrid.classList.add('active');
+            }
+
+            renderizarPedidos(window.pedidosCache);
+        }
+
+        function tocarSinalNovoPedido() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log('Sinal sonoro não emitido:', e);
+            }
+        }
+
+        function carregarTemaSalvo() {
+            const isDark = localStorage.getItem('sensacao_dark_theme') === 'true';
+            const themeIcon = document.getElementById('themeIcon');
+            if (isDark) {
+                document.body.classList.add('dark-theme');
+                if (themeIcon) themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                document.body.classList.remove('dark-theme');
+                if (themeIcon) themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('sensacao_dark_theme', isDark);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+                lucide.createIcons();
+            }
+        }
+
+        function verificarStatusLoja() {
+            const lojaFechada = localStorage.getItem('sensacao_loja_fechada') === 'true';
+            const aviso = document.getElementById('avisoLojaFechada');
+            if (aviso) {
+                aviso.style.display = lojaFechada ? 'block' : 'none';
+            }
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'sensacao_loja_fechada') verificarStatusLoja();
+            if (e.key === 'sensacao_dark_theme') carregarTemaSalvo();
+        });
+
+        function escapeHtml(texto) {
+            if (!texto) return '';
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function gerarCardHTML(p) {
+            const agora = new Date().getTime();
+            let dataPedido = agora;
+
+            if (p.data_hora) {
+                let dataStr = String(p.data_hora);
+                
+                if (!dataStr.includes('T')) {
+                    dataStr = dataStr.replace(' ', 'T');
+                }
+
+                const parsedTime = new Date(dataStr).getTime();
+                if (!isNaN(parsedTime)) {
+                    dataPedido = parsedTime;
+                }
+            }
+
+            let diffMs = agora - dataPedido;
+            if (diffMs < 0) diffMs = 0;
+            const minutosAtras = Math.floor(diffMs / 60000);
+
+            let tempoBadgeClass = 'tempo-ok';
+            if (minutosAtras >= 15) {
+                tempoBadgeClass = 'tempo-urgente';
+            } else if (minutosAtras >= 8) {
+                tempoBadgeClass = 'tempo-atencao';
+            }
+
+            let badgeTipoHtml = `<span class="badge-local">PARA VIAGEM</span>`;
+            if (p.tipo === 'delivery') {
+                badgeTipoHtml = `<span class="badge-local badge-delivery">DELIVERY</span>`;
+            } else if (p.tipo && p.tipo.toLowerCase().includes('mesa')) {
+                badgeTipoHtml = `<span class="badge-local badge-mesa">${escapeHtml(p.tipo).toUpperCase()}</span>`;
+            } else if (p.tipo === 'viagem' || p.tipo === 'para viagem') {
+                badgeTipoHtml = `<span class="badge-local">PARA VIAGEM</span>`;
+            } else if (p.tipo) {
+                badgeTipoHtml = `<span class="badge-local badge-mesa">${escapeHtml(p.tipo).toUpperCase()}</span>`;
+            }
+
+            let acompItems = [];
+            if (p.acompanhamentos) {
+                if (typeof p.acompanhamentos === 'string') {
+                    acompItems = p.acompanhamentos.split(',').map(a => a.trim()).filter(Boolean);
+                } else if (Array.isArray(p.acompanhamentos)) {
+                    acompItems = p.acompanhamentos;
+                }
+            }
+
+            let adicItems = [];
+            if (p.adicionais) {
+                if (typeof p.adicionais === 'string') {
+                    adicItems = p.adicionais.split(',').map(a => a.trim()).filter(Boolean);
+                } else if (Array.isArray(p.adicionais)) {
+                    adicItems = p.adicionais;
+                }
+            }
+
+            return `
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div class="pedido-header-top">
+                            ${badgeTipoHtml}
+                            <span class="badge-status status-preparo">Em Preparo</span>
+                        </div>
+                        <div class="pedido-id-row">
+                            <span class="pedido-id">PEDIDO #${p.id}</span>
+                        </div>
+                        <div class="pedido-cliente">${escapeHtml(p.cliente)}</div>
+                        <div>
+                            <span class="cronometro-badge ${tempoBadgeClass}">há ${minutosAtras} min</span>
+                        </div>
+                    </div>
+
+                    <div class="pedido-body">
+                        <div>
+                            <div class="pedido-secao-titulo">Copo / Produto</div>
+                            <span class="pedido-tamanho">${escapeHtml(p.tamanho)}</span>
+                        </div>
+
+                        ${acompItems.length > 0 ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Acompanhamentos</div>
+                                <div>${acompItems.map(i => `<span class="badge-acomp">${escapeHtml(i)}</span>`).join('')}</div>
+                            </div>
+                        ` : ''}
+
+                        ${adicItems.length > 0 ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Adicionais Pagos</div>
+                                <div>${adicItems.map(i => `<span class="badge-adic">${escapeHtml(i)}</span>`).join('')}</div>
+                            </div>
+                        ` : ''}
+
+                        ${p.observacoes ? `
+                            <div>
+                                <div class="pedido-secao-titulo">Observações</div>
+                                <div class="pedido-obs">${escapeHtml(p.observacoes)}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="pedido-footer">
+                        <button class="btn-concluir" onclick="concluirPedido(${p.id})">
+                            ✓ Marcar como Pronto
+                        </button>
+                        <button class="btn-imprimir" onclick="imprimirComanda(${p.id})">
+                            Imprimir Comanda
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderizarPedidos(pedidos) {
+            const grid = document.getElementById('cozinhaGridContainer');
+            const counter = document.getElementById('ativosCount');
+            if (counter) counter.innerText = pedidos.length;
+
+            if (pedidos.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 1.1rem; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color);">Nenhum pedido pendente na cozinha no momento!</div>`;
+                document.getElementById('kanbanFilaList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('kanbanPreparoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('kanbanProntoList').innerHTML = '<p style="text-align:center; color: var(--text-muted); padding:20px;">Vazio</p>';
+                document.getElementById('countFila').innerText = '0';
+                document.getElementById('countPreparo').innerText = '0';
+                document.getElementById('countPronto').innerText = '0';
+                return;
+            }
+
+            grid.innerHTML = pedidos.map(p => gerarCardHTML(p)).join('');
+
+            const fila = pedidos.filter(p => !p.status || p.status === 'pendente' || p.status === 'fila');
+            const preparo = pedidos.filter(p => p.status === 'preparo' || p.status === 'em_preparo');
+            const pronto = pedidos.filter(p => p.status === 'pronto');
+
+            const emPreparoList = preparo.length === 0 && fila.length === 0 ? pedidos : preparo;
+
+            document.getElementById('kanbanFilaList').innerHTML = fila.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+            document.getElementById('kanbanPreparoList').innerHTML = emPreparoList.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+            document.getElementById('kanbanProntoList').innerHTML = pronto.map(p => gerarCardHTML(p)).join('') || '<p style="text-align:center; color: var(--text-muted); padding:10px;">Sem pedidos</p>';
+
+            document.getElementById('countFila').innerText = fila.length;
+            document.getElementById('countPreparo').innerText = emPreparoList.length;
+            document.getElementById('countPronto').innerText = pronto.length;
+            
+            if (window.lucide) lucide.createIcons();
+        }
+
+        async function carregarPedidos() {
+            try {
+                const response = await fetch('/api/pedidos/ativos');
+                if (!response.ok) throw new Error('Erro ao buscar pedidos ativos.');
+
+                const pedidos = await response.json();
+
+                if (ultimoCountPedidos !== null && pedidos.length > ultimoCountPedidos) {
+                    tocarSinalNovoPedido();
+                }
+                ultimoCountPedidos = pedidos.length;
+
+                window.pedidosCache = pedidos;
+                renderizarPedidos(pedidos);
+            } catch (error) {
+                console.error('Erro ao carregar cozinha:', error);
+            }
+        }
+
+        function imprimirComanda(id) {
+            const pedido = (window.pedidosCache || []).find(p => p.id === id);
+            if (!pedido) {
+                alert('Pedido não encontrado.');
+                return;
+            }
+
+            const dataObj = pedido.data_hora ? new Date(pedido.data_hora.replace(' ', 'T')) : new Date();
+            const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+            const horaFormatada = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            let acompHtml = '';
+            if (pedido.acompanhamentos && String(pedido.acompanhamentos).trim() !== '') {
+                const acomps = String(pedido.acompanhamentos).split(',').map(a => a.trim()).filter(Boolean);
+                acompHtml = acomps.map(a => `<li style="font-weight: 900;">${escapeHtml(a)} (grátis)</li>`).join('');
+            } else {
+                acompHtml = '<li style="font-weight: 900;">Nenhum</li>';
+            }
+
+            let adicHtml = '';
+            if (pedido.adicionais && String(pedido.adicionais).trim() !== '') {
+                const adics = String(pedido.adicionais).split(',').map(a => a.trim()).filter(Boolean);
+                adicHtml = adics.map(a => `<li style="font-weight: 900;">${escapeHtml(a)}</li>`).join('');
+            } else {
+                adicHtml = '<li style="font-weight: 900;">Nenhum</li>';
+            }
+
+            const valorTotal = parseFloat(pedido.total);
+            const totalFormatado = !isNaN(valorTotal) ? valorTotal.toFixed(2).replace('.', ',') : '0,00';
+
+            const conteudoImpressao = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Comanda #${pedido.id}</title>
+                    <style>
+                        @page { size: 80mm auto; margin: 0; }
+                        * { font-weight: 900 !important; color: #000 !important; }
+                        body {
+                            font-family: 'Courier New', Courier, monospace;
+                            width: 70mm;
+                            margin: 5mm auto;
+                            font-size: 13px;
+                            line-height: 1.4;
+                            color: #000;
+                            background: #fff;
+                            font-weight: 900 !important;
+                        }
+                        .text-center { text-align: center; }
+                        .bold { font-weight: 900 !important; }
+                        .header-title { font-size: 15px; font-weight: 900 !important; letter-spacing: 1px; margin-bottom: 12px; }
+                        .double-line { border-bottom: 2px dashed #000; margin: 8px 0; }
+                        .flex-row { display: flex; justify-content: space-between; align-items: center; font-weight: 900 !important; }
+                        .pedido-info { font-size: 14px; font-weight: 900 !important; }
+                        .cliente-info { margin: 10px 0; font-size: 14px; font-weight: 900 !important; }
+                        .section-title { margin-top: 10px; font-weight: 900 !important; }
+                        ul { list-style-type: disc; margin: 4px 0 10px 20px; padding: 0; font-weight: 900 !important; }
+                        li { margin-bottom: 2px; font-weight: 900 !important; }
+                        .total-row { font-size: 15px; font-weight: 900 !important; margin: 6px 0; }
+                        .total-valor { margin-right: 20px !important; font-weight: 900 !important; }
+                        .footer { margin-top: 15px; font-size: 12px; font-weight: 900 !important; }
+                    </style>
+                </head>
+                <body>
+                    <div class="text-center header-title">SORVETERIA SENSAÇÃO</div>
+                    <div class="double-line"></div>
+                    <div class="pedido-info">PEDIDO #${pedido.id}</div>
+                    <div>${dataFormatada}, ${horaFormatada}</div>
+                    <div class="double-line"></div>
+                    <div class="cliente-info">Cliente: <b>${escapeHtml(pedido.cliente)}</b></div>
+                    <div style="border-bottom: 1px dashed #000; margin: 8px 0;"></div>
+                    <div class="flex-row bold" style="margin-bottom: 8px;">
+                        <span>${escapeHtml(pedido.tamanho)}</span>
+                    </div>
+                    <div class="section-title">Acompanhamentos:</div>
+                    <ul>${acompHtml}</ul>
+                    ${pedido.adicionais && String(pedido.adicionais).trim() !== '' ? `
+                        <div class="section-title">Adicionais:</div>
+                        <ul>${adicHtml}</ul>
+                    ` : ''}
+                    ${pedido.observacoes ? `
+                        <div class="section-title">Observações:</div>
+                        <div style="margin-left: 10px; font-weight: 900;">${escapeHtml(pedido.observacoes)}</div>
+                    ` : ''}
+                    <div class="double-line"></div>
+                    <div class="flex-row total-row">
+                        <span>TOTAL</span>
+                        <span class="total-valor">R$ ${totalFormatado}</span>
+                    </div>
+                    <div class="double-line"></div>
+                    <div class="text-center footer">
+                        Obrigado pela preferência!<br>Volte sempre!
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const janImpressao = window.open('', '_blank', 'width=400,height=600');
+            janImpressao.document.write(conteudoImpressao);
+            janImpressao.document.close();
+            janImpressao.focus();
+
+            setTimeout(() => {
+                janImpressao.print();
+                janImpressao.close();
+            }, 250);
+        }
+
+        async function concluirPedido(id) {
+            try {
+                const response = await fetch(`/api/pedidos/${id}/concluir`, { method: 'PUT' });
+                if (response.ok) carregarPedidos();
+                else alert('Erro ao concluir pedido.');
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function init() {
+            try {
+                carregarTemaSalvo();
+                verificarStatusLoja();
+
+                const sessRes = await fetch('/api/session');
+                const sess = await sessRes.json();
+
+                if (!sess.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                document.getElementById('userNameDisplay').innerText = escapeHtml(sess.user.login);
+
+                const navAdmin = document.getElementById('navAdmin');
+                const navLogs = document.getElementById('navLogs');
+
+                if (sess.user) {
+                    const role = sess.user.role || sess.user.cargo || '';
+                    if (role.toLowerCase() === 'admin') {
+                        if (navAdmin) navAdmin.style.display = 'inline-flex';
+                        if (navLogs) navLogs.style.display = 'inline-flex';
+                    } else {
+                        if (navAdmin) navAdmin.style.display = 'none';
+                        if (navLogs) navLogs.style.display = 'none';
+                    }
+                }
+
+                alternarVisao(modoVisaoAtual);
+                carregarPedidos();
+                setInterval(carregarPedidos, 3000);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

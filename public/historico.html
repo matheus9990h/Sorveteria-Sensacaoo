@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Histórico de Pedidos</title>
+    
+    <link rel="icon" type="image/jpeg" href="Logo.jpeg">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+        }
+
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --border-active: #9333ea;
+            --primary-color: #7e22ce;
+            --primary-hover: #6b21a8;
+            --primary-light: #f3e8ff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --card-title-color: #7e22ce;
+            --input-bg: #f8fafc;
+            --shadow-color: rgba(147, 51, 234, 0.08);
+            --table-header-bg: #f8fafc;
+            --table-hover: #f1f5f9;
+        }
+
+        body.dark-theme {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --border-active: #a855f7;
+            --primary-color: #a855f7;
+            --primary-hover: #c084fc;
+            --primary-light: #3b0764;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-title-color: #c084fc;
+            --input-bg: #0f172a;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --table-header-bg: #0f172a;
+            --table-hover: #1a2333;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* --- CABEÇALHO (NAVBAR IGUAL A ATENDIMENTO) --- */
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+        }
+
+        nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        nav .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        nav .nav-btn:hover:not(.active) {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        nav .nav-btn.active {
+            background: var(--primary-color);
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(126, 34, 206, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #themeToggleBtn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #themeToggleBtn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .user-title {
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .btn-logout-door {
+            background-color: #ef4444;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-logout-door:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* --- CONTAINER E CONTEÚDO PRINCIPAL --- */
+        .container {
+            padding: 32px 24px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            background: var(--bg-card);
+            padding: 20px 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .page-title {
+            color: var(--text-color);
+            margin: 0 0 6px 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.92rem;
+        }
+
+        /* --- FILTRO E BUSCA --- */
+        .filter-box {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            border: 1px solid var(--border-color) !important;
+            background: var(--input-bg);
+            padding: 10px 16px 10px 44px;
+            border-radius: 9999px;
+            outline: none;
+            transition: all 0.25s ease;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--border-active) !important;
+            box-shadow: 0 0 0 4px rgba(147, 51, 234, 0.12);
+        }
+
+        /* --- TABELA DO HISTÓRICO --- */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color) !important;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--table-header-bg);
+            font-weight: 700;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: var(--table-hover);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Badges de Status */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .badge-pendente { 
+            background: #fef3c7; 
+            color: #d97706; 
+            border: 1px solid #fde68a;
+        }
+
+        .badge-pronto { 
+            background: #d1fae5; 
+            color: #059669; 
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Botões de Ação na Tabela */
+        .btn-acao {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .btn-acao:hover {
+            background: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(126, 34, 206, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            color: #ffffff;
+            border-color: #dc2626;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        }
+
+        .item-details {
+            line-height: 1.4;
+        }
+
+        .item-details b {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 900px) {
+            header {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="mobile.css">
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <img src="Logo.jpeg" alt="Logo">
+            <h1>Sorveteria Sensação</h1>
+        </div>
+        <nav>
+            <a href="atendimento.html" class="nav-btn" id="navAtendimento">
+                <i data-lucide="clipboard-edit" size="18"></i> Atendimento
+            </a>
+            <a href="cozinha.html" class="nav-btn" id="navCozinha">
+                <i data-lucide="chef-hat" size="18"></i> Cozinha
+            </a>
+            <a href="historico.html" class="nav-btn active" id="navHistorico">
+                <i data-lucide="bar-chart-3" size="18"></i> Histórico
+            </a>
+            <a href="logs.html" class="nav-btn" id="navLogs" style="display: none;">
+                <i data-lucide="file-text" size="18"></i> Logs
+            </a>
+            <a href="admin.html" class="nav-btn" id="navAdmin" style="display: none;">
+                <i data-lucide="settings" size="18"></i> Administração
+            </a>
+        </nav>
+        <div class="user-info">
+            <button onclick="toggleTheme()" id="themeToggleBtn" title="Alternar Tema">
+                <i data-lucide="moon" id="themeIcon" size="20"></i>
+            </button>
+            <span class="user-title" id="userNameDisplay">Usuário</span>
+            <button onclick="logout()" class="btn-logout-door" title="Sair">
+                <i data-lucide="log-out" size="18"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h2 class="page-title"><i data-lucide="history" size="26"></i> Histórico de Pedidos do Dia</h2>
+            <p class="page-subtitle">Consulte pedidos já realizados para conferência de caixa ou reimpressão.</p>
+        </div>
+
+        <div class="filter-box">
+            <div class="search-wrapper">
+                <i data-lucide="search" size="18"></i>
+                <input type="text" id="filtroCliente" placeholder="Buscar por nome do cliente ou mesa..." oninput="filtrarPedidos()">
+            </div>
+            <button id="btnLimparHistorico" onclick="limparHistorico()" class="btn-acao btn-danger" style="display: none;">
+                <i data-lucide="trash-2" size="16"></i> Limpar Histórico
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Horário</th>
+                        <th>Cliente / Local</th>
+                        <th>Itens / Descrição</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaHistorico">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">Carregando pedidos...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let todosPedidos = [];
+
+        function renderIcons() {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('sensacao_dark_theme', isDark);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            }
+            renderIcons();
+        }
+
+        function initTheme() {
+            const isDark = localStorage.getItem('sensacao_dark_theme') === 'true';
+            const themeIcon = document.getElementById('themeIcon');
+            if (isDark) {
+                document.body.classList.add('dark-theme');
+                if (themeIcon) themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                document.body.classList.remove('dark-theme');
+                if (themeIcon) themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            renderIcons();
+        }
+
+        async function checarSessao() {
+            try {
+                const res = await fetch('/api/session');
+                const data = await res.json();
+                if (!data.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                document.getElementById('userNameDisplay').innerText = data.user.login;
+                
+                const btnCozinha = document.getElementById('navCozinha');
+                const btnHistorico = document.getElementById('navHistorico');
+                const btnAdmin = document.getElementById('navAdmin');
+                const btnLogs = document.getElementById('navLogs');
+
+                if (data.user.role === 'cliente') {
+                    if (btnCozinha) btnCozinha.style.display = 'none';
+                    if (btnHistorico) btnHistorico.style.display = 'none';
+                    if (btnAdmin) btnAdmin.style.display = 'none';
+                    if (btnLogs) btnLogs.style.display = 'none';
+                } else if (data.user.role === 'admin') {
+                    if (btnCozinha) btnCozinha.style.display = 'inline-flex';
+                    if (btnHistorico) btnHistorico.style.display = 'inline-flex';
+                    if (btnAdmin) btnAdmin.style.display = 'inline-flex';
+                    if (btnLogs) btnLogs.style.display = 'inline-flex';
+
+                    const btnLimpar = document.getElementById('btnLimparHistorico');
+                    if (btnLimpar) btnLimpar.style.display = 'inline-flex';
+                } else {
+                    if (btnCozinha) btnCozinha.style.display = 'inline-flex';
+                    if (btnHistorico) btnHistorico.style.display = 'inline-flex';
+                    if (btnAdmin) btnAdmin.style.display = 'none';
+                    if (btnLogs) btnLogs.style.display = 'none';
+                }
+                renderIcons();
+            } catch (err) {
+                console.error('Erro ao checar sessão:', err);
+            }
+        }
+
+        async function carregarHistorico() {
+            try {
+                const res = await fetch('/api/pedidos');
+                if (!res.ok) throw new Error('Falha na resposta do servidor');
+                todosPedidos = await res.json();
+                renderizarTabela(todosPedidos);
+            } catch (err) {
+                console.error('Erro ao carregar histórico:', err);
+                document.getElementById('tabelaHistorico').innerHTML = `<tr><td colspan="7" style="text-align: center; color: #ef4444; padding: 24px;">Erro ao carregar dados. Verifique a conexão com o servidor.</td></tr>`;
+            }
+        }
+
+        function renderizarTabela(pedidos) {
+            const tbody = document.getElementById('tabelaHistorico');
+            if (!pedidos || pedidos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">Nenhum pedido encontrado.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = pedidos.map(p => {
+                const acompStr = p.acompanhamentos ? `<b>Acomp:</b> ${p.acompanhamentos}<br>` : '';
+                const adicStr = p.adicionais ? `<b>Adic:</b> ${p.adicionais}<br>` : '';
+                const obsStr = p.observacoes ? `<i>Obs: ${p.observacoes}</i>` : '';
+                
+                const statusPronto = p.status === 'PRONTO' || p.status === 'pronto';
+                const statusBadge = statusPronto 
+                    ? `<span class="badge-status badge-pronto"><i data-lucide="check-circle-2" size="14"></i> Pronto/Entregue</span>` 
+                    : `<span class="badge-status badge-pendente"><i data-lucide="clock" size="14"></i> Em Preparo</span>`;
+
+                return `
+                    <tr>
+                        <td><strong>#${p.id || '---'}</strong></td>
+                        <td style="color: var(--text-muted);">${p.data_hora || '---'}</td>
+                        <td><strong>${p.cliente}</strong></td>
+                        <td class="item-details">
+                            <strong>${p.tamanho}</strong><br>
+                            ${acompStr} ${adicStr} ${obsStr}
+                        </td>
+                        <td><strong style="color: var(--primary-color);">R$ ${Number(p.total || 0).toFixed(2).replace('.', ',')}</strong></td>
+                        <td>${statusBadge}</td>
+                        <td style="text-align: center;">
+                            <button class="btn-acao" onclick='reimprimir(${JSON.stringify(p)})' title="Reimprimir Comprovante">
+                                <i data-lucide="printer" size="14"></i> Reimprimir
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            renderIcons();
+        }
+
+        function filtrarPedidos() {
+            const termo = document.getElementById('filtroCliente').value.toLowerCase();
+            const filtrados = todosPedidos.filter(p => 
+                p.cliente.toLowerCase().includes(termo) || (p.id && String(p.id).includes(termo))
+            );
+            renderizarTabela(filtrados);
+        }
+
+        async function limparHistorico() {
+            if (!confirm('Tem certeza que deseja apagar todo o histórico de pedidos? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/pedidos/limpar', { method: 'DELETE' });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert('Histórico limpo com sucesso!');
+                    carregarHistorico();
+                } else {
+                    alert('Erro ao limpar histórico: ' + (data.error || 'Erro desconhecido'));
+                }
+            } catch (err) {
+                console.error('Erro na requisição:', err);
+                alert('Erro de conexão ao tentar limpar o histórico.');
+            }
+        }
+
+        function reimprimir(pedido) {
+            const janela = window.open('', '', 'width=300,height=600');
+            if (!janela) {
+                alert('Permita pop-ups no navegador para realizar a reimpressão.');
+                return;
+            }
+            janela.document.write(`
+                <html>
+                <head><title>Reimpressão - Pedido #${pedido.id}</title></head>
+                <body style="font-family: monospace; font-size: 12px; padding: 10px;">
+                    <div style="text-align: center; font-weight: bold;">SORVETERIA SENSAÇÃO</div>
+                    <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 6px;">REIMPRESSÃO DE CAIXA</div>
+                    <div><strong>Pedido:</strong> #${pedido.id}</div>
+                    <div><strong>Horário:</strong> ${pedido.data_hora}</div>
+                    <div><strong>Cliente:</strong> ${pedido.cliente}</div>
+                    <div style="border-bottom: 1px dashed #000; margin: 6px 0;"></div>
+                    <div><strong>Tamanho:</strong> ${pedido.tamanho}</div>
+                    <div><strong>Acompanhamentos:</strong><br>${pedido.acompanhamentos || 'Nenhum'}</div>
+                    <div style="margin-top: 4px;"><strong>Adicionais:</strong><br>${pedido.adicionais || 'Nenhum'}</div>
+                    <div style="margin-top: 4px;"><strong>Obs:</strong> ${pedido.observacoes || 'Nenhuma'}</div>
+                    <div style="border-bottom: 1px dashed #000; margin: 6px 0;"></div>
+                    <div style="text-align: right; font-weight: bold; font-size: 13px;">TOTAL: R$ ${Number(pedido.total || 0).toFixed(2).replace('.', ',')}</div>
+                </body>
+                </html>
+            `);
+            janela.document.close();
+            janela.focus();
+            setTimeout(() => { janela.print(); janela.close(); }, 500);
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            checarSessao();
+            carregarHistorico();
+        });
+    </script>
+</body>
+</html>

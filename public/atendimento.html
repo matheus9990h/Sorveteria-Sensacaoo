@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Atendimento</title>
+    
+    <link rel="icon" type="image/jpeg" href="Logo.jpeg">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-color: #7e22ce;
+            --primary-hover: #6b21a8;
+            --primary-light: #f3e8ff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --card-title-color: #7e22ce;
+            --input-bg: #f8fafc;
+        }
+
+        body.dark-theme {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --primary-color: #a855f7;
+            --primary-hover: #c084fc;
+            --primary-light: #3b0764;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-title-color: #c084fc;
+            --input-bg: #0f172a;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- CABEÇALHO --- */
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+        }
+
+        /* --- NAVEGAÇÃO / BOTÕES DE ABA SUAVES --- */
+        nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        nav .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            /* Transição extremamente suave usando cubic-bezier */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        /* Hover no botão inativo: flutua levemente para cima e ganha fundo limpo */
+        nav .nav-btn:hover:not(.active) {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(126, 34, 206, 0.1);
+        }
+
+        /* Estado ativo (aba selecionada): destaque com sombra elegante e elevação */
+        nav .nav-btn.active {
+            background: var(--primary-color);
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(126, 34, 206, 0.35);
+            transform: translateY(-1px);
+        }
+
+        /* Toque/Clique suave */
+        nav .nav-btn:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #themeToggleBtn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #themeToggleBtn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .user-title {
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .btn-logout-door {
+            background-color: #ef4444;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-logout-door:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        /* --- CONTAINER E GRID PRINCIPAL --- */
+        .container {
+            max-width: 1280px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-color);
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+
+        .grid-atendimento {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* --- CARDS E FORMULÁRIOS --- */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: border-color 0.2s ease;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--card-title-color);
+            margin-bottom: 16px;
+        }
+
+        .card-title span {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.88rem;
+            font-weight: 800;
+        }
+
+        /* Inputs e seletores */
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(126, 34, 206, 0.12);
+            background-color: var(--bg-card);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 12px;
+        }
+
+        .option-card {
+            background-color: var(--input-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-color);
+        }
+
+        .option-card:hover:not(.disabled) {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(126, 34, 206, 0.15);
+        }
+
+        .option-card.selected .title {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .option-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .option-card .price {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Items e Contadores */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .item-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .item-card.disabled {
+            opacity: 0.5;
+            background-color: var(--bg-body);
+        }
+
+        .item-info .title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .item-info .price {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 2px;
+        }
+
+        .badge-esgotado {
+            font-size: 0.7rem;
+            color: #ef4444;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .counter-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+
+        .counter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .counter-btn:hover:not(:disabled) {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .counter-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.3;
+        }
+
+        .counter-value {
+            font-weight: 700;
+            font-size: 0.9rem;
+            min-width: 18px;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .section-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- RESUMO DO PEDIDO (LATERAL) --- */
+        .summary-card {
+            position: sticky;
+            top: 90px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-card h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .summary-row strong {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid var(--border-color);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .summary-total #summaryTotal {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(126, 34, 206, 0.25);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(126, 34, 206, 0.35);
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 900px) {
+            header {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+
+            .grid-atendimento {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: static;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="mobile.css">
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <img src="Logo.jpeg" alt="Logo">
+            <h1>Sorveteria Sensação</h1>
+        </div>
+        <nav>
+            <a href="atendimento.html" class="nav-btn active">
+                <i data-lucide="clipboard-edit" size="18"></i> Atendimento
+            </a>
+            <a href="cozinha.html" class="nav-btn" id="navCozinha">
+                <i data-lucide="chef-hat" size="18"></i> Cozinha
+            </a>
+            <a href="historico.html" class="nav-btn" id="navHistorico">
+                <i data-lucide="bar-chart-3" size="18"></i> Histórico
+            </a>
+            <a href="logs.html" class="nav-btn" id="navLogs" style="display: none;">
+                <i data-lucide="file-text" size="18"></i> Logs
+            </a>
+            <a href="admin.html" class="nav-btn" id="navAdmin" style="display: none;">
+                <i data-lucide="settings" size="18"></i> Administração
+            </a>
+        </nav>
+        <div class="user-info">
+            <button onclick="toggleTheme()" id="themeToggleBtn" title="Alternar Tema">
+                <i data-lucide="moon" id="themeIcon" size="20"></i>
+            </button>
+            <span class="user-title" id="userNameDisplay">Usuário</span>
+            <button onclick="logout()" class="btn-logout-door" title="Sair">
+                <i data-lucide="log-out" size="18"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 class="page-title">Novo Pedido</h2>
+        <p class="page-subtitle">Monte o açaí e envie o pedido diretamente para a cozinha. <span style="font-size: 0.85rem; opacity: 0.8;">(Dica: Pressione <b>ENTER</b> nas obs. para enviar ou <b>ESC</b> para limpar)</span></p>
+
+        <form id="orderForm" class="grid-atendimento" onsubmit="enviarPedido(event)">
+            <div>
+                <!-- 1. Dados do Cliente -->
+                <div class="card">
+                    <div class="card-title"><span>1</span> Dados do Cliente</div>
+                    <input type="text" id="clienteNome" placeholder="Ex: Matheus" required>
+                </div>
+
+                <!-- 2. Local de Entrega -->
+                <div class="card">
+                    <div class="card-title"><span>2</span> Local de Entrega</div>
+                    <p class="page-subtitle" style="font-size: 0.85rem; margin-bottom: 12px;">Onde o pedido será entregue?</p>
+                    <div class="options-grid" id="localEntregaContainer">
+                        <div class="option-card selected" data-local="Balcão" onclick="selectLocal(this)">
+                            <i data-lucide="store" size="24"></i>
+                            <div class="title">Balcão</div>
+                        </div>
+                        <div class="option-card" data-local="Para Viagem" onclick="selectLocal(this)">
+                            <i data-lucide="shopping-bag" size="24"></i>
+                            <div class="title">Para Viagem</div>
+                        </div>
+                        <div class="option-card" data-local="Mesa" onclick="selectLocal(this)">
+                            <i data-lucide="utensils" size="24"></i>
+                            <div class="title">Mesa</div>
+                        </div>
+                    </div>
+
+                    <!-- Caixa Condicional: Tampado ou Aberto -->
+                    <div id="tipoCopoContainer" style="margin-top: 16px; border-top: 1px dashed var(--border-color); padding-top: 14px;">
+                        <label class="section-label">Como vai o copo?</label>
+                        <div class="options-grid" id="tipoCopoSubContainer">
+                            <div class="option-card selected" data-tipo="Tampado" onclick="selectTipoCopo(this)">
+                                <i data-lucide="cup-soda" size="20"></i>
+                                <div class="title" style="font-size: 0.88rem;">Tampado</div>
+                            </div>
+                            <div class="option-card" data-tipo="Aberto" onclick="selectTipoCopo(this)">
+                                <i data-lucide="ice-cream" size="20"></i>
+                                <div class="title" style="font-size: 0.88rem;">Aberto</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caixa Condicional: Número da Mesa -->
+                    <div id="mesaContainer" style="display: none; margin-top: 16px; border-top: 1px dashed var(--border-color); padding-top: 14px;">
+                        <label class="section-label">Identificação da Mesa</label>
+                        <input type="text" id="inputMesa" placeholder="Ex: Mesa 04 ou Varanda">
+                    </div>
+                </div>
+
+                <!-- 3. Tamanhos -->
+                <div class="card">
+                    <div class="card-title"><span>3</span> Tamanho do Copo</div>
+                    <div class="options-grid" id="tamanhosContainer"></div>
+
+                    <!-- Caixa de Quantidade -->
+                    <div id="quantidadeContainer" style="display: none; margin-top: 18px; border-top: 1px dashed var(--border-color); padding-top: 14px;">
+                        <label class="section-label">Quantidade deste mesmo copo:</label>
+                        <div style="display: flex; align-items: center; gap: 10px; max-width: 180px;">
+                            <button type="button" onclick="alterarQuantidade(-1)" class="counter-btn" style="width:36px; height:36px; border:1px solid var(--border-color);">-</button>
+                            <input type="number" id="inputQuantidade" value="1" min="1" max="50" style="text-align: center; font-weight: bold;" onchange="validarQuantidade()" oninput="atualizarResumo()">
+                            <button type="button" onclick="alterarQuantidade(1)" class="counter-btn" style="width:36px; height:36px; border:1px solid var(--border-color);">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Acompanhamentos -->
+                <div class="card">
+                    <div class="card-title"><span>4</span> Acompanhamentos</div>
+                    <p class="page-subtitle" style="font-size: 0.85rem; margin-bottom: 12px;">
+                        Até 4 grátis por copo — cada extra total custa R$ 2,00
+                    </p>
+                    <div class="items-grid" id="acompContainer"></div>
+                </div>
+
+                <!-- 5. Adicionais Pagos -->
+                <div class="card">
+                    <div class="card-title"><span>5</span> Adicionais Pagos</div>
+                    <p class="page-subtitle" style="font-size: 0.85rem; margin-bottom: 12px;">Deixe o açaí ainda mais turbinado ✨</p>
+                    <div class="items-grid" id="adicContainer"></div>
+                </div>
+
+                <!-- 6. Observações -->
+                <div class="card">
+                    <div class="card-title"><span>6</span> Observações do Copo</div>
+                    <input type="text" id="observacoes" placeholder="Ex: Tirar morango, colocar mais leite condensado..." oninput="atualizarResumo()">
+                </div>
+            </div>
+
+            <!-- Resumo lateral -->
+            <div>
+                <div class="summary-card">
+                    <h3><i data-lucide="receipt" size="22"></i> Resumo do Pedido</h3>
+                    <div class="summary-row">
+                        <span>Cliente</span>
+                        <strong id="summaryCliente">-</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Entrega</span>
+                        <strong id="summaryLocal">Balcão (Tampado)</strong>
+                    </div>
+                    <div class="summary-row" id="summaryMesaRow" style="display: none;">
+                        <span>Mesa</span>
+                        <strong id="summaryMesa">-</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tamanho</span>
+                        <strong id="summaryTamanho">-</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Quantidade</span>
+                        <strong id="summaryQtd">1x</strong>
+                    </div>
+                    <div class="summary-row" style="align-items: flex-start;">
+                        <span>Acompanhamentos</span>
+                        <strong id="summaryAcomp" style="text-align: right; max-width: 150px; font-weight: 500; font-size: 0.85rem;">Nenhum</strong>
+                    </div>
+                    <div class="summary-row" style="align-items: flex-start;">
+                        <span>Adicionais</span>
+                        <strong id="summaryAdic" style="text-align: right; max-width: 150px; font-weight: 500; font-size: 0.85rem;">Nenhum</strong>
+                    </div>
+                    <div class="summary-row" id="summaryObsRow" style="display: none; align-items: flex-start;">
+                        <span>Observações</span>
+                        <strong id="summaryObs" style="text-align: right; max-width: 150px; font-weight: 500; font-size: 0.85rem; color: #d97706;">-</strong>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span id="summaryTotal">R$ 0,00</span>
+                    </div>
+                    <button type="submit" class="btn-submit" id="btnEnviarCozinha" style="opacity: 0.6; cursor: not-allowed;" disabled>
+                        <span>Enviar para Cozinha</span>
+                        <i data-lucide="send" size="18"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let selectedTamanho = null;
+        let quantidadeAtual = 1;
+        let selectedLocalEntrega = "Balcão";
+        let selectedTipoCopo = "Tampado";
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('sensacao_dark_theme', isDark);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+                lucide.createIcons();
+            }
+        }
+
+        function initTheme() {
+            const isDark = localStorage.getItem('sensacao_dark_theme') === 'true';
+            const themeIcon = document.getElementById('themeIcon');
+            if (isDark) {
+                document.body.classList.add('dark-theme');
+                if (themeIcon) themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                if (themeIcon) themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        function selectLocal(el) {
+            document.querySelectorAll('#localEntregaContainer .option-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedLocalEntrega = el.dataset.local;
+
+            const mesaContainer = document.getElementById('mesaContainer');
+            const summaryMesaRow = document.getElementById('summaryMesaRow');
+            const tipoCopoContainer = document.getElementById('tipoCopoContainer');
+
+            if (selectedLocalEntrega === 'Mesa') {
+                tipoCopoContainer.style.display = 'none';
+                mesaContainer.style.display = 'block';
+                summaryMesaRow.style.display = 'flex';
+                atualizarResumoLocal();
+            } else {
+                tipoCopoContainer.style.display = 'block';
+                mesaContainer.style.display = 'none';
+                summaryMesaRow.style.display = 'none';
+                document.getElementById('inputMesa').value = '';
+                document.getElementById('summaryMesa').innerText = '-';
+                atualizarResumoLocal();
+            }
+        }
+
+        function selectTipoCopo(el) {
+            document.querySelectorAll('#tipoCopoSubContainer .option-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedTipoCopo = el.dataset.tipo;
+            atualizarResumoLocal();
+        }
+
+        function atualizarResumoLocal() {
+            if (selectedLocalEntrega === 'Mesa') {
+                document.getElementById('summaryLocal').innerText = 'Mesa';
+            } else {
+                document.getElementById('summaryLocal').innerText = `${selectedLocalEntrega} (${selectedTipoCopo})`;
+            }
+        }
+
+        document.getElementById('inputMesa').addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            document.getElementById('summaryMesa').innerText = val ? val : '-';
+        });
+
+        async function checarSessao() {
+            try {
+                const res = await fetch('/api/session');
+                const data = await res.json();
+                if (!data.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                document.getElementById('userNameDisplay').innerText = data.user.login;
+                
+                const btnCozinha = document.getElementById('navCozinha');
+                const btnHistorico = document.getElementById('navHistorico');
+                const btnAdmin = document.getElementById('navAdmin');
+                const btnLogs = document.getElementById('navLogs');
+
+                if (data.user.role === 'cliente') {
+                    if (btnCozinha) btnCozinha.style.display = 'none';
+                    if (btnHistorico) btnHistorico.style.display = 'none';
+                    if (btnAdmin) btnAdmin.style.display = 'none';
+                    if (btnLogs) btnLogs.style.display = 'none';
+                } else if (data.user.role === 'admin') {
+                    if (btnCozinha) btnCozinha.style.display = 'inline-flex';
+                    if (btnHistorico) btnHistorico.style.display = 'inline-flex';
+                    if (btnAdmin) btnAdmin.style.display = 'inline-flex';
+                    if (btnLogs) btnLogs.style.display = 'inline-flex';
+                } else {
+                    if (btnCozinha) btnCozinha.style.display = 'inline-flex';
+                    if (btnHistorico) btnHistorico.style.display = 'inline-flex';
+                    if (btnAdmin) btnAdmin.style.display = 'none';
+                    if (btnLogs) btnLogs.style.display = 'none';
+                }
+            } catch (err) {
+                console.error('Erro ao checar sessão:', err);
+            }
+        }
+
+        async function init() {
+            initTheme();
+            await checarSessao();
+            loadTamanhos();
+            loadAcompanhamentos();
+            loadAdicionais();
+            verificarStatusOperacaoAtendimento();
+        }
+
+        async function loadTamanhos() {
+            try {
+                const res = await fetch('/api/tamanhos');
+                const data = await res.json();
+                const container = document.getElementById('tamanhosContainer');
+                container.innerHTML = data.map(item => {
+                    const disponivel = item.disponivel !== 0;
+
+                    return `
+                        <div class="option-card ${!disponivel ? 'disabled' : ''}" 
+                             data-id="${item.id}" 
+                             data-nome="${item.nome}" 
+                             data-preco="${item.preco}" 
+                             data-disponivel="${disponivel}" 
+                             onclick="selectTamanho(this)">
+                            <i data-lucide="cup-soda" size="24"></i>
+                            <div class="title">${item.nome}</div>
+                            <div class="price">R$ ${Number(item.preco).toFixed(2).replace('.', ',')}</div>
+                            ${!disponivel ? '<span class="badge-esgotado">Esgotado</span>' : ''}
+                        </div>
+                    `;
+                }).join('');
+                lucide.createIcons();
+            } catch (err) {
+                console.error('Erro ao carregar tamanhos:', err);
+            }
+        }
+
+        function selectTamanho(el) {
+            if (el.dataset.disponivel === 'false') return;
+
+            document.querySelectorAll('#tamanhosContainer .option-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedTamanho = {
+                nome: el.dataset.nome,
+                preco: parseFloat(el.dataset.preco)
+            };
+            document.getElementById('quantidadeContainer').style.display = 'block';
+            document.getElementById('summaryTamanho').innerText = selectedTamanho.nome;
+            atualizarResumo();
+        }
+
+        function alterarQuantidade(valor) {
+            const input = document.getElementById('inputQuantidade');
+            let novaQtd = parseInt(input.value || 1) + valor;
+            if (novaQtd < 1) novaQtd = 1;
+            if (novaQtd > 50) novaQtd = 50;
+            input.value = novaQtd;
+            quantidadeAtual = novaQtd;
+            atualizarResumo();
+        }
+
+        function validarQuantidade() {
+            const input = document.getElementById('inputQuantidade');
+            let val = parseInt(input.value);
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > 50) val = 50;
+            input.value = val;
+            quantidadeAtual = val;
+            atualizarResumo();
+        }
+
+        async function loadAcompanhamentos() {
+            try {
+                const res = await fetch('/api/acompanhamentos');
+                const data = await res.json();
+                const container = document.getElementById('acompContainer');
+                container.innerHTML = data.map(item => {
+                    const disponivel = item.disponivel !== 0;
+                    return `
+                        <div class="item-card ${!disponivel ? 'disabled' : ''}">
+                            <div class="item-info">
+                                <div class="title">${item.nome}</div>
+                                ${!disponivel ? '<span class="badge-esgotado">Esgotado</span>' : ''}
+                            </div>
+                            <div class="counter-box">
+                                <button type="button" class="counter-btn" ${!disponivel ? 'disabled' : ''} onclick="mudarItemCount('acomp', '${item.nome}', -1)">-</button>
+                                <span class="counter-value" id="acomp_${item.nome}">0</span>
+                                <button type="button" class="counter-btn" ${!disponivel ? 'disabled' : ''} onclick="mudarItemCount('acomp', '${item.nome}', 1)">+</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Erro ao carregar acompanhamentos:', err);
+            }
+        }
+
+        async function loadAdicionais() {
+            try {
+                const res = await fetch('/api/adicionais');
+                const data = await res.json();
+                const container = document.getElementById('adicContainer');
+                container.innerHTML = data.map(item => {
+                    const disponivel = item.disponivel !== 0;
+                    return `
+                        <div class="item-card ${!disponivel ? 'disabled' : ''}">
+                            <div class="item-info">
+                                <div class="title">${item.nome}</div>
+                                <div class="price">R$ ${Number(item.preco).toFixed(2).replace('.', ',')}</div>
+                                ${!disponivel ? '<span class="badge-esgotado">Esgotado</span>' : ''}
+                            </div>
+                            <div class="counter-box">
+                                <button type="button" class="counter-btn" ${!disponivel ? 'disabled' : ''} onclick="mudarItemCount('adic', '${item.nome}', -1, ${item.preco})">-</button>
+                                <span class="counter-value" id="adic_${item.nome}">0</span>
+                                <button type="button" class="counter-btn" ${!disponivel ? 'disabled' : ''} onclick="mudarItemCount('adic', '${item.nome}', 1, ${item.preco})">+</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Erro ao carregar adicionais:', err);
+            }
+        }
+
+        function mudarItemCount(tipo, nome, delta, preco = 0) {
+            const spanId = `${tipo}_${nome}`;
+            const span = document.getElementById(spanId);
+            if (!span) return;
+            let atual = parseInt(span.innerText) || 0;
+            let novo = atual + delta;
+            if (novo < 0) novo = 0;
+            if (novo > 10) novo = 10;
+            span.innerText = novo;
+            atualizarResumo();
+        }
+
+        document.getElementById('clienteNome').addEventListener('input', (e) => {
+            document.getElementById('summaryCliente').innerText = e.target.value || '-';
+            atualizarResumo();
+        });
+
+        function atualizarResumo() {
+            document.getElementById('summaryQtd').innerText = `${quantidadeAtual}x`;
+
+            const acompList = [];
+            document.querySelectorAll('[id^="acomp_"]').forEach(el => {
+                const qtd = parseInt(el.innerText) || 0;
+                if (qtd > 0) {
+                    const nome = el.id.replace('acomp_', '');
+                    acompList.push(qtd > 1 ? `${nome} (${qtd}x)` : nome);
+                }
+            });
+            document.getElementById('summaryAcomp').innerText = acompList.length > 0 ? acompList.join(', ') : 'Nenhum';
+
+            const adicList = [];
+            document.querySelectorAll('[id^="adic_"]').forEach(el => {
+                const qtd = parseInt(el.innerText) || 0;
+                if (qtd > 0) {
+                    const nome = el.id.replace('adic_', '');
+                    adicList.push(qtd > 1 ? `${nome} (${qtd}x)` : nome);
+                }
+            });
+            document.getElementById('summaryAdic').innerText = adicList.length > 0 ? adicList.join(', ') : 'Nenhum';
+
+            const obsVal = document.getElementById('observacoes').value.trim();
+            const summaryObsRow = document.getElementById('summaryObsRow');
+            if (obsVal) {
+                summaryObsRow.style.display = 'flex';
+                document.getElementById('summaryObs').innerText = obsVal;
+            } else {
+                summaryObsRow.style.display = 'none';
+            }
+
+            let totalUnitario = selectedTamanho ? selectedTamanho.preco : 0;
+
+            let totalAcompCount = 0;
+            document.querySelectorAll('[id^="acomp_"]').forEach(el => {
+                totalAcompCount += parseInt(el.innerText) || 0;
+            });
+            let extraAcompFee = 0;
+            if (totalAcompCount > 4) {
+                extraAcompFee = (totalAcompCount - 4) * 2.00;
+            }
+
+            let totalAdicSomado = 0;
+            const adicCards = document.querySelectorAll('#adicContainer .item-card');
+            adicCards.forEach(card => {
+                const title = card.querySelector('.title').innerText;
+                const priceEl = card.querySelector('.price');
+                if (!priceEl) return;
+                const priceText = priceEl.innerText.replace('R$', '').replace(',', '.').trim();
+                const precoUnit = parseFloat(priceText) || 0;
+                const qtdSpan = document.getElementById(`adic_${title}`);
+                const qtd = qtdSpan ? (parseInt(qtdSpan.innerText) || 0) : 0;
+                totalAdicSomado += (precoUnit * qtd);
+            });
+
+            let subtotalUnitario = totalUnitario + extraAcompFee + totalAdicSomado;
+            let totalGeral = subtotalUnitario * quantidadeAtual;
+
+            document.getElementById('summaryTotal').innerText = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+
+            const clientePreenchido = document.getElementById('clienteNome').value.trim() !== '';
+            const btnFinalizar = document.getElementById('btnEnviarCozinha');
+            const lojaFechada = localStorage.getItem('sensacao_loja_fechada') === 'true';
+
+            if (selectedTamanho && clientePreenchido && !lojaFechada) {
+                btnFinalizar.style.opacity = '1';
+                btnFinalizar.style.cursor = 'pointer';
+                btnFinalizar.disabled = false;
+            } else if (lojaFechada) {
+                verificarStatusOperacaoAtendimento();
+            } else {
+                btnFinalizar.style.opacity = '0.6';
+                btnFinalizar.style.cursor = 'not-allowed';
+                btnFinalizar.disabled = true;
+            }
+        }
+
+        async function enviarPedido(event) {
+            if (event) event.preventDefault();
+
+            const lojaFechada = localStorage.getItem('sensacao_loja_fechada') === 'true';
+            if (lojaFechada) {
+                alert('⚠️ A operação interna está fechada! Não é possível enviar novos pedidos para a cozinha.');
+                verificarStatusOperacaoAtendimento();
+                return;
+            }
+
+            const clienteInput = document.getElementById('clienteNome').value.trim();
+            if (!clienteInput || !selectedTamanho) return;
+
+            let clienteFinal = '';
+            if (selectedLocalEntrega === 'Mesa') {
+                const numeroMesa = document.getElementById('inputMesa').value.trim();
+                clienteFinal = numeroMesa ? `${clienteInput} [Mesa: ${numeroMesa}]` : `${clienteInput} [Mesa]`;
+            } else {
+                clienteFinal = `${clienteInput} [${selectedLocalEntrega} - ${selectedTipoCopo}]`;
+            }
+
+            const acompanhamentos = [];
+            document.querySelectorAll('[id^="acomp_"]').forEach(el => {
+                const qtd = parseInt(el.innerText) || 0;
+                if (qtd > 0) {
+                    const nome = el.id.replace('acomp_', '');
+                    acompanhamentos.push(qtd > 1 ? `${nome} (${qtd}x)` : nome);
+                }
+            });
+
+            const adicionais = [];
+            document.querySelectorAll('[id^="adic_"]').forEach(el => {
+                const qtd = parseInt(el.innerText) || 0;
+                if (qtd > 0) {
+                    const nome = el.id.replace('adic_', '');
+                    adicionais.push(qtd > 1 ? `${nome} (${qtd}x)` : nome);
+                }
+            });
+
+            const observacoes = document.getElementById('observacoes').value.trim();
+            const tamanhoFormatado = `${quantidadeAtual}x ${selectedTamanho.nome}`;
+
+            let totalUnitario = selectedTamanho.preco;
+            let totalAcompCount = 0;
+            document.querySelectorAll('[id^="acomp_"]').forEach(el => {
+                totalAcompCount += parseInt(el.innerText) || 0;
+            });
+            let extraAcompFee = totalAcompCount > 4 ? (totalAcompCount - 4) * 2.00 : 0;
+
+            let totalAdicSomado = 0;
+            document.querySelectorAll('#adicContainer .item-card').forEach(card => {
+                const title = card.querySelector('.title').innerText;
+                const priceEl = card.querySelector('.price');
+                if (!priceEl) return;
+                const priceText = priceEl.innerText.replace('R$', '').replace(',', '.').trim();
+                const precoUnit = parseFloat(priceText) || 0;
+                const qtdSpan = document.getElementById(`adic_${title}`);
+                const qtd = qtdSpan ? (parseInt(qtdSpan.innerText) || 0) : 0;
+                totalAdicSomado += (precoUnit * qtd);
+            });
+
+            const totalGeral = (totalUnitario + extraAcompFee + totalAdicSomado) * quantidadeAtual;
+
+            const dadosPedido = {
+                cliente: clienteFinal,
+                tamanho: tamanhoFormatado,
+                acompanhamentos,
+                adicionais,
+                observacoes,
+                total: totalGeral
+            };
+
+            try {
+                const response = await fetch('/api/pedidos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosPedido)
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Erro ao enviar o pedido.');
+                }
+            } catch (err) {
+                console.error('Erro na requisição:', err);
+                alert('Erro de conexão com o servidor.');
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = 'index.html';
+            } catch (err) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function verificarStatusOperacaoAtendimento() {
+            const lojaFechada = localStorage.getItem('sensacao_loja_fechada') === 'true';
+            const btnEnviarCozinha = document.getElementById('btnEnviarCozinha');
+
+            if (btnEnviarCozinha) {
+                if (lojaFechada) {
+                    btnEnviarCozinha.disabled = true;
+                    btnEnviarCozinha.style.opacity = '1';
+                    btnEnviarCozinha.style.backgroundColor = '#64748b';
+                    btnEnviarCozinha.style.cursor = 'not-allowed';
+                    btnEnviarCozinha.innerHTML = '<span>Operação Fechada</span>';
+                } else {
+                    btnEnviarCozinha.disabled = false;
+                    btnEnviarCozinha.style.backgroundColor = ''; 
+                    btnEnviarCozinha.style.cursor = 'pointer';
+                    btnEnviarCozinha.innerHTML = '<span>Enviar para Cozinha</span><i data-lucide="send" size="18"></i>';
+                    lucide.createIcons();
+                    atualizarResumo();
+                }
+            }
+        }
+
+        /* --- CONFIGURAÇÃO DOS ATALHOS DE TECLADO --- */
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (confirm('Deseja limpar todos os dados do pedido atual?')) {
+                    window.location.reload();
+                }
+            }
+        });
+
+        document.getElementById('observacoes').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const btnEnviar = document.getElementById('btnEnviarCozinha');
+                if (btnEnviar && !btnEnviar.disabled) {
+                    enviarPedido(e);
+                } else {
+                    alert('Por favor, preencha o nome do cliente e selecione um tamanho antes de enviar.');
+                }
+            }
+        });
+
+        window.addEventListener('load', () => {
+            verificarStatusOperacaoAtendimento();
+        });
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'sensacao_loja_fechada') {
+                verificarStatusOperacaoAtendimento();
+            }
+        });
+
+        init();
+    </script>
+</body>
+
+</html>
