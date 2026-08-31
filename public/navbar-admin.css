@@ -1,0 +1,209 @@
+/* Navbar padronizada com a Administração - não altera o conteúdo das páginas */
+header {
+    background: var(--card-bg, #fff) !important;
+    border-bottom: 1px solid var(--border-color, #e2e8f0) !important;
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,.05)) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 28px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    min-height: 66px;
+}
+
+header .brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-shrink: 0;
+}
+
+header .brand img {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px;
+    border-radius: 8px !important;
+    object-fit: cover !important;
+    box-shadow: 0 0 0 2px var(--primary-purple, #7e22ce) !important;
+}
+
+header .brand h1 {
+    font-size: 1.35rem !important;
+    font-weight: 800 !important;
+    color: var(--primary-purple, #7e22ce) !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+    margin: 0 !important;
+    letter-spacing: -0.5px !important;
+    white-space: nowrap;
+}
+
+header nav {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    justify-content: center;
+    margin: 0 auto !important;
+}
+
+header nav .nav-btn {
+    background: transparent !important;
+    color: var(--text-muted, #64748b) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 10px 18px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center;
+    gap: 8px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+    transform: none !important;
+    white-space: nowrap;
+}
+
+header nav .nav-btn:hover:not(.active) {
+    background: var(--hover-purple-bg, #f3e8ff) !important;
+    color: var(--primary-purple, #7e22ce) !important;
+    transform: none !important;
+}
+
+header nav .nav-btn.active {
+    background: #8b5cf6 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4) !important;
+    border-radius: 12px !important;
+}
+
+header nav .nav-btn i {
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0;
+}
+
+header nav .nav-btn.active i {
+    color: #fff !important;
+}
+
+header .user-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-shrink: 0;
+    width: auto !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+}
+
+header .user-title {
+    font-weight: 700 !important;
+    color: var(--text-color, #1e293b) !important;
+    font-size: 0.9rem !important;
+    white-space: nowrap;
+}
+
+header #themeToggleBtn,
+header .theme-toggle-btn,
+header .icon-btn:not(.logout) {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border-color, #e2e8f0) !important;
+    background: var(--card-bg, #fff) !important;
+    color: var(--text-color, #1e293b) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+
+header #themeToggleBtn:hover,
+header .theme-toggle-btn:hover,
+header .icon-btn:not(.logout):hover {
+    background: var(--hover-purple-bg, #f3e8ff) !important;
+    border-color: var(--primary-purple, #7e22ce) !important;
+    color: var(--primary-purple, #7e22ce) !important;
+}
+
+header #themeToggleBtn i,
+header .theme-toggle-btn i,
+header .icon-btn:not(.logout) i {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+header .logout-btn,
+header .btn-logout-door,
+header .icon-btn.logout {
+    width: 48px !important;
+    height: 42px !important;
+    min-width: 48px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    background: #ef4444 !important;
+    color: #fff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(239,68,68,.2) !important;
+}
+
+header .logout-btn:hover,
+header .btn-logout-door:hover,
+header .icon-btn.logout:hover {
+    background: #dc2626 !important;
+    transform: translateY(-1px) !important;
+}
+
+header .logout-btn i,
+header .btn-logout-door i,
+header .icon-btn.logout i {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+@media (max-width: 1050px) {
+    header nav .nav-btn { padding: 10px 12px !important; }
+    header nav { gap: 4px !important; }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column !important;
+        gap: 10px !important;
+        padding: 10px 12px !important;
+        position: sticky !important;
+    }
+
+    header .brand { width: 100%; justify-content: center; }
+    header .brand h1 { font-size: 1.15rem !important; }
+
+    header nav {
+        width: 100% !important;
+        margin: 0 !important;
+        overflow-x: auto;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        padding: 2px 0 4px;
+        scrollbar-width: none;
+    }
+    header nav::-webkit-scrollbar { display: none; }
+    header nav .nav-btn { flex: 0 0 auto !important; padding: 9px 12px !important; font-size: .84rem !important; }
+
+    header .user-info {
+        width: 100% !important;
+        justify-content: center !important;
+        border-top: 1px solid var(--border-color, #e2e8f0) !important;
+        padding-top: 8px !important;
+    }
+}
