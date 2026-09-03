@@ -1,0 +1,2533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Administração</title>
+
+    <link rel="icon" type="image/jpeg" href="Logo.jpeg">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Lucide Icons Library -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- ESTILOS FIXOS / TEMAS (CLARO E ESCURO) --- */
+        :root {
+            --bg-body: #f8fafc;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --primary-purple: #7e22ce;
+            --primary-purple-hover: #6b21a8;
+            --hover-purple-bg: #f3e8ff;
+            --table-border: #f1f5f9;
+            --modal-overlay: rgba(15, 23, 42, 0.5);
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"],
+        body.dark-theme,
+        body.dark-mode {
+            --bg-body: #0f172a;
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --primary-purple: #a855f7;
+            --primary-purple-hover: #9333ea;
+            --hover-purple-bg: #2e1065;
+            --table-border: #334155;
+            --modal-overlay: rgba(0, 0, 0, 0.75);
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            background-color: var(--bg-body) !important;
+            color: var(--text-color);
+            transition: background-color 0.25s ease, color 0.25s ease;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* --- CABEÇALHO --- */
+        header {
+            background: var(--card-bg) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .brand img {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 0 0 2px var(--primary-purple);
+        }
+
+        header .brand h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-purple);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        header nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* BOTÕES DO CABEÇALHO COM BORDAS ARREDONDADAS IGUAIS */
+        header nav .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            border-radius: 12px !important;
+            padding: 10px 18px !important;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: none;
+        }
+
+        header nav .nav-btn:hover:not(.active) {
+            background-color: var(--hover-purple-bg);
+            color: var(--primary-purple);
+        }
+
+        header nav .nav-btn.active {
+            background-color: #8b5cf6 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4) !important;
+            border-radius: 12px !important;
+        }
+
+        header nav .nav-btn i {
+            width: 18px;
+            height: 18px;
+        }
+
+        header nav .nav-btn.active i {
+            color: #ffffff !important;
+        }
+
+        header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .user-title {
+            font-weight: 700;
+            color: var(--text-color) !important;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background-color: #ef4444 !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 8px !important;
+            cursor: pointer;
+            padding: 8px 14px !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-btn:hover {
+            background-color: #dc2626 !important;
+            transform: translateY(-1px);
+        }
+
+        .logout-btn i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* --- WRAPPER DE SENHA --- */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex: 2;
+            min-width: 180px;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding-right: 40px !important;
+            box-sizing: border-box;
+        }
+
+        .toggle-password-btn {
+            position: absolute;
+            right: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            border-radius: 4px;
+        }
+
+        .toggle-password-btn:hover {
+            color: var(--primary-purple);
+        }
+
+        .toggle-password-btn i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* --- NAVEGAÇÃO INTERNA ADMIN (COM FUNDO ADICIONADO) --- */
+        .admin-nav-bar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-x: auto;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 8px !important;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .admin-nav-btn i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .admin-nav-btn:hover:not(.active) {
+            background-color: var(--hover-purple-bg);
+            color: var(--primary-purple);
+        }
+
+        .admin-nav-btn.active {
+            background: #8b5cf6 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4) !important;
+            border-radius: 8px !important;
+        }
+
+        .admin-nav-btn.active i {
+            color: #ffffff !important;
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- CARDS E FORMULÁRIOS --- */
+        .cardapio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .cardapio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cardapio-col-left,
+        .cardapio-col-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .menu-card,
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s;
+        }
+
+        .menu-card:hover,
+        .card:hover {
+            border-color: var(--primary-purple);
+        }
+
+        .menu-card h3 {
+            margin-top: 0;
+            margin-bottom: 4px;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .menu-card-subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        .form-inline {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .form-inline input,
+        .form-inline select {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-inline input:focus,
+        .form-inline select:focus {
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.15);
+        }
+
+        .btn-add-purple {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add-purple i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-add-purple:hover {
+            background-color: var(--primary-purple-hover);
+            transform: translateY(-1px);
+        }
+
+        /* --- TABELAS --- */
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .custom-table th {
+            text-align: left;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--table-border);
+        }
+
+        .custom-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--table-border);
+            font-size: 0.9rem;
+            color: var(--text-color);
+            vertical-align: middle;
+        }
+
+        .custom-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .custom-table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: var(--hover-purple-bg);
+        }
+
+        .price-red {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            padding: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-icon:hover {
+            background-color: var(--card-bg);
+            color: var(--primary-purple);
+            border-color: var(--border-color);
+        }
+
+        /* --- MODAIS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 28px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-card h3 {
+            margin-top: 0;
+            color: var(--primary-purple);
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-card label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .modal-card input,
+        .modal-card select {
+            width: 100%;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .modal-card input:focus,
+        .modal-card select:focus {
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.15);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-modal-cancel {
+            background: var(--hover-purple-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+
+        .btn-modal-cancel:hover {
+            background: var(--border-color);
+        }
+
+        .btn-modal-save {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+
+        .btn-modal-save:hover {
+            background: var(--primary-purple-hover);
+        }
+
+
+        /* ==========================================================
+           ADMIN — LAYOUT PREMIUM / RESPONSIVO
+           ========================================================== */
+        .admin-nav-bar {
+            position: sticky; top: 78px; z-index: 20;
+            padding: 8px; gap: 6px;
+            border-radius: 16px;
+            background: color-mix(in srgb, var(--card-bg) 94%, transparent);
+            box-shadow: 0 8px 24px rgba(15,23,42,.07);
+            backdrop-filter: blur(12px);
+        }
+        .admin-nav-btn {
+            min-height: 42px; border-radius: 11px !important; padding: 10px 14px;
+        }
+        .admin-nav-btn.active {
+            background: linear-gradient(135deg,#8b5cf6,#7c3aed) !important;
+            box-shadow: 0 6px 16px rgba(124,58,237,.28) !important;
+        }
+        .cardapio-grid { grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); gap:24px; }
+        .cardapio-col-left, .cardapio-col-right { gap:24px; }
+        .menu-card, .card {
+            border-radius: 18px !important;
+            padding: 22px !important;
+            box-shadow: 0 8px 24px rgba(15,23,42,.06) !important;
+        }
+        .menu-card:hover, .card:hover {
+            transform: translateY(-2px);
+            border-color: color-mix(in srgb, var(--primary-purple) 55%, var(--border-color)) !important;
+            box-shadow: 0 14px 30px rgba(15,23,42,.09) !important;
+        }
+        .menu-card h3 { font-size:1.08rem; }
+        .form-inline { align-items:stretch; }
+        .form-inline input, .form-inline select, .modal-card input, .modal-card select {
+            border-radius: 10px !important; min-height:42px;
+        }
+        .btn-add-purple, .btn-modal-save {
+            border-radius:10px !important;
+            background:linear-gradient(135deg,#8b5cf6,#7c3aed) !important;
+            box-shadow:0 5px 12px rgba(124,58,237,.18);
+        }
+        .custom-table { overflow:hidden; border-radius:12px; }
+        .custom-table th { background:var(--hover-purple-bg); }
+        .custom-table td, .custom-table th { padding:13px 14px; }
+        .custom-table tbody tr:hover { background:var(--hover-purple-bg); }
+        .pedido-card { border-radius:16px !important; padding:18px !important; }
+        .modal-card { border-radius:18px !important; }
+        .theme-toggle-btn { border-radius:10px !important; }
+
+        body.dark-theme .admin-nav-bar, body.dark-mode .admin-nav-bar {
+            background:#172033; border-color:#334155; box-shadow:0 10px 28px rgba(0,0,0,.25);
+        }
+        body.dark-theme .menu-card, body.dark-theme .card,
+        body.dark-mode .menu-card, body.dark-mode .card {
+            box-shadow:0 10px 26px rgba(0,0,0,.20) !important;
+        }
+        body.dark-theme .custom-table th, body.dark-mode .custom-table th { background:#172033; }
+        body.dark-theme .custom-table tbody tr:hover, body.dark-mode .custom-table tbody tr:hover { background:#24143d; }
+
+        @media (max-width:900px) {
+            .container { padding:16px 12px !important; }
+            .admin-nav-bar { position:relative; top:auto; overflow-x:auto; flex-wrap:nowrap; }
+            .admin-nav-btn { flex:0 0 auto; }
+            .cardapio-grid { grid-template-columns:1fr; gap:16px; }
+            .menu-card, .card { padding:18px !important; border-radius:16px !important; }
+            .form-inline { flex-wrap:wrap; }
+            .form-inline input, .form-inline select { min-width:0; flex:1 1 150px; }
+            .custom-table { display:block; overflow-x:auto; }
+        }
+
+        /* --- COZINHA GRID & CARDS --- */
+        .cozinha-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .pedido-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary-purple);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pedido-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .theme-toggle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--hover-purple-bg);
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .theme-toggle-btn i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* --- BADGES & TOGGLES --- */
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .badge-status i {
+            width: 12px;
+            height: 12px;
+        }
+
+        .badge-disponivel {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        [data-theme="dark"] .badge-disponivel {
+            background-color: #14532d;
+            color: #86efac;
+        }
+
+        .badge-indisponivel {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        [data-theme="dark"] .badge-indisponivel {
+            background-color: #7f1d1d;
+            color: #fca5a5;
+        }
+
+        .badge-cliente {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        [data-theme="dark"] .badge-cliente {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+        }
+
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+            vertical-align: middle;
+        }
+
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .25s;
+            border-radius: 12px;
+        }
+
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .25s;
+            border-radius: 50%;
+        }
+
+        .switch-toggle input:checked+.slider-toggle {
+            background-color: #10b981;
+        }
+
+        .switch-toggle input:checked+.slider-toggle:before {
+            transform: translateX(22px);
+        }
+    </style>
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="navbar-padrao.css">
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <img src="Logo.jpeg" alt="Logo">
+            <h1>Sorveteria Sensação</h1>
+        </div>
+        <nav>
+            <a href="atendimento.html" class="nav-btn"><i data-lucide="clipboard-list"></i> Atendimento</a>
+            <a href="cozinha.html" class="nav-btn"><i data-lucide="utensils-crossed"></i> Cozinha</a>
+            <a href="historico.html" class="nav-btn"><i data-lucide="bar-chart-3"></i> Histórico</a>
+            <a href="logs.html" class="nav-btn"><i data-lucide="scroll-text"></i> Logs</a>
+            <a href="admin.html" class="nav-btn active"><i data-lucide="settings"></i> Administração</a>
+        </nav>
+        <div class="user-info">
+            <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn"
+                title="Alternar Tema Claro/Escuro">
+                <i data-lucide="moon" id="themeIcon"></i>
+            </button>
+            <span class="user-title" id="userNameDisplay">Administrador</span>
+            <button onclick="logout()" class="logout-btn" title="Sair"><i data-lucide="log-out"></i></button>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 style="color: var(--primary-purple); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <i data-lucide="sliders" style="width: 28px; height: 28px;"></i> Painel Administrativo
+        </h2>
+
+        <!-- CARD DE CONTROLE DE OPERAÇÃO INTERNA -->
+        <div class="loja-status-card"
+            style="background: var(--card-bg); padding: 16px 24px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="store" style="color: var(--primary-purple); width: 20px; height: 20px;"></i>
+                <strong style="font-size: 0.95rem;">Status Operacional Interno:</strong>
+                <span id="textoStatusLoja" style="font-weight: bold; margin-left: 4px; font-size: 1rem;">ABERTO</span>
+            </div>
+            <button id="btnAlternarLoja" onclick="alternarStatusLoja()" class="btn-acao"
+                style="background: #ef4444; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.88rem; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;">
+                <i data-lucide="power" style="width: 16px; height: 16px;"></i> Fechar Operação
+            </button>
+        </div>
+
+        <!-- Barra de Navegação Interna do Admin -->
+        <div class="admin-nav-bar">
+            <button class="admin-nav-btn active" onclick="switchAdminTab('cardapio')">
+                <i data-lucide="book-open"></i> Cardápio
+            </button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('bloqueio')">
+                <i data-lucide="ban"></i> Bloqueio Rápido
+            </button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('cozinha')">
+                <i data-lucide="chef-hat"></i> Cozinha (Ativos)
+            </button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('historico')">
+                <i data-lucide="history"></i> Histórico
+            </button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('relatorio')">
+                <i data-lucide="file-text"></i> Relatório
+            </button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('caixa')">
+                <i data-lucide="wallet"></i> Caixa
+            </button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('usuarios')">
+                <i data-lucide="users"></i> Usuários
+            </button>
+            <button class="admin-nav-btn" onclick="switchAdminTab('qrcode')">
+                <i data-lucide="qr-code"></i> QR Code
+            </button>
+        </div>
+
+        <!-- ABA: CARDÁPIO -->
+        <div id="tab-cardapio" class="tab-panel active">
+            <div class="cardapio-grid">
+                <div class="cardapio-col-left">
+                    <div class="menu-card">
+                        <h3>Tamanhos de Copos</h3>
+                        <div class="menu-card-subtitle">Cadastre novos copos ou edite os existentes abaixo.</div>
+                        <form id="addTamanhoForm" class="form-inline">
+                            <input type="text" id="tamanhoNome" placeholder="Ex: Copo 600ml" style="flex: 2;" required>
+                            <input type="number" step="0.01" id="tamanhoPreco" placeholder="Preço (ex: 20,00)"
+                                style="flex: 1;" required>
+                            <button type="submit" class="btn-add-purple"><i data-lucide="plus"></i> Adicionar</button>
+                        </form>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Preço (R$)</th>
+                                    <th style="text-align: right;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tamanhosTable"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="menu-card">
+                        <h3>Adicionais Pagos</h3>
+                        <form id="addAdicForm" class="form-inline">
+                            <input type="text" id="adicNome" placeholder="Novo adicional..." style="flex: 2;" required>
+                            <input type="number" step="0.01" id="adicPreco" placeholder="Preço (ex: 2,50)"
+                                style="flex: 1;" required>
+                            <button type="submit" class="btn-add-purple"><i data-lucide="plus"></i> Adicionar</button>
+                        </form>
+                        <table class="custom-table">
+                            <tbody id="adicTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="cardapio-col-right">
+                    <div class="menu-card">
+                        <h3>Acompanhamentos Grátis</h3>
+                        <form id="addAcompForm" class="form-inline">
+                            <input type="text" id="acompNome" placeholder="Novo acompanhamento..." style="flex: 1;"
+                                required>
+                            <button type="submit" class="btn-add-purple"><i data-lucide="plus"></i> Adicionar</button>
+                        </form>
+                        <table class="custom-table">
+                            <tbody id="acompTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: BLOQUEIO RÁPIDO DE INGREDIENTES -->
+        <div id="tab-bloqueio" class="tab-panel">
+            <div class="card" style="border-left: 5px solid #f59e0b;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3
+                            style="margin: 0; color: var(--text-color); font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="alert-octagon" style="color: #f59e0b;"></i> Bloqueio Rápido de Ingredientes
+                            / Estoque
+                        </h3>
+                        <p style="color: var(--text-muted); margin-top: 4px; font-size: 0.85rem;">
+                            Desative rapidamente os itens que acabaram no estoque para ocultá-los na tela de
+                            atendimento.
+                        </p>
+                    </div>
+                    <button onclick="loadBloqueioData()"
+                        style="background: var(--hover-purple-bg); color: var(--primary-purple); border: 1px solid var(--primary-purple); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Sincronizar
+                    </button>
+                </div>
+
+                <div class="cardapio-grid">
+                    <div class="cardapio-col-left">
+                        <h4
+                            style="color: var(--primary-purple); font-size: 0.95rem; margin: 0 0 10px 0; font-weight: 700;">
+                            Acompanhamentos Grátis</h4>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Disponibilidade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bloqueioAcompTable">
+                                <tr>
+                                    <td colspan="3"
+                                        style="text-align: center; color: var(--text-muted); padding: 15px;">
+                                        Carregando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="cardapio-col-right">
+                        <h4
+                            style="color: var(--primary-purple); font-size: 0.95rem; margin: 0 0 10px 0; font-weight: 700;">
+                            Adicionais Pagos</h4>
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Disponibilidade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bloqueioAdicTable">
+                                <tr>
+                                    <td colspan="3"
+                                        style="text-align: center; color: var(--text-muted); padding: 15px;">
+                                        Carregando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: COZINHA -->
+        <div id="tab-cozinha" class="tab-panel">
+            <div class="card">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0; color: var(--text-color);">Pedidos Ativos na Cozinha</h3>
+                        <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.9rem;">Acompanhe, imprima
+                            comanda e conclua os pedidos em produção.</p>
+                    </div>
+                    <button onclick="carregarCozinha()"
+                        style="background: var(--hover-purple-bg); color: var(--primary-purple); border: 1px solid var(--primary-purple); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Atualizar
+                    </button>
+                </div>
+                <div id="cozinhaGridContainer" class="cozinha-grid">
+                    <p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 20px;">
+                        Carregando pedidos ativos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: HISTÓRICO -->
+        <div id="tab-historico" class="tab-panel">
+            <div class="card">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0; color: var(--text-color);">Histórico de Pedidos</h3>
+                        <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.9rem;">Consulte pedidos
+                            finalizados anteriormente ou gerencie a base de dados.</p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button onclick="zerarIdsPedidos()"
+                            style="background-color: #f59e0b; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;"
+                            title="Reinicia a contagem de ID dos pedidos para 1">
+                            <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i> Zerar IDs
+                        </button>
+                        <button onclick="limparTodosPedidos()"
+                            style="background-color: #ef4444; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;"
+                            title="Apaga todos os pedidos do histórico">
+                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Limpar Pedidos
+                        </button>
+                        <button onclick="carregarHistorico()"
+                            style="background: var(--hover-purple-bg); color: var(--primary-purple); border: 1px solid var(--primary-purple); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Atualizar
+                        </button>
+                    </div>
+                </div>
+                <div style="overflow-x: auto; margin-top: 15px;">
+                    <table class="admin-table custom-table">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Cliente</th>
+                                <th>Tamanho</th>
+                                <th>Acompanhamentos</th>
+                                <th>Adicionais</th>
+                                <th>Obs.</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Ações / Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-historico">
+                            <tr>
+                                <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                    Carregando histórico...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: RELATÓRIO -->
+        <div id="tab-relatorio" class="tab-panel">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="color: var(--text-color); font-size: 1.2rem; font-weight: 700; margin: 0;">Resumo do Dia</h3>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 6px 14px; border-radius: 6px;">
+                        <i data-lucide="calendar" style="width: 16px; height: 16px; color: var(--primary-purple);"></i>
+                        <input type="date" id="relatorioDataFilter" onchange="loadRelatorioData()"
+                            style="border: none; background: transparent; outline: none; font-size: 0.9rem; color: var(--text-color);">
+                    </div>
+                    <button onclick="resetRelatorio()"
+                        style="background-color: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Resetar Relatório
+                    </button>
+                </div>
+            </div>
+
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div
+                    style="background: var(--card-bg); border: 1px solid var(--border-color); border-top: 4px solid var(--primary-purple); border-radius: 8px; padding: 20px; box-shadow: var(--shadow-sm);">
+                    <div
+                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                        FATURAMENTO</div>
+                    <div id="repFaturamento" style="font-size: 1.8rem; font-weight: 800; color: var(--primary-purple);">
+                        R$ 0,00</div>
+                </div>
+                <div
+                    style="background: var(--card-bg); border: 1px solid var(--border-color); border-top: 4px solid #ec4899; border-radius: 8px; padding: 20px; box-shadow: var(--shadow-sm);">
+                    <div
+                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                        TOTAL DE PEDIDOS</div>
+                    <div id="repTotalPedidos" style="font-size: 1.8rem; font-weight: 800; color: #ec4899;">0</div>
+                </div>
+                <div
+                    style="background: var(--card-bg); border: 1px solid var(--border-color); border-top: 4px solid #f59e0b; border-radius: 8px; padding: 20px; box-shadow: var(--shadow-sm);">
+                    <div
+                        style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                        COPO MAIS VENDIDO</div>
+                    <div id="repCopoMaisVendido"
+                        style="font-size: 1.3rem; font-weight: 700; color: var(--text-color); margin-top: 8px;">-</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                <div
+                    style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-color); margin-top: 0;">
+                        Faturamento por Hora</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">Evolução das vendas ao
+                        longo do dia</p>
+                    <div id="chartContainer"
+                        style="border: 1px dashed var(--border-color); border-radius: 6px; height: 230px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.85rem;">
+                        (Gráfico Em Desenvolvimento)
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div
+                        style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 18px;">
+                        <h4
+                            style="font-size: 0.95rem; font-weight: 700; color: var(--text-color); margin-top: 0; margin-bottom: 8px;">
+                            Top Adicionais</h4>
+                        <div id="topAdicionaisList"
+                            style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px;">
+                            Sem dados.</div>
+                    </div>
+                    <div
+                        style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 18px;">
+                        <h4
+                            style="font-size: 0.95rem; font-weight: 700; color: var(--text-color); margin-top: 0; margin-bottom: 8px;">
+                            Top Acompanhamentos</h4>
+                        <div id="topAcompanhamentosList"
+                            style="font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px;">
+                            Sem dados.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: CAIXA -->
+        <div id="tab-caixa" class="tab-panel">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="color: var(--text-color); margin: 0; font-size: 1.2rem; font-weight: 700;">Relatório Caixa
+                </h3>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="imprimirFechamentoCaixa()"
+                        style="background-color: #64748b; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Imprimir Fechamento
+                    </button>
+                    <button onclick="resetarCaixaDoDia()"
+                        style="background-color: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Resetar Caixa
+                    </button>
+                </div>
+            </div>
+
+            <!-- CARDS DE RESUMO DO DIA -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px;">
+                <div
+                    style="background: var(--card-bg); border: 1px solid var(--border-color); border-top: 4px solid var(--primary-purple); border-radius: 8px; padding: 24px; box-shadow: var(--shadow-sm);">
+                    <div
+                        style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+                        CAIXA DO DIA</div>
+                    <div id="repFaturamentoCaixa"
+                        style="font-size: 2.2rem; font-weight: 800; color: var(--primary-purple);">R$ 0,00</div>
+                </div>
+                <div
+                    style="background: var(--card-bg); border: 1px solid var(--border-color); border-top: 4px solid #ec4899; border-radius: 8px; padding: 24px; box-shadow: var(--shadow-sm);">
+                    <div
+                        style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i> DATA NO DIA
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <input type="date" id="caixaDataFilter" onchange="mudarDataCaixa()"
+                            style="background: var(--hover-purple-bg); color: #ec4899; border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 14px; font-size: 1.1rem; font-weight: 800; outline: none; cursor: pointer; width: 100%;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCOS DE LANÇAMENTO E VALORES DO CAIXA -->
+            <div class="caixa-grid-layout" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="card">
+                    <h3
+                        style="margin-top: 0; margin-bottom: 16px; font-size: 1.05rem; color: var(--primary-purple); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="banknote"></i> Entradas por Forma de Pagamento
+                    </h3>
+                    <div class="caixa-input-grupo" style="margin-bottom: 16px;">
+                        <label for="valDinheiro"
+                            style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;"><i
+                                data-lucide="dollar-sign" style="width: 14px; height: 14px;"></i> Dinheiro (R$)</label>
+                        <input type="number" id="valDinheiro" step="0.01" placeholder="0,00"
+                            oninput="calcularResumoTempoReal()"
+                            style="width: 100%; padding: 10px; border: 1px solid var(--input-border); border-radius: 6px;">
+                    </div>
+                    <div class="caixa-input-grupo" style="margin-bottom: 16px;">
+                        <label for="valCartao"
+                            style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;"><i
+                                data-lucide="credit-card" style="width: 14px; height: 14px;"></i> Cartão (Débito /
+                            Crédito) (R$)</label>
+                        <input type="number" id="valCartao" step="0.01" placeholder="0,00"
+                            oninput="calcularResumoTempoReal()"
+                            style="width: 100%; padding: 10px; border: 1px solid var(--input-border); border-radius: 6px;">
+                    </div>
+                    <div class="caixa-input-grupo" style="margin-bottom: 16px;">
+                        <label for="valPix"
+                            style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;"><i
+                                data-lucide="qr-code" style="width: 14px; height: 14px;"></i> Pix (R$)</label>
+                        <input type="number" id="valPix" step="0.01" placeholder="0,00"
+                            oninput="calcularResumoTempoReal()"
+                            style="width: 100%; padding: 10px; border: 1px solid var(--input-border); border-radius: 6px;">
+                    </div>
+                    <div class="caixa-input-grupo" style="margin-bottom: 16px;">
+                        <label for="valIfood"
+                            style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;"><i
+                                data-lucide="bike" style="width: 14px; height: 14px;"></i> iFood (R$)</label>
+                        <input type="number" id="valIfood" step="0.01" placeholder="0,00"
+                            oninput="calcularResumoTempoReal()"
+                            style="width: 100%; padding: 10px; border: 1px solid var(--input-border); border-radius: 6px;">
+                    </div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-modal-save" style="flex: 1; background-color: #10b981;"
+                            onclick="salvarFechamentoCaixa()">
+                            <i data-lucide="save"></i> Salvar Fechamento
+                        </button>
+                        <button class="btn-modal-cancel" style="flex: 1; background-color: #64748b; color: white;"
+                            onclick="imprimirFechamentoCaixa()">
+                            <i data-lucide="printer"></i> Imprimir Fechamento
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3
+                        style="margin-top: 0; margin-bottom: 16px; font-size: 1.05rem; color: var(--primary-purple); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="pie-chart"></i> Resumo Consolidado
+                    </h3>
+                    <div class="resumo-valores"
+                        style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                        <div
+                            style="display: flex; justify-content: space-between; padding: 12px; background: var(--hover-purple-bg); border-radius: 6px;">
+                            <span>Dinheiro:</span>
+                            <span id="resDinheiro" style="font-weight: bold; color: var(--primary-purple);">R$
+                                0,00</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; padding: 12px; background: var(--hover-purple-bg); border-radius: 6px;">
+                            <span>Cartão:</span>
+                            <span id="resCartao" style="font-weight: bold; color: var(--primary-purple);">R$ 0,00</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; padding: 12px; background: var(--hover-purple-bg); border-radius: 6px;">
+                            <span>Pix:</span>
+                            <span id="resPix" style="font-weight: bold; color: var(--primary-purple);">R$ 0,00</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; padding: 12px; background: var(--hover-purple-bg); border-radius: 6px;">
+                            <span>iFood:</span>
+                            <span id="resIfood" style="font-weight: bold; color: var(--primary-purple);">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--primary-purple); color: white; border-radius: 6px; margin-bottom: 20px;">
+                        <span style="font-weight: bold;">TOTAL GERAL EM CAIXA</span>
+                        <span id="resTotalGeral" style="font-size: 1.35rem; font-weight: 800;">R$ 0,00</span>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
+                            Últimos Pedidos Registrados na Data:
+                        </div>
+                        <div style="max-height: 160px; overflow-y: auto;">
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Cliente</th>
+                                        <th style="text-align: right;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaPedidosCaixa">
+                                    <tr>
+                                        <td colspan="3" style="text-align: center; color: var(--text-muted);">
+                                            Carregando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: USUÁRIOS -->
+        <div id="tab-usuarios" class="tab-panel">
+            <div class="card">
+                <h3 style="margin-top: 0; color: var(--primary-purple); display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="user-cog"></i> Gerenciamento de Usuários
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">
+                    Cadastre novos logins com permissão de Cliente, Funcionário ou Administrador para acesso ao sistema.
+                </p>
+
+                <!-- FORMULÁRIO COM O OLHO NA SENHA DO NOVO USUÁRIO -->
+                <form id="addUsuarioForm" class="form-inline" style="margin-bottom: 20px; flex-wrap: wrap;">
+                    <input type="text" id="usrLogin" placeholder="Nome de usuário / Login"
+                        style="flex: 2; min-width: 180px;" required>
+
+                    <!-- CAMPO DE SENHA COM OLHO -->
+                    <div class="password-wrapper">
+                        <input type="password" id="usrSenha" placeholder="Senha" required>
+                        <button type="button" class="toggle-password-btn"
+                            onclick="togglePasswordVisibility('usrSenha', this)" title="Mostrar/Ocultar Senha">
+                            <i data-lucide="eye"></i>
+                        </button>
+                    </div>
+
+                    <select id="usrRole" style="flex: 1; min-width: 140px;">
+                        <option value="cliente">Cliente</option>
+                        <option value="funcionario">Funcionário</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                    <button type="submit" class="btn-add-purple"><i data-lucide="user-plus"></i> Cadastrar
+                        Usuário</button>
+                </form>
+
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Login / Usuário</th>
+                            <th>Cargo / Nível</th>
+                            <th style="text-align: right;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usuariosTable">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 15px;">
+                                Carregando usuários...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ABA: QR CODE -->
+        <div id="tab-qrcode" class="tab-panel">
+            <div class="card" style="text-align: center; max-width: 450px; margin: 0 auto; padding: 30px 20px;">
+                <h3
+                    style="margin-top: 0; color: var(--primary-purple); font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i data-lucide="qr-code"></i> QR Code de Acesso ao Sistema
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 20px;">
+                    Aponte a câmera do seu celular para ser redirecionado para a página de login.
+                </p>
+
+                <div
+                    style="background: #ffffff; display: inline-block; padding: 14px; border-radius: 8px; border: 2px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://sorveteria-sensacaoo-production.up.railway.app/index.html"
+                        alt="QR Code de Login" style="border-radius: 6px; display: block;">
+                </div>
+
+                <div
+                    style="margin-top: 20px; background: var(--hover-purple-bg); border: 1px solid var(--border-color); padding: 14px 20px; border-radius: 8px; text-align: left; font-size: 0.95rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="color: var(--text-muted); font-weight: 600;">USUÁRIO:</span>
+                        <strong style="color: var(--primary-purple);">Cliente</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted); font-weight: 600;">SENHA:</span>
+                        <strong style="color: var(--primary-purple);">Cliente</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: LOGS DO SISTEMA -->
+        <div id="tab-logs" class="tab-panel">
+            <div class="card">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3
+                            style="margin: 0; color: var(--primary-purple); display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="scroll-text"></i> Histórico de Atividades e Logs
+                        </h3>
+                        <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">
+                            Registros de auditoria das ações executadas no sistema.
+                        </p>
+                    </div>
+                    <button onclick="carregarLogsTabAdmin()" class="btn-add-purple">
+                        <i data-lucide="refresh-cw"></i> Atualizar Logs
+                    </button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>#ID</th>
+                                <th>Data / Hora</th>
+                                <th>Usuário</th>
+                                <th>Ação</th>
+                                <th>Detalhes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaLogsAdminTab">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 15px;">
+                                    Carregando logs...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAIXA DE EDITAR ITEM DO CARDÁPIO (MODAL) -->
+    <div id="editModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modalTitle"><i data-lucide="edit-3"></i> Editar Item</h3>
+            <form id="editForm" onsubmit="salvarEdicao(event)">
+                <input type="hidden" id="editType">
+                <input type="hidden" id="editId">
+
+                <div id="groupNome">
+                    <label for="editNome">Nome do Item:</label>
+                    <input type="text" id="editNome">
+                </div>
+
+                <div id="groupPreco">
+                    <label for="editPreco">Preço (R$):</label>
+                    <input type="number" step="0.01" id="editPreco">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn-modal-save">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CAIXA DE EDITAR USUÁRIO (MODAL) COM OLHO NA NOVA SENHA -->
+    <div id="editUserModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3><i data-lucide="user-cog"></i> Editar Usuário</h3>
+            <form id="editUserForm" onsubmit="salvarEdicaoUsuario(event)">
+                <input type="hidden" id="editUserId">
+
+                <label for="editUserLogin">Login / Nome de Usuário:</label>
+                <input type="text" id="editUserLogin" required>
+
+                <label for="editUserRole">Cargo / Nível:</label>
+                <select id="editUserRole">
+                    <option value="cliente">Cliente</option>
+                    <option value="funcionario">Funcionário</option>
+                    <option value="admin">Administrador</option>
+                </select>
+
+                <label for="editUserSenha">Nova Senha (deixe em branco se não quiser alterar):</label>
+                <div class="password-wrapper" style="margin-bottom: 15px;">
+                    <input type="password" id="editUserSenha" placeholder="Digite uma nova senha..."
+                        style="margin-bottom: 0;">
+                    <button type="button" class="toggle-password-btn"
+                        onclick="togglePasswordVisibility('editUserSenha', this)" title="Mostrar/Ocultar Senha">
+                        <i data-lucide="eye"></i>
+                    </button>
+                </div>
+
+                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 15px 0;">
+
+                <label for="confirmSenhaAdmin"
+                    style="color: #ef4444; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="lock" style="width: 14px; height: 14px;"></i> Senha Secreta de Confirmação:
+                </label>
+                <input type="password" id="confirmSenhaAdmin" placeholder="Digite a senha de confirmação..." required
+                    style="border-color: #fca5a5;">
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="fecharModalUsuario()">Cancelar</button>
+                    <button type="submit" class="btn-modal-save">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CONFIRMAÇÃO DE SENHA SECRETA CENSURADA COM OLHO -->
+    <div id="secretKeyModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="color: #ef4444;"><i data-lucide="shield-alert"></i> Confirmação Secreta</h3>
+            <p id="secretKeyMessage" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 15px;"></p>
+
+            <label for="inputSecretKey">Digite a SENHA SECRETA:</label>
+            <div class="password-wrapper" style="margin-bottom: 20px;">
+                <input type="password" id="inputSecretKey" placeholder="Senha secreta..." style="margin-bottom: 0;"
+                    required>
+                <button type="button" class="toggle-password-btn"
+                    onclick="togglePasswordVisibility('inputSecretKey', this)" title="Mostrar/Ocultar Senha">
+                    <i data-lucide="eye"></i>
+                </button>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" onclick="fecharModalSenhaSecreta()">Cancelar</button>
+                <button type="button" class="btn-modal-save" style="background-color: #ef4444;"
+                    onclick="confirmarSenhaSecretaModal()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SENHA_MESTRA = "SENSA2026";
+
+        window.pedidosCache = [];
+        window.usuariosCache = [];
+        let pendingUserSubmit = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedTheme();
+            loadAdminData();
+            verificarStatusLojaAdmin();
+            lucide.createIcons();
+        });
+
+        /* --- FUNÇÃO PARA MOSTRAR/OCULTAR SENHA --- */
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '<i data-lucide="eye-off"></i>';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '<i data-lucide="eye"></i>';
+            }
+            lucide.createIcons();
+        }
+
+        /* --- CONTROLE DO MODAL DE SENHA SECRETA --- */
+        function abrirModalSenhaSecreta(mensagem, callback) {
+            pendingUserSubmit = callback;
+            document.getElementById('secretKeyMessage').innerText = mensagem;
+            const input = document.getElementById('inputSecretKey');
+            input.value = '';
+            input.type = 'password';
+
+            const btnEye = document.querySelector('#secretKeyModal .toggle-password-btn');
+            if (btnEye) btnEye.innerHTML = '<i data-lucide="eye"></i>';
+
+            document.getElementById('secretKeyModal').classList.add('active');
+            lucide.createIcons();
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function fecharModalSenhaSecreta() {
+            document.getElementById('secretKeyModal').classList.remove('active');
+            pendingUserSubmit = null;
+        }
+
+        function confirmarSenhaSecretaModal() {
+            const senhaDigitada = document.getElementById('inputSecretKey').value.trim();
+
+            if (senhaDigitada !== SENHA_MESTRA) {
+                alert('❌ SENHA SECRETA INCORRETA! Operação cancelada.');
+                return;
+            }
+
+            if (typeof pendingUserSubmit === 'function') {
+                pendingUserSubmit();
+            }
+
+            fecharModalSenhaSecreta();
+        }
+
+        function getLocalDateString() {
+            const dateObj = new Date();
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function escapeHtml(texto) {
+            if (!texto) return '';
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        /* --- CONTROLE DE TEMA --- */
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const icon = document.getElementById('themeIcon');
+
+            if (newTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('sensacao_theme', 'dark');
+                if (icon) icon.setAttribute('data-lucide', 'sun');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('sensacao_theme', 'light');
+                if (icon) icon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('sensacao_theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                if (icon) icon.setAttribute('data-lucide', 'sun');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                if (icon) icon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.admin-nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+            const activeBtn = document.querySelector(`button[onclick="switchAdminTab('${tabName}')"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            if (tabName === 'relatorio' || tabName === 'caixa') loadRelatorioData();
+            else if (tabName === 'historico') carregarHistorico();
+            else if (tabName === 'cozinha') carregarCozinha();
+            else if (tabName === 'bloqueio') loadBloqueioData();
+            else if (tabName === 'usuarios') loadUsuariosData();
+            else if (tabName === 'logs') carregarLogsTabAdmin();
+
+            lucide.createIcons();
+        }
+
+        /* --- LOGS --- */
+        async function carregarLogsTabAdmin() {
+            try {
+                const res = await fetch('/api/admin/logs');
+                const logs = await res.json();
+                const tbody = document.getElementById('tabelaLogsAdminTab');
+
+                if (!tbody) return;
+
+                if (!logs || logs.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 15px;">Nenhum registro de atividade encontrado.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = logs.map(l => {
+                    const dataFmt = l.data_hora ? new Date(l.data_hora.replace(' ', 'T')).toLocaleString('pt-BR') : '-';
+                    return `
+                        <tr>
+                            <td><b>#${l.id}</b></td>
+                            <td><small>${dataFmt}</small></td>
+                            <td><b>${escapeHtml(l.usuario)}</b></td>
+                            <td><span class="badge-status badge-disponivel"><i data-lucide="check-circle-2"></i> ${escapeHtml(l.acao)}</span></td>
+                            <td><small style="color: var(--text-muted);">${escapeHtml(l.detalhes || '-')}</small></td>
+                        </tr>
+                    `;
+                }).join('');
+                lucide.createIcons();
+            } catch (err) {
+                console.error('Erro ao carregar logs:', err);
+            }
+        }
+
+        /* --- STATUS DA LOJA --- */
+        function verificarStatusLojaAdmin() {
+            const statusAtual = localStorage.getItem('sensacao_loja_fechada') === 'true';
+            const textoStatus = document.getElementById('textoStatusLoja');
+            const btnAlternar = document.getElementById('btnAlternarLoja');
+
+            if (statusAtual) {
+                if (textoStatus) {
+                    textoStatus.innerText = 'FECHADO';
+                    textoStatus.style.color = '#ef4444';
+                }
+                if (btnAlternar) {
+                    btnAlternar.innerHTML = '<i data-lucide="power"></i> Abrir Operação';
+                    btnAlternar.style.background = '#10b981';
+                }
+            } else {
+                if (textoStatus) {
+                    textoStatus.innerText = 'ABERTO';
+                    textoStatus.style.color = '#10b981';
+                }
+                if (btnAlternar) {
+                    btnAlternar.innerHTML = '<i data-lucide="power"></i> Fechar Operação';
+                    btnAlternar.style.background = '#ef4444';
+                }
+            }
+            lucide.createIcons();
+        }
+
+        function alternarStatusLoja() {
+            const statusAtual = localStorage.getItem('sensacao_loja_fechada') === 'true';
+            const novoStatus = !statusAtual;
+
+            localStorage.setItem('sensacao_loja_fechada', novoStatus);
+            verificarStatusLojaAdmin();
+
+            if (novoStatus) {
+                alert('Operação interna fechada com sucesso!');
+            } else {
+                alert('Operação interna aberta com sucesso!');
+            }
+        }
+
+        /* --- CAIXA --- */
+        function getDataCaixaSelecionada() {
+            const input = document.getElementById('caixaDataFilter');
+            return input && input.value ? input.value : getLocalDateString();
+        }
+
+        function carregarValoresSalvosCaixa() {
+            const dataSelecionada = getDataCaixaSelecionada();
+            const salvo = JSON.parse(localStorage.getItem(`sensacao_caixa_${dataSelecionada}`) || '{}');
+
+            document.getElementById('valDinheiro').value = salvo.dinheiro !== undefined ? salvo.dinheiro : '';
+            document.getElementById('valCartao').value = salvo.cartao !== undefined ? salvo.cartao : '';
+            document.getElementById('valPix').value = salvo.pix !== undefined ? salvo.pix : '';
+            document.getElementById('valIfood').value = salvo.ifood !== undefined ? salvo.ifood : '';
+
+            const dinheiro = parseFloat(salvo.dinheiro) || 0;
+            const cartao = parseFloat(salvo.cartao) || 0;
+            const pix = parseFloat(salvo.pix) || 0;
+            const ifood = parseFloat(salvo.ifood) || 0;
+            const totalSalvo = dinheiro + cartao + pix + ifood;
+
+            atualizarResumoLateral(dinheiro, cartao, pix, ifood);
+
+            const elCaixaDia = document.getElementById('repFaturamentoCaixa');
+            if (elCaixaDia) {
+                if (salvo.dinheiro !== undefined) {
+                    elCaixaDia.textContent = `R$ ${totalSalvo.toFixed(2).replace('.', ',')}`;
+                } else {
+                    elCaixaDia.textContent = `R$ 0,00`;
+                }
+            }
+        }
+
+        function mudarDataCaixa() {
+            carregarValoresSalvosCaixa();
+            loadRelatorioData();
+        }
+
+        function calcularResumoTempoReal() {
+            const dinheiro = parseFloat(document.getElementById('valDinheiro').value) || 0;
+            const cartao = parseFloat(document.getElementById('valCartao').value) || 0;
+            const pix = parseFloat(document.getElementById('valPix').value) || 0;
+            const ifood = parseFloat(document.getElementById('valIfood').value) || 0;
+
+            atualizarResumoLateral(dinheiro, cartao, pix, ifood);
+        }
+
+        function atualizarResumoLateral(dinheiro, cartao, pix, ifood) {
+            const totalGeralCaixa = dinheiro + cartao + pix + ifood;
+
+            document.getElementById('resDinheiro').innerText = `R$ ${dinheiro.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resCartao').innerText = `R$ ${cartao.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resPix').innerText = `R$ ${pix.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resIfood').innerText = `R$ ${ifood.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resTotalGeral').innerText = `R$ ${totalGeralCaixa.toFixed(2).replace('.', ',')}`;
+        }
+
+        function resetarCaixaDoDia() {
+            const dataSelecionada = getDataCaixaSelecionada();
+            if (!confirm(`⚠️ Deseja limpar os valores do caixa salvos para a data ${dataSelecionada}?`)) return;
+
+            document.getElementById('valDinheiro').value = '';
+            document.getElementById('valCartao').value = '';
+            document.getElementById('valPix').value = '';
+            document.getElementById('valIfood').value = '';
+
+            localStorage.removeItem(`sensacao_caixa_${dataSelecionada}`);
+            atualizarResumoLateral(0, 0, 0, 0);
+
+            const elCaixaDia = document.getElementById('repFaturamentoCaixa');
+            if (elCaixaDia) elCaixaDia.textContent = `R$ 0,00`;
+        }
+
+        async function carregarDadosCaixa() {
+            try {
+                const response = await fetch(`/api/pedidos/ativos`);
+                if (response.ok) {
+                    const pedidos = await response.json();
+                    const tbody = document.getElementById('tabelaPedidosCaixa');
+                    if (!pedidos || pedidos.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">Nenhum pedido recente.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = pedidos.slice(0, 10).map(p => `
+                        <tr>
+                            <td><b>#${p.id}</b></td>
+                            <td>${escapeHtml(p.cliente)}</td>
+                            <td style="text-align: right; color: #10b981; font-weight: bold;">R$ ${parseFloat(p.total || 0).toFixed(2).replace('.', ',')}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Erro ao carregar dados do caixa:', err);
+            }
+        }
+
+        async function salvarFechamentoCaixa() {
+            const dinheiro = parseFloat(document.getElementById('valDinheiro').value) || 0;
+            const cartao = parseFloat(document.getElementById('valCartao').value) || 0;
+            const pix = parseFloat(document.getElementById('valPix').value) || 0;
+            const ifood = parseFloat(document.getElementById('valIfood').value) || 0;
+            const totalGeral = dinheiro + cartao + pix + ifood;
+            const dataSelecionada = getDataCaixaSelecionada();
+
+            if (!confirm(`Deseja realmente salvar e registrar o fechamento do caixa da data ${dataSelecionada} no valor total de R$ ${totalGeral.toFixed(2).replace('.', ',')}?`)) {
+                return;
+            }
+
+            localStorage.setItem(`sensacao_caixa_${dataSelecionada}`, JSON.stringify({
+                dinheiro: document.getElementById('valDinheiro').value,
+                cartao: document.getElementById('valCartao').value,
+                pix: document.getElementById('valPix').value,
+                ifood: document.getElementById('valIfood').value
+            }));
+
+            const elCaixaDia = document.getElementById('repFaturamentoCaixa');
+            if (elCaixaDia) {
+                elCaixaDia.textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+            }
+
+            try {
+                const response = await fetch('/api/caixa/fechar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        data: dataSelecionada,
+                        fundo_troco: 0,
+                        dinheiro,
+                        cartao,
+                        pix,
+                        ifood,
+                        sangria: 0,
+                        total_gaveta: totalGeral,
+                        faturamento_total: totalGeral
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Fechamento de caixa registrado e salvo com sucesso no banco de dados!');
+                } else {
+                    alert('Erro ao salvar o fechamento do caixa.');
+                }
+            } catch (err) {
+                console.error('Erro de conexão:', err);
+                alert('Erro de conexão ao salvar o caixa.');
+            }
+        }
+
+        /* --- IMPRESSÃO --- */
+        function imprimirFechamentoCaixa() {
+            const dataSelecionada = getDataCaixaSelecionada();
+            const dinheiro = parseFloat(document.getElementById('valDinheiro').value) || 0;
+            const cartao = parseFloat(document.getElementById('valCartao').value) || 0;
+            const pix = parseFloat(document.getElementById('valPix').value) || 0;
+            const ifood = parseFloat(document.getElementById('valIfood').value) || 0;
+            const total = dinheiro + cartao + pix + ifood;
+
+            const partesData = dataSelecionada.split('-');
+            const dataFormatada = partesData.length === 3 ? `${partesData[2]}/${partesData[1]}/${partesData[0]}` : dataSelecionada;
+
+            const conteudoImpressao = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Fechamento de Caixa - ${dataFormatada}</title>
+                    <style>
+                        @page { size: 80mm auto; margin: 0; }
+                        body { font-family: 'Courier New', monospace; width: 72mm; margin: 4mm auto; font-size: 12px; line-height: 1.3; }
+                        .text-center { text-align: center; }
+                        .bold { font-weight: bold; }
+                        .title { font-size: 16px; font-weight: bold; margin-bottom: 2px; }
+                        .line { border-bottom: 1px solid #000; margin: 6px 0; }
+                        .row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="text-center title">SORVETERIA SENSAÇÃO</div>
+                    <div class="text-center bold">FECHAMENTO DE CAIXA</div>
+                    <div class="line"></div>
+                    <div><span class="bold">DATA CAIXA:</span> ${dataFormatada}</div>
+                    <div><span class="bold">EMISSÃO:</span> ${new Date().toLocaleString('pt-BR')}</div>
+                    <div class="line"></div>
+                    <div class="bold" style="margin-bottom: 6px;">ENTRADAS POR FORMA DE PAGAMENTO:</div>
+                    <div class="row"><span>Dinheiro:</span> <span>R$ ${dinheiro.toFixed(2).replace('.', ',')}</span></div>
+                    <div class="row"><span>Cartão:</span> <span>R$ ${cartao.toFixed(2).replace('.', ',')}</span></div>
+                    <div class="row"><span>Pix:</span> <span>R$ ${pix.toFixed(2).replace('.', ',')}</span></div>
+                    <div class="row"><span>iFood:</span> <span>R$ ${ifood.toFixed(2).replace('.', ',')}</span></div>
+                    <div class="line"></div>
+                    <div class="row bold" style="font-size: 14px;">
+                        <span>TOTAL CAIXA:</span>
+                        <span>R$ ${total.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <div class="line"></div>
+                    <div class="text-center" style="margin-top: 15px;">*** SENSAÇÃO AÇAÍ ***</div>
+                </body>
+                </html>
+            `;
+
+            const janImpressao = window.open('', '_blank', 'width=400,height=600');
+            janImpressao.document.write(conteudoImpressao);
+            janImpressao.document.close();
+            janImpressao.focus();
+
+            setTimeout(() => {
+                janImpressao.print();
+                janImpressao.close();
+            }, 250);
+        }
+
+        /* --- USUÁRIOS --- */
+        async function loadUsuariosData() {
+            try {
+                const res = await fetch('/api/admin/usuarios');
+                const usuarios = await res.json();
+                window.usuariosCache = usuarios;
+                const tbody = document.getElementById('usuariosTable');
+                if (tbody) {
+                    if (!usuarios || usuarios.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 15px;">Nenhum usuário cadastrado.</td></tr>`;
+                    } else {
+                        tbody.innerHTML = usuarios.map(u => {
+                            let badgeClass = 'badge-indisponivel';
+                            let badgeText = 'Funcionário';
+                            let iconName = 'user';
+
+                            if (u.role === 'admin') {
+                                badgeClass = 'badge-disponivel';
+                                badgeText = 'Administrador';
+                                iconName = 'crown';
+                            } else if (u.role === 'cliente') {
+                                badgeClass = 'badge-cliente';
+                                badgeText = 'Cliente';
+                                iconName = 'shopping-bag';
+                            }
+
+                            return `
+                                <tr>
+                                    <td><b>#${u.id}</b></td>
+                                    <td><b>${escapeHtml(u.login)}</b></td>
+                                    <td>
+                                        <span class="badge-status ${badgeClass}">
+                                            <i data-lucide="${iconName}"></i> ${badgeText}
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <button onclick="abrirModalUsuario(${u.id})" class="btn-icon" title="Editar Usuário"><i data-lucide="edit-2"></i></button>
+                                        <button onclick="deleteUsuario(${u.id}, '${escapeHtml(u.login)}')" class="btn-icon" title="Excluir Usuário"><i data-lucide="trash-2"></i></button>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                        lucide.createIcons();
+                    }
+                }
+            } catch (err) {
+                console.error('Erro ao carregar lista de usuários:', err);
+            }
+        }
+
+        document.getElementById('addUsuarioForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const loginInput = document.getElementById('usrLogin');
+            const senhaInput = document.getElementById('usrSenha');
+            const roleInput = document.getElementById('usrRole');
+
+            const login = loginInput.value.trim();
+            const senha = senhaInput.value.trim();
+            const role = roleInput.value;
+
+            if (!login || !senha) return;
+
+            abrirModalSenhaSecreta(`Cadastrar o usuário "${login}"`, async () => {
+                try {
+                    const res = await fetch('/api/admin/usuarios', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ login, senha, role })
+                    });
+
+                    if (res.ok) {
+                        loginInput.value = '';
+                        senhaInput.value = '';
+                        loadUsuariosData();
+                        alert('✅ Usuário cadastrado com sucesso!');
+                    } else {
+                        const data = await res.json();
+                        alert(data.error || 'Erro ao cadastrar usuário.');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro de conexão ao cadastrar usuário.');
+                }
+            });
+        });
+
+        function abrirModalUsuario(id) {
+            const usuario = (window.usuariosCache || []).find(u => u.id === id);
+            if (!usuario) return;
+
+            document.getElementById('editUserId').value = usuario.id;
+            document.getElementById('editUserLogin').value = usuario.login;
+            document.getElementById('editUserRole').value = usuario.role || 'funcionario';
+            document.getElementById('editUserSenha').value = '';
+
+            const inputConfirm = document.getElementById('confirmSenhaAdmin');
+            if (inputConfirm) inputConfirm.value = '';
+
+            document.getElementById('editUserModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function fecharModalUsuario() {
+            document.getElementById('editUserModal').classList.remove('active');
+        }
+
+        async function salvarEdicaoUsuario(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('editUserId').value;
+            const login = document.getElementById('editUserLogin').value.trim();
+            const role = document.getElementById('editUserRole').value;
+            const senha = document.getElementById('editUserSenha').value.trim();
+            const confirmSenha = document.getElementById('confirmSenhaAdmin').value.trim();
+
+            if (confirmSenha !== SENHA_MESTRA) {
+                alert('❌ SENHA SECRETA INCORRETA! A alteração do usuário foi cancelada.');
+                return;
+            }
+
+            if (!login) {
+                alert('O nome de usuário não pode ficar em branco.');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/admin/usuarios/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login, role, senha })
+                });
+
+                if (res.ok) {
+                    fecharModalUsuario();
+                    loadUsuariosData();
+                    alert('✅ Usuário atualizado com sucesso!');
+                } else {
+                    const data = await res.json();
+                    alert(data.error || 'Erro ao atualizar usuário.');
+                }
+            } catch (err) {
+                console.error('Erro ao atualizar usuário:', err);
+                alert('Erro de conexão ao atualizar usuário.');
+            }
+        }
+
+        function deleteUsuario(id, login) {
+            abrirModalSenhaSecreta(`Excluir permanentemente o usuário "${login}"`, async () => {
+                try {
+                    const res = await fetch(`/api/admin/usuarios/${id}`, { method: 'DELETE' });
+                    if (res.ok) {
+                        loadUsuariosData();
+                        alert(`✅ Usuário "${login}" excluído com sucesso!`);
+                    } else {
+                        alert('Erro ao excluir usuário.');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro de conexão ao excluir usuário.');
+                }
+            });
+        }
+
+        /* --- CARDÁPIO & MODAIS --- */
+        function abrirModal(tipo, id, nome, preco) {
+            document.getElementById('editType').value = tipo;
+            document.getElementById('editId').value = id;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const groupNome = document.getElementById('groupNome');
+            const groupPreco = document.getElementById('groupPreco');
+            const inputNome = document.getElementById('editNome');
+            const inputPreco = document.getElementById('editPreco');
+
+            if (tipo === 'tamanho') {
+                modalTitle.innerHTML = '<i data-lucide="edit-3"></i> Editar Tamanho e Preço do Copo';
+                groupNome.style.display = 'block';
+                groupPreco.style.display = 'block';
+                inputNome.value = nome;
+                inputPreco.value = preco;
+            } else if (tipo === 'acomp') {
+                modalTitle.innerHTML = '<i data-lucide="edit-3"></i> Editar Acompanhamento';
+                groupNome.style.display = 'block';
+                groupPreco.style.display = 'none';
+                inputNome.value = nome;
+                inputPreco.value = '';
+            } else if (tipo === 'adic') {
+                modalTitle.innerHTML = '<i data-lucide="edit-3"></i> Editar Adicional';
+                groupNome.style.display = 'block';
+                groupPreco.style.display = 'block';
+                inputNome.value = nome;
+                inputPreco.value = preco;
+            }
+
+            document.getElementById('editModal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function fecharModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        async function salvarEdicao(event) {
+            event.preventDefault();
+
+            const tipo = document.getElementById('editType').value;
+            const id = document.getElementById('editId').value;
+            const nome = document.getElementById('editNome').value.trim();
+            const preco = parseFloat(document.getElementById('editPreco').value);
+
+            let url = '';
+            let payload = {};
+
+            if (tipo === 'tamanho') {
+                url = `/api/tamanhos/${id}`;
+                payload = { nome, preco };
+            } else if (tipo === 'acomp') {
+                url = `/api/acompanhamentos/${id}`;
+                payload = { nome };
+            } else if (tipo === 'adic') {
+                url = `/api/adicionais/${id}`;
+                payload = { nome, preco };
+            }
+
+            try {
+                const res = await fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    fecharModal();
+                    loadAdminData();
+                } else {
+                    alert('Erro ao atualizar item.');
+                }
+            } catch (err) {
+                console.error('Erro ao salvar alteração:', err);
+                alert('Erro de conexão ao atualizar item.');
+            }
+        }
+
+        /* --- BLOQUEIO INGREDIENTES --- */
+        async function loadBloqueioData() {
+            try {
+                const resAcomp = await fetch('/api/acompanhamentos');
+                const acomps = await resAcomp.json();
+                const tbodyAcomp = document.getElementById('bloqueioAcompTable');
+                if (tbodyAcomp) {
+                    if (!acomps || acomps.length === 0) {
+                        tbodyAcomp.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 15px;">Nenhum acompanhamento cadastrado.</td></tr>`;
+                    } else {
+                        tbodyAcomp.innerHTML = acomps.map(a => {
+                            const disponivel = a.disponivel !== false && a.disponivel !== 0;
+                            return `
+                                <tr>
+                                    <td><b>${escapeHtml(a.nome)}</b></td>
+                                    <td>
+                                        <span class="badge-status ${disponivel ? 'badge-disponivel' : 'badge-indisponivel'}">
+                                            <i data-lucide="${disponivel ? 'check' : 'x'}"></i> ${disponivel ? 'Disponível' : 'Indisponível'}
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label class="switch-toggle" title="Alternar disponibilidade">
+                                            <input type="checkbox" ${disponivel ? 'checked' : ''} onchange="toggleBloqueioItem('acomp', ${a.id}, !this.checked)">
+                                            <span class="slider-toggle"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+
+                const resAdic = await fetch('/api/adicionais');
+                const adics = await resAdic.json();
+                const tbodyAdic = document.getElementById('bloqueioAdicTable');
+                if (tbodyAdic) {
+                    if (!adics || adics.length === 0) {
+                        tbodyAdic.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 15px;">Nenhum adicional cadastrado.</td></tr>`;
+                    } else {
+                        tbodyAdic.innerHTML = adics.map(ad => {
+                            const disponivel = ad.disponivel !== false && ad.disponivel !== 0;
+                            return `
+                                <tr>
+                                    <td><b>${escapeHtml(ad.nome)}</b></td>
+                                    <td>
+                                        <span class="badge-status ${disponivel ? 'badge-disponivel' : 'badge-indisponivel'}">
+                                            <i data-lucide="${disponivel ? 'check' : 'x'}"></i> ${disponivel ? 'Disponível' : 'Indisponível'}
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <label class="switch-toggle" title="Alternar disponibilidade">
+                                            <input type="checkbox" ${disponivel ? 'checked' : ''} onchange="toggleBloqueioItem('adic', ${ad.id}, !this.checked)">
+                                            <span class="slider-toggle"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+                lucide.createIcons();
+            } catch (err) {
+                console.error('Erro ao carregar lista de bloqueios:', err);
+            }
+        }
+
+        async function toggleBloqueioItem(tipo, id, estaBloqueado) {
+            const endpoint = tipo === 'acomp' ? `/api/acompanhamentos/${id}` : `/api/adicionais/${id}`;
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ disponivel: !estaBloqueado })
+                });
+
+                if (res.ok) {
+                    loadBloqueioData();
+                } else {
+                    alert('Erro ao atualizar estado de disponibilidade do item.');
+                    loadBloqueioData();
+                }
+            } catch (err) {
+                console.error('Erro de conexão ao alterar disponibilidade:', err);
+                alert('Erro de conexão com o servidor.');
+                loadBloqueioData();
+            }
+        }
+
+        /* --- CARREGAMENTO GERAL DE DADOS --- */
+        async function loadAdminData() {
+            try {
+                const resTamanhos = await fetch('/api/tamanhos');
+                const tamanhos = await resTamanhos.json();
+                const tbodyTamanhos = document.getElementById('tamanhosTable');
+                if (tbodyTamanhos) {
+                    tbodyTamanhos.innerHTML = tamanhos.map(t => `
+                        <tr>
+                            <td><b>${escapeHtml(t.nome)}</b></td>
+                            <td class="price-red">R$ ${parseFloat(t.preco).toFixed(2).replace('.', ',')}</td>
+                            <td style="text-align: right;">
+                                <button onclick="abrirModal('tamanho', ${t.id}, '${escapeHtml(t.nome)}', ${t.preco})" class="btn-icon" title="Editar"><i data-lucide="edit-2"></i></button>
+                                <button onclick="deleteTamanho(${t.id})" class="btn-icon" title="Excluir"><i data-lucide="trash-2"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+                const resAcomp = await fetch('/api/acompanhamentos');
+                const acomps = await resAcomp.json();
+                const tbodyAcomp = document.getElementById('acompTable');
+                if (tbodyAcomp) {
+                    tbodyAcomp.innerHTML = acomps.map(a => `
+                        <tr>
+                            <td>${escapeHtml(a.nome)}</td>
+                            <td style="text-align: right;">
+                                <button onclick="abrirModal('acomp', ${a.id}, '${escapeHtml(a.nome)}', 0)" class="btn-icon" title="Editar"><i data-lucide="edit-2"></i></button>
+                                <button onclick="deleteAcomp(${a.id})" class="btn-icon" title="Excluir"><i data-lucide="trash-2"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+                const resAdic = await fetch('/api/adicionais');
+                const adics = await resAdic.json();
+                const tbodyAdic = document.getElementById('adicTable');
+                if (tbodyAdic) {
+                    tbodyAdic.innerHTML = adics.map(ad => `
+                        <tr>
+                            <td><b>${escapeHtml(ad.nome)}</b></td>
+                            <td class="price-red">R$ ${parseFloat(ad.preco).toFixed(2).replace('.', ',')}</td>
+                            <td style="text-align: right;">
+                                <button onclick="abrirModal('adic', ${ad.id}, '${escapeHtml(ad.nome)}', ${ad.preco})" class="btn-icon" title="Editar"><i data-lucide="edit-2"></i></button>
+                                <button onclick="deleteAdic(${ad.id})" class="btn-icon" title="Excluir"><i data-lucide="trash-2"></i></button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+                lucide.createIcons();
+            } catch (err) {
+                console.error('Erro ao carregar dados do cardápio:', err);
+            }
+        }
+
+        async function loadRelatorioData() {
+            const sanitizeHtml = (str) => {
+                if (typeof escapeHtml === 'function') return escapeHtml(str);
+                return String(str || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            };
+
+            try {
+                const inputRel = document.getElementById('relatorioDataFilter');
+                const inputCaixa = document.getElementById('caixaDataFilter');
+                const tabCaixa = document.getElementById('tab-caixa');
+
+                let dataFiltro = (typeof getLocalDateString === 'function')
+                    ? getLocalDateString()
+                    : new Date().toISOString().split('T')[0];
+
+                if (tabCaixa && tabCaixa.classList.contains('active')) {
+                    if (inputCaixa && inputCaixa.value) dataFiltro = inputCaixa.value;
+                } else {
+                    if (inputRel && inputRel.value) dataFiltro = inputRel.value;
+                }
+
+                if (inputRel) inputRel.value = dataFiltro;
+                if (inputCaixa) inputCaixa.value = dataFiltro;
+
+                const response = await fetch(`/api/admin/relatorio?data=${encodeURIComponent(dataFiltro)}`);
+
+                if (!response.ok) throw new Error(`Erro HTTP ${response.status}`);
+
+                const data = await response.json();
+
+                const faturamento = parseFloat(data.totalVendas || 0);
+                const totalPedidos = data.totalPedidos ?? 0;
+                const copoMaisVendido = (Array.isArray(data.topTamanhos) && data.topTamanhos.length > 0)
+                    ? `${sanitizeHtml(data.topTamanhos[0].nome)} (${data.topTamanhos[0].qtd})`
+                    : '-';
+
+                const elFaturamento = document.getElementById('repFaturamento');
+                const elTotalPedidos = document.getElementById('repTotalPedidos');
+                const elCopoMaisVendido = document.getElementById('repCopoMaisVendido');
+
+                if (elFaturamento) elFaturamento.textContent = `R$ ${faturamento.toFixed(2).replace('.', ',')}`;
+                if (elTotalPedidos) elTotalPedidos.textContent = totalPedidos;
+                if (elCopoMaisVendido) elCopoMaisVendido.textContent = copoMaisVendido;
+
+                const adicList = document.getElementById('topAdicionaisList');
+                if (adicList) {
+                    if (Array.isArray(data.topAdicionais) && data.topAdicionais.length > 0) {
+                        adicList.innerHTML = data.topAdicionais.slice(0, 5).map(item => `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span>${sanitizeHtml(item.nome)}</span>
+                                <b>${item.qtd}x</b>
+                            </div>
+                        `).join('');
+                    } else {
+                        adicList.innerHTML = '<span style="color: var(--text-muted);">Sem dados no período.</span>';
+                    }
+                }
+
+                const acompList = document.getElementById('topAcompanhamentosList');
+                if (acompList) {
+                    if (Array.isArray(data.topAcompanhamentos) && data.topAcompanhamentos.length > 0) {
+                        acompList.innerHTML = data.topAcompanhamentos.slice(0, 5).map(item => `
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span>${sanitizeHtml(item.nome)}</span>
+                                <b>${item.qtd}x</b>
+                            </div>
+                        `).join('');
+                    } else {
+                        acompList.innerHTML = '<span style="color: var(--text-muted);">Sem dados no período.</span>';
+                    }
+                }
+
+                if (typeof renderGraficoRelatorio === 'function' && data.vendasPorHora) {
+                    renderGraficoRelatorio(data.vendasPorHora);
+                }
+
+                if (typeof carregarDadosCaixa === 'function') {
+                    carregarDadosCaixa(dataFiltro);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados do relatório:', error);
+            }
+        }
+
+        async function deleteTamanho(id) {
+            if (!confirm('Excluir este copo/tamanho?')) return;
+            try {
+                const res = await fetch(`/api/tamanhos/${id}`, { method: 'DELETE' });
+                if (res.ok) loadAdminData();
+                else alert('Erro ao excluir.');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteAcomp(id) {
+            if (!confirm('Excluir este acompanhamento?')) return;
+            try {
+                const res = await fetch(`/api/acompanhamentos/${id}`, { method: 'DELETE' });
+                if (res.ok) loadAdminData();
+                else alert('Erro ao excluir.');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteAdic(id) {
+            if (!confirm('Excluir este adicional?')) return;
+            try {
+                const res = await fetch(`/api/adicionais/${id}`, { method: 'DELETE' });
+                if (res.ok) loadAdminData();
+                else alert('Erro ao excluir.');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.getElementById('addTamanhoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const inputNome = document.getElementById('tamanhoNome');
+            const inputPreco = document.getElementById('tamanhoPreco');
+            const nome = inputNome.value.trim();
+            const preco = parseFloat(inputPreco.value.replace(',', '.'));
+
+            if (!nome || isNaN(preco)) return;
+
+            try {
+                const res = await fetch('/api/tamanhos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, preco })
+                });
+                if (res.ok) {
+                    inputNome.value = '';
+                    inputPreco.value = '';
+                    loadAdminData();
+                } else {
+                    alert('Erro ao adicionar copo/tamanho.');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        document.getElementById('addAcompForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('acompNome');
+            const nome = input.value.trim();
+            if (!nome) return;
+
+            try {
+                const res = await fetch('/api/acompanhamentos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome })
+                });
+                if (res.ok) {
+                    input.value = '';
+                    loadAdminData();
+                } else {
+                    alert('Erro ao adicionar acompanhamento.');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+            } catch (err) {
+                console.error('Erro ao sair:', err);
+            } finally {
+                window.location.href = 'index.html';
+            }
+        }
+
+        document.getElementById('addAdicForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const inputNome = document.getElementById('adicNome');
+            const inputPreco = document.getElementById('adicPreco');
+            const nome = inputNome.value.trim();
+            const preco = parseFloat(inputPreco.value.replace(',', '.'));
+
+            if (!nome || isNaN(preco)) return;
+
+            try {
+                const res = await fetch('/api/adicionais', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, preco })
+                });
+                if (res.ok) {
+                    inputNome.value = '';
+                    inputPreco.value = '';
+                    loadAdminData();
+                } else {
+                    alert('Erro ao adicionar adicional.');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+
+</html>

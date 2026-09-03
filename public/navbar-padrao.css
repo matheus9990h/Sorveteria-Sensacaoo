@@ -1,0 +1,123 @@
+/* ==========================================================
+   NAVBAR GLOBAL — SORVETERIA SENSAÇÃO
+   Tema claro/escuro consistente em todas as páginas operacionais.
+   ========================================================== */
+
+:root {
+  --nav-bg: #ffffff;
+  --nav-text: #64748b;
+  --nav-title: #7e22ce;
+  --nav-border: #e2e8f0;
+  --nav-hover: #f3e8ff;
+  --nav-active: #8b5cf6;
+  --nav-active-shadow: rgba(139,92,246,.28);
+  --nav-icon-bg: #ffffff;
+}
+
+body.dark-theme, body.dark-mode, [data-theme="dark"] {
+  --nav-bg: #111827;
+  --nav-text: #aeb8c8;
+  --nav-title: #c084fc;
+  --nav-border: #334155;
+  --nav-hover: #24143d;
+  --nav-active: #9333ea;
+  --nav-active-shadow: rgba(168,85,247,.30);
+  --nav-icon-bg: #172033;
+}
+
+header.site-header, body > header, header {
+  background: var(--nav-bg) !important;
+  color: var(--nav-text) !important;
+  border-bottom: 1px solid var(--nav-border) !important;
+  box-shadow: 0 4px 18px rgba(15,23,42,.06) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  isolation: isolate;
+}
+
+body.dark-theme header, body.dark-mode header, [data-theme="dark"] header {
+  box-shadow: 0 4px 22px rgba(0,0,0,.28) !important;
+}
+
+header .brand { display:flex !important; align-items:center !important; gap:12px !important; min-width:0; }
+header .brand img {
+  width:42px !important; height:42px !important; border-radius:11px !important;
+  object-fit:cover !important; flex:0 0 42px;
+  box-shadow:0 0 0 2px var(--nav-title), 0 4px 10px rgba(15,23,42,.10) !important;
+}
+header .brand h1 {
+  font-size:1.25rem !important; font-weight:800 !important; color:var(--nav-title) !important;
+  margin:0 !important; letter-spacing:-.5px !important; white-space:nowrap;
+}
+
+header nav {
+  display:flex !important; align-items:center !important; justify-content:center;
+  gap:6px !important; min-width:0;
+}
+header nav .nav-btn {
+  background:transparent !important; color:var(--nav-text) !important;
+  border:1px solid transparent !important; border-radius:11px !important;
+  padding:9px 14px !important; min-height:40px;
+  font-weight:700 !important; font-size:.84rem !important;
+  text-decoration:none !important; display:inline-flex !important; align-items:center !important;
+  justify-content:center; gap:7px !important; white-space:nowrap;
+  transition:background .18s ease,color .18s ease,transform .18s ease,box-shadow .18s ease !important;
+  box-shadow:none !important; transform:none !important;
+}
+header nav .nav-btn:hover:not(.active) {
+  background:var(--nav-hover) !important; color:var(--nav-title) !important;
+  transform:translateY(-1px) !important;
+}
+header nav .nav-btn.active {
+  background:var(--nav-active) !important; color:#fff !important;
+  border-color:transparent !important;
+  box-shadow:0 5px 14px var(--nav-active-shadow) !important;
+  transform:none !important;
+}
+header nav .nav-btn i { width:17px !important; height:17px !important; flex:0 0 17px; }
+header nav .nav-btn.active i { color:#fff !important; }
+
+header .user-info { display:flex !important; align-items:center !important; gap:8px !important; }
+header .user-title { color:var(--nav-text) !important; font-weight:700 !important; font-size:.84rem !important; }
+header .theme-toggle-btn, header #themeToggleBtn, header .icon-btn {
+  width:38px !important; height:38px !important; padding:0 !important;
+  border-radius:10px !important; border:1px solid var(--nav-border) !important;
+  background:var(--nav-icon-bg) !important; color:var(--nav-text) !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  cursor:pointer !important; box-shadow:none !important;
+  transition:.18s ease !important;
+}
+header .theme-toggle-btn:hover, header #themeToggleBtn:hover, header .icon-btn:hover {
+  border-color:var(--nav-title) !important; color:var(--nav-title) !important;
+  background:var(--nav-hover) !important; transform:translateY(-1px);
+}
+header .logout-btn, header .btn-logout-door {
+  background:#ef4444 !important; color:#fff !important; border:none !important;
+  border-radius:10px !important; min-height:38px; padding:8px 12px !important;
+  display:inline-flex !important; align-items:center; justify-content:center; gap:6px;
+  box-shadow:0 3px 9px rgba(239,68,68,.20) !important;
+}
+header .logout-btn:hover, header .btn-logout-door:hover { background:#dc2626 !important; transform:translateY(-1px) !important; }
+
+/* Corrige fundos transparentes/claros herdados por componentes comuns no escuro. */
+body.dark-theme input, body.dark-theme select, body.dark-theme textarea,
+body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+  color:var(--text-color,#f8fafc) !important;
+}
+
+@media (max-width:900px) {
+  header, body > header {
+    padding:10px 12px !important; gap:8px !important; flex-wrap:wrap !important;
+  }
+  header .brand { flex:1 1 auto !important; }
+  header .brand h1 { font-size:1.02rem !important; white-space:normal; line-height:1.15; }
+  header .user-info { flex:0 0 auto !important; }
+  header nav {
+    order:3 !important; width:100% !important; flex:0 0 100% !important;
+    justify-content:flex-start !important; overflow-x:auto !important; overflow-y:hidden !important;
+    padding:2px 1px 5px !important; scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  header nav::-webkit-scrollbar { display:none; }
+  header nav .nav-btn { flex:0 0 auto !important; padding:9px 12px !important; font-size:.79rem !important; min-height:42px; }
+}

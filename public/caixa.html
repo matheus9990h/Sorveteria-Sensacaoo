@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensação - Fechamento de Caixa</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg-body: #f4f5f7;
+            --text-color: #333333;
+            --text-muted: #666666;
+            --card-bg: #ffffff;
+            --border-color: #ebdbe8;
+            --primary-purple: #5c246b;
+            --hover-purple-bg: #f8edf9;
+            --table-border: #f0f0f0;
+            --input-bg: #ffffff;
+            --input-border: #dddddd;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .caixa-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .caixa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .caixa-header h2 {
+            color: var(--primary-purple);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        /* --- ESTILO DO CALENDÁRIO IGUAL À IMAGEM --- */
+        .calendario-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .calendario-icone-esq {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .calendario-texto-data {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-color);
+            letter-spacing: 0.3px;
+        }
+
+        .calendario-icone-dir {
+            font-size: 1rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Input nativo invisível cobrindo o componente para manter a funcionalidade de clique do calendário */
+        .calendario-box input[type="date"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        /* ------------------------------------------- */
+
+        .caixa-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .caixa-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 1.15rem;
+            color: var(--primary-purple);
+            border-bottom: 2px solid var(--hover-purple-bg);
+            padding-bottom: 8px;
+        }
+
+        .input-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .input-grupo label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .input-grupo input {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-grupo input:focus {
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(92, 36, 107, 0.1);
+        }
+
+        .resumo-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .resumo-linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--hover-purple-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .resumo-linha span:first-child {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .resumo-linha span:last-child {
+            font-weight: 700;
+            color: var(--primary-purple);
+            font-size: 1rem;
+        }
+
+        .total-geral-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--primary-purple);
+            border-radius: 14px;
+            color: #fff;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(92, 36, 107, 0.25);
+        }
+
+        .total-geral-box span:first-child {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .total-geral-box span:last-child {
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+
+        .btn-salvar {
+            background-color: #00a884;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0, 168, 132, 0.2);
+        }
+
+        .btn-salvar:hover {
+            background-color: #008f70;
+        }
+
+        .btn-salvar:active {
+            transform: scale(0.98);
+        }
+
+        .historico-fechamentos {
+            margin-top: 30px;
+        }
+
+        .tabela-custom {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .tabela-custom th {
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            padding: 14px 16px;
+            background-color: var(--hover-purple-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tabela-custom td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--table-border);
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .tabela-custom tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="navbar-padrao.css">
+</head>
+
+<body>
+
+    <div class="caixa-container">
+        <div class="caixa-header">
+            <div>
+                <h2>💰 Fechamento de Caixa</h2>
+                <p style="color: var(--text-muted); margin: 4px 0 0 0; font-size: 0.9rem;">Registre e consulte os valores apurados por data.</p>
+            </div>
+
+            <!-- Calendário Personalizado (Estilo da Imagem) -->
+            <div class="calendario-box">
+                <span class="calendario-icone-esq">📅</span>
+                <span id="labelDataExibicao" class="calendario-texto-data">--/--/----</span>
+                <span class="calendario-icone-dir">📆</span>
+                <input type="date" id="dataFechamento" onchange="atualizarDataSelecionada()">
+            </div>
+        </div>
+
+        <div class="caixa-grid">
+            <!-- Coluna de Entradas -->
+            <div class="card">
+                <h3>💵 Entradas do Dia</h3>
+
+                <div class="input-grupo">
+                    <label for="valDinheiro">Dinheiro em Espécie (R$)</label>
+                    <input type="number" id="valDinheiro" step="0.01" placeholder="0,00" oninput="calcularTotal()">
+                </div>
+
+                <div class="input-grupo">
+                    <label for="valCartao">Cartão (Débito / Crédito) (R$)</label>
+                    <input type="number" id="valCartao" step="0.01" placeholder="0,00" oninput="calcularTotal()">
+                </div>
+
+                <div class="input-grupo">
+                    <label for="valPix">Pix (R$)</label>
+                    <input type="number" id="valPix" step="0.01" placeholder="0,00" oninput="calcularTotal()">
+                </div>
+
+                <div class="input-grupo">
+                    <label for="valIfood">iFood (R$)</label>
+                    <input type="number" id="valIfood" step="0.01" placeholder="0,00" oninput="calcularTotal()">
+                </div>
+
+                <button class="btn-salvar" onclick="salvarFechamento()">
+                    💾 Salvar Fechamento do Dia
+                </button>
+            </div>
+
+            <!-- Coluna de Resumo -->
+            <div class="card">
+                <h3>📊 Conferência de Valores</h3>
+
+                <div class="resumo-lista">
+                    <div class="resumo-linha">
+                        <span>Dinheiro:</span>
+                        <span id="resDinheiro">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>Cartão:</span>
+                        <span id="resCartao">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>Pix:</span>
+                        <span id="resPix">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-linha">
+                        <span>iFood:</span>
+                        <span id="resIfood">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="total-geral-box">
+                    <span>TOTAL APURADO</span>
+                    <span id="resTotalGeral">R$ 0,00</span>
+                </div>
+
+                <div style="background: var(--hover-purple-bg); border-radius: 12px; padding: 14px; border: 1px solid var(--border-color);">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary-purple); margin-bottom: 4px; text-transform: uppercase;">💡 Dica de Caixa:</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+                        Altere a data no campo superior para consultar ou preencher o fechamento de dias anteriores.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Histórico Recente -->
+        <div class="historico-fechamentos">
+            <h3 style="color: var(--primary-purple); font-size: 1.15rem; margin-bottom: 12px;">🕒 Últimos Fechamentos Salvos</h3>
+            <table class="tabela-custom">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Dinheiro</th>
+                        <th>Cartão</th>
+                        <th>Pix</th>
+                        <th>iFood</th>
+                        <th style="text-align: right;">Total Geral</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaHistoricoCaixa">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhum fechamento registrado recentemente.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function getLocalDateString() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function initCaixa() {
+            const inputData = document.getElementById('dataFechamento');
+            if (inputData && !inputData.value) {
+                inputData.value = getLocalDateString();
+            }
+            atualizarDataSelecionada();
+            carregarHistoricoCaixa();
+        }
+
+        // Atualiza o texto visual do componente de data quando o usuário escolhe um dia no calendário
+        function atualizarDataSelecionada() {
+            const inputData = document.getElementById('dataFechamento');
+            const labelVisual = document.getElementById('labelDataExibicao');
+            
+            if (inputData.value) {
+                const [ano, mes, dia] = inputData.value.split('-');
+                labelVisual.innerText = `${dia}/${mes}/${ano}`;
+            }
+            
+            carregarFechamentoDoDia();
+        }
+
+        function calcularTotal() {
+            const dinheiro = parseFloat(document.getElementById('valDinheiro').value) || 0;
+            const cartao = parseFloat(document.getElementById('valCartao').value) || 0;
+            const pix = parseFloat(document.getElementById('valPix').value) || 0;
+            const ifood = parseFloat(document.getElementById('valIfood').value) || 0;
+
+            const totalGeral = dinheiro + cartao + pix + ifood;
+
+            document.getElementById('resDinheiro').innerText = `R$ ${dinheiro.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resCartao').innerText = `R$ ${cartao.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resPix').innerText = `R$ ${pix.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resIfood').innerText = `R$ ${ifood.toFixed(2).replace('.', ',')}`;
+            document.getElementById('resTotalGeral').innerText = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+        }
+
+        function carregarFechamentoDoDia() {
+            const dataSelecionada = document.getElementById('dataFechamento').value;
+            const fechamentosSalvos = JSON.parse(localStorage.getItem('sensacao_fechamentos_caixa') || '{}');
+
+            const dadosDia = fechamentosSalvos[dataSelecionada] || { dinheiro: '', cartao: '', pix: '', ifood: '' };
+
+            document.getElementById('valDinheiro').value = dadosDia.dinheiro;
+            document.getElementById('valCartao').value = dadosDia.cartao;
+            document.getElementById('valPix').value = dadosDia.pix;
+            document.getElementById('valIfood').value = dadosDia.ifood;
+
+            calcularTotal();
+        }
+
+        function salvarFechamento() {
+            const dataSelecionada = document.getElementById('dataFechamento').value;
+            if (!dataSelecionada) {
+                alert('Por favor, selecione uma data válida.');
+                return;
+            }
+
+            const dinheiro = document.getElementById('valDinheiro').value;
+            const cartao = document.getElementById('valCartao').value;
+            const pix = document.getElementById('valPix').value;
+            const ifood = document.getElementById('valIfood').value;
+
+            const fechamentosSalvos = JSON.parse(localStorage.getItem('sensacao_fechamentos_caixa') || '{}');
+
+            fechamentosSalvos[dataSelecionada] = {
+                dinheiro,
+                cartao,
+                pix,
+                ifood,
+                total: (parseFloat(dinheiro) || 0) + (parseFloat(cartao) || 0) + (parseFloat(pix) || 0) + (parseFloat(ifood) || 0)
+            };
+
+            localStorage.setItem('sensacao_fechamentos_caixa', JSON.stringify(fechamentosSalvos));
+
+            alert(`Fechamento do dia ${document.getElementById('labelDataExibicao').innerText} salvo com sucesso!`);
+            carregarHistoricoCaixa();
+        }
+
+        function carregarHistoricoCaixa() {
+            const tbody = document.getElementById('tabelaHistoricoCaixa');
+            const fechamentosSalvos = JSON.parse(localStorage.getItem('sensacao_fechamentos_caixa') || '{}');
+            const datas = Object.keys(fechamentosSalvos).sort().reverse();
+
+            if (datas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhum fechamento registrado recentemente.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = datas.slice(0, 5).map(data => {
+                const item = fechamentosSalvos[data];
+                const dataFormatada = data.split('-').reverse().join('/');
+                return `
+                    <tr>
+                        <td><b>${dataFormatada}</b></td>
+                        <td>R$ ${(parseFloat(item.dinheiro) || 0).toFixed(2).replace('.', ',')}</td>
+                        <td>R$ ${(parseFloat(item.cartao) || 0).toFixed(2).replace('.', ',')}</td>
+                        <td>R$ ${(parseFloat(item.pix) || 0).toFixed(2).replace('.', ',')}</td>
+                        <td>R$ ${(parseFloat(item.ifood) || 0).toFixed(2).replace('.', ',')}</td>
+                        <td style="text-align: right; color: #2e7d32; font-weight: bold;">R$ ${(parseFloat(item.total) || 0).toFixed(2).replace('.', ',')}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.onload = initCaixa;
+    </script>
+</body>
+</html>
